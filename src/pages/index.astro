@@ -20,60 +20,83 @@ const works = allWorks
 ---
 
 <BaseLayout title="Home">
-  <section class="hero" data-pin-container data-pin-media="all" data-pin-mode="backward" data-pin-start="top top">
+  <section
+    class="hero"
+    data-pin-container
+    data-pin-media="all"
+    data-pin-mode="backward"
+    data-pin-start="top top"
+  >
     <div class="container" data-pin-element>
       <div class="hero__content">
         <div class="hero__text">
-          <h1 class="text-h1"data-split-text-anim="word" 
-            data-settings='{ "repeat": true}'>
+          <h1
+            class="text-h1"
+            data-split-text-anim="word"
+            data-settings='{ "repeat": true}'
+          >
             Less talking More solving
           </h1>
         </div>
-        <div class="media-frame"data-img-anim="hero-block" 
-        data-settings='{"type": "down", "duration": 1.5, "delay": 0.2,  "repeat": true}'>
-          <CustomImage
-            src={avatar}
-            alt="avatar"
-            importance="feature"
-          />
+        <div
+          class="media-frame"
+          data-img-anim="hero-block"
+          data-settings='{"type": "down", "duration": 1.5, "delay": 0.2,  "repeat": true}'
+        >
+          <CustomImage src={avatar} alt="avatar" importance="feature" />
         </div>
-        <div class="hero__text"data-split-text-anim="word" 
-            data-settings='{ "repeat": true}'>
+        <div
+          class="hero__text"
+          data-split-text-anim="word"
+          data-settings='{ "repeat": true}'
+        >
           <span>HUY THUONG NGO</span>
         </div>
       </div>
     </div>
   </section>
-  <section class="intro-video-section"data-parallax-container data-parallax-media="all" data-parallax-start="top bottom" data-parallax-end="bottom top" data-parallax-y="-30">
+  <section
+    class="intro-video-section"
+    data-parallax-container
+    data-parallax-media="all"
+    data-parallax-start="top bottom"
+    data-parallax-end="bottom top"
+    data-parallax-y="-30"
+  >
     <div class="section--bg-video" data-parallax-element>
       <div
-      class="media-embed"
-      data-controls="false"
-      data-autoplay="true"
-      data-muted="true"
-      data-loop="true"
-    >
-      <video autoplay muted playsinline loop class="media-embed__video">
-        <source src={v0407} />
-      </video>
+        class="media-embed"
+        data-controls="false"
+        data-autoplay="true"
+        data-muted="true"
+        data-loop="true"
+      >
+        <video autoplay muted playsinline loop class="media-embed__video">
+          <source src={v0407} type="video/mp4" />
+        </video>
+      </div>
     </div>
-    </div>
-    
   </section>
   <section class="mindset">
     <div class="container container--lg">
       <div class="row">
         <div class="col l-4 m-4 s-12">
-          <span class="overline"data-scroll-anim="slide-up"
-            data-settings='{ "repeat": true}'>
+          <span
+            class="overline"
+            data-scroll-anim="slide-up"
+            data-settings='{ "repeat": true}'
+          >
             <Icon name="add" />
             <span class="overline__text">The Mindset</span>
           </span>
         </div>
         <div class="col l-6 m-8 s-12">
           <div class="hero__text">
-            <p class="p-big"data-split-text-anim="line" 
-            data-settings='{ "repeat": true}'>
+            <p
+              class="p-big"
+              data-split-text-anim="line"
+              data-settings='{ "repeat": true}'
+            >
               Complexity isn't my thing. I see UI/UX as a way to observe the
               world and distill it into seamless experiences. I'm a big believer
               that the best design is felt, not seen—it should just work as
@@ -84,8 +107,12 @@ const works = allWorks
       </div>
     </div>
     <div class="container container--lg">
-      <div class="mindset__grid"data-scroll-anim="slide-up"
-          data-settings='{ "repeat": true}' data-scroll-stagger>
+      <div
+        class="mindset__grid"
+        data-scroll-anim="slide-up"
+        data-settings='{ "repeat": true}'
+        data-scroll-stagger
+      >
         <div class="mindset-card">
           <span class="mindset-card__number">01</span>
           <div class="mindset-card__body">
@@ -127,23 +154,38 @@ const works = allWorks
   <section class="process">
     <div class="container">
       <div class="section-header">
-        <span class="overline"data-scroll-anim="slide-up"
-            data-settings='{ "repeat": true}'>
+        <span
+          class="overline"
+          data-scroll-anim="slide-up"
+          data-settings='{ "repeat": true}'
+        >
           <Icon name="add" />
           <span class="overline__text">The Silent Process</span>
         </span>
-        <h2 class="text-h2"data-split-text-anim="word" 
-            data-settings='{ "repeat": false}'>Making Sense of It All</h2>
-        <p class="p-desc"data-split-text-anim="line" 
-            data-settings='{ "repeat": true}'>
+        <h2
+          class="text-h2"
+          data-split-text-anim="word"
+          data-settings='{ "repeat": false}'
+        >
+          Making Sense of It All
+        </h2>
+        <p
+          class="p-desc"
+          data-split-text-anim="line"
+          data-settings='{ "repeat": true}'
+        >
           A deep dive into pixels and patterns. Refining the chaos until only
           the essentials remain.
         </p>
       </div>
     </div>
     <div class="container">
-      <ul class="process__list"data-scroll-anim="slide-up"
-            data-settings='{ "repeat": true}' data-scroll-stagger>
+      <ul
+        class="process__list"
+        data-scroll-anim="slide-up"
+        data-settings='{ "repeat": true}'
+        data-scroll-stagger
+      >
         <li class="process__item">
           <span class="process__item-number">01</span>
           <div class="process__item-title">
@@ -209,24 +251,44 @@ const works = allWorks
   </section>
   <section class="case-study">
     <div class="container container--lg">
-      <div class="case-study__wrapper" data-pin-container data-pin-media="desktop" data-pin-start="top 20%" data-pin-end="bottom center">
+      <div
+        class="case-study__wrapper"
+        data-pin-container
+        data-pin-media="desktop"
+        data-pin-start="top 20%"
+        data-pin-end="bottom center"
+      >
         <div class="case-study__header-wrap" data-pin-element>
           <div class="section-header">
             <span class="overline">
-              <Icon name="add"/>
-              <span class="overline__text" data-split-text-anim="word" 
-            data-settings='{ "repeat": true}'>SELECTED WORKS</span>
+              <Icon name="add" />
+              <span
+                class="overline__text"
+                data-split-text-anim="word"
+                data-settings='{ "repeat": true}'>SELECTED WORKS</span
+              >
             </span>
-            <h2 class="text-h2"data-split-text-anim="word" 
-            data-settings='{ "repeat": true}'>Cool stuff I made</h2>
-            <p class="p-desc"data-split-text-anim="line" 
-            data-settings='{ "repeat": true}'>
+            <h2
+              class="text-h2"
+              data-split-text-anim="word"
+              data-settings='{ "repeat": true}'
+            >
+              Cool stuff I made
+            </h2>
+            <p
+              class="p-desc"
+              data-split-text-anim="line"
+              data-settings='{ "repeat": true}'
+            >
               Just me untangling complex vibes into clean designs. Poured a lot
               of heart into these
             </p>
           </div>
-          <div class="btn-container" data-scroll-anim="slide-up"
-          data-settings='{ "repeat": true}'>
+          <div
+            class="btn-container"
+            data-scroll-anim="slide-up"
+            data-settings='{ "repeat": true}'
+          >
             <a href="/works" class="btn-link" data-hover>
               <span>View All</span>
               <Icon name="arrow_outward" />
@@ -242,41 +304,54 @@ const works = allWorks
   <section class="behind">
     <div class="container container--lg">
       <div class="behind__wrapper">
-        <div class="behind__video" >
+        <div class="behind__video">
           <div
             class="media-embed"
             data-controls="false"
             data-autoplay="true"
             data-muted="true"
-            data-loop="true" data-img-anim="block" 
+            data-loop="true"
+            data-img-anim="block"
             data-settings='{"type": "down", "delay": 0.5, "duration": 1.5, "repeat": true}'
           >
             <video autoplay muted playsinline loop class="media-embed__video">
-              <source src={chill} />
+              <source src={chill} type="video/mp4" />
             </video>
           </div>
         </div>
         <div class="behind__text">
-          <span class="overline"data-scroll-anim="slide-up"
-            data-settings='{ "repeat": true}'>
+          <span
+            class="overline"
+            data-scroll-anim="slide-up"
+            data-settings='{ "repeat": true}'
+          >
             <Icon name="add" />
             <span class="overline__text">Behind the silence</span>
           </span>
-          <p class="p-big"data-split-text-anim="line" 
-            data-settings='{ "repeat": true}'>
+          <p
+            class="p-big"
+            data-split-text-anim="line"
+            data-settings='{ "repeat": true}'
+          >
             A quiet observer finding logic in the noise. Outside of pixels, I'm
             often found with a sketchbook or a cup of black coffee
           </p>
-          <div class="btn-container" data-scroll-anim="slide-up"
-          data-settings='{ "repeat": true}'>
-            <a href="/about" class="btn-link" data-hover >
+          <div
+            class="btn-container"
+            data-scroll-anim="slide-up"
+            data-settings='{ "repeat": true}'
+          >
+            <a href="/about" class="btn-link" data-hover>
               <span>More about my story</span>
               <Icon name="arrow_outward" />
             </a>
           </div>
         </div>
-        <div class="media-frame behind__photo" data-img-anim="block" 
-     data-settings='{"type": "down",  "duration": 1.5, "repeat": true}'>
+        <div
+          class="media-frame behind__photo"
+          data-img-anim="block"
+          data-settings='{"type": "down",  "duration": 1.5, "repeat": true}'
+        >
           <CustomImage
             src={thuongnh}
             alt="Thuongnh"
@@ -322,12 +397,13 @@ const works = allWorks
     }
   }
 
-  .intro-video-section{
+  .intro-video-section {
+    position: relative;
     width: 100%;
     min-height: 100vh;
     overflow: hidden;
     z-index: 10;
-     .section--bg-video {
+    .section--bg-video {
       position: absolute;
       top: 0;
       left: 0;
@@ -342,7 +418,7 @@ const works = allWorks
     padding: 6rem 0 8rem 0;
   }
 
-  .mindset .overline{
+  .mindset .overline {
     margin-bottom: 1.5rem;
   }
 
@@ -433,7 +509,7 @@ const works = allWorks
     flex-direction: column;
     gap: 4rem;
 
-    .project-card__thumb img { 
+    .project-card__thumb img {
       filter: grayscale(0) contrast(1);
       transition: all 0.3s ease;
     }
@@ -491,15 +567,15 @@ const works = allWorks
       gap: 2rem;
     }
 
-     .behind__text {
-    width: 100%;
-    padding: 0;
-  }
+    .behind__text {
+      width: 100%;
+      padding: 0;
+    }
 
     .behind__photo {
-    width: 100%;
-    margin-bottom: 0;
-  }
+      width: 100%;
+      margin-bottom: 0;
+    }
 
     .mindset,
     .process,
