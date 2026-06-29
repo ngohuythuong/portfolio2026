@@ -1,0 +1,535 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import ProjectCard from "../components/ProjectCard.astro";
+import { getCollection } from "astro:content";
+import CustomImage from "../components/CustomImage.astro";
+import avatar from "../assets/images/avatar.webp";
+import thuongnh from "../assets/images/thuongnh.webp";
+import v0407 from "../assets/images/0407.mp4";
+import chill from "../assets/images/chill.mp4";
+import Icon from "../components/Icon.astro";
+
+const allWorks = await getCollection("works");
+const works = allWorks
+  .sort((a, b) =>
+    a.data.project_hero.metadata.stt.localeCompare(
+      b.data.project_hero.metadata.stt,
+    ),
+  )
+  .slice(0, 3);
+---
+
+<BaseLayout title="Home">
+  <section class="hero" data-pin-container data-pin-media="all" data-pin-mode="backward" data-pin-start="top top">
+    <div class="container" data-pin-element>
+      <div class="hero__content">
+        <div class="hero__text">
+          <h1 class="text-h1"data-split-text-anim="word" 
+            data-settings='{ "repeat": true}'>
+            Less talking More solving
+          </h1>
+        </div>
+        <div class="media-frame"data-img-anim="hero-block" 
+        data-settings='{"type": "down", "duration": 1.5, "delay": 0.2,  "repeat": true}'>
+          <CustomImage
+            src={avatar}
+            alt="avatar"
+            importance="feature"
+          />
+        </div>
+        <div class="hero__text"data-split-text-anim="word" 
+            data-settings='{ "repeat": true}'>
+          <span>HUY THUONG NGO</span>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="intro-video-section"data-parallax-container data-parallax-media="all" data-parallax-start="top bottom" data-parallax-end="bottom top" data-parallax-y="-30">
+    <div class="section--bg-video" data-parallax-element>
+      <div
+      class="media-embed"
+      data-controls="false"
+      data-autoplay="true"
+      data-muted="true"
+      data-loop="true"
+    >
+      <video autoplay muted playsinline loop class="media-embed__video">
+        <source src={v0407} />
+      </video>
+    </div>
+    </div>
+    
+  </section>
+  <section class="mindset">
+    <div class="container container--lg">
+      <div class="row">
+        <div class="col l-4 m-4 s-12">
+          <span class="overline"data-scroll-anim="slide-up"
+            data-settings='{ "repeat": true}'>
+            <Icon name="add" />
+            <span class="overline__text">The Mindset</span>
+          </span>
+        </div>
+        <div class="col l-6 m-8 s-12">
+          <div class="hero__text">
+            <p class="p-big"data-split-text-anim="line" 
+            data-settings='{ "repeat": true}'>
+              Complexity isn't my thing. I see UI/UX as a way to observe the
+              world and distill it into seamless experiences. I'm a big believer
+              that the best design is felt, not seen—it should just work as
+              naturally as breathing
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="container container--lg">
+      <div class="mindset__grid"data-scroll-anim="slide-up"
+          data-settings='{ "repeat": true}' data-scroll-stagger>
+        <div class="mindset-card">
+          <span class="mindset-card__number">01</span>
+          <div class="mindset-card__body">
+            <h3 class="text-h3">Obsession over<br /> observation</h3>
+            <p class="p-md">
+              Being quiet is my superpower. While others talk, I'm busy
+              'decoding' the subtle cues. No guessing games—just deep listening
+              to what's not being said to build what's actually needed
+            </p>
+          </div>
+        </div>
+        <div class="mindset-card mindset-card--dark">
+          <span class="mindset-card__number">02</span>
+          <div class="mindset-card__body">
+            <h3 class="text-h3">Trim the fat.<br /> Keep the soul</h3>
+            <p class="p-md">
+              I'm literally 'allergic' to clutter. My job is to filter out the
+              noise and keep the core vibes. A clean UI isn't just for the
+              'aesthetic'—it's about giving users some breathing room to
+              actually breathe
+            </p>
+          </div>
+        </div>
+        <div class="mindset-card">
+          <span class="mindset-card__number">03</span>
+          <div class="mindset-card__body">
+            <h3 class="text-h3">Built to scale, <br />not just to show</h3>
+            <p class="p-md">
+              Pretty is basic, but logic is what keeps them coming back. I don't
+              do 'random' pixels. Every interaction is backed by a rock-solid
+              Design System, making sure the product grows without breaking a
+              sweat.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="process">
+    <div class="container">
+      <div class="section-header">
+        <span class="overline"data-scroll-anim="slide-up"
+            data-settings='{ "repeat": true}'>
+          <Icon name="add" />
+          <span class="overline__text">The Silent Process</span>
+        </span>
+        <h2 class="text-h2"data-split-text-anim="word" 
+            data-settings='{ "repeat": false}'>Making Sense of It All</h2>
+        <p class="p-desc"data-split-text-anim="line" 
+            data-settings='{ "repeat": true}'>
+          A deep dive into pixels and patterns. Refining the chaos until only
+          the essentials remain.
+        </p>
+      </div>
+    </div>
+    <div class="container">
+      <ul class="process__list"data-scroll-anim="slide-up"
+            data-settings='{ "repeat": true}' data-scroll-stagger>
+        <li class="process__item">
+          <span class="process__item-number">01</span>
+          <div class="process__item-title">
+            <h3 class="text-h3">Listen</h3>
+            <p class="p-desc">Understanding what isn't said.</p>
+          </div>
+          <div class="process__item-body">
+            <p class="p-md">
+              I start by observing. I don't just take requirements; I listen to
+              user pain points through data and behavior. Silence at this stage
+              allows me to fully empathize with the problem before seeking the
+              solution.
+            </p>
+          </div>
+        </li>
+        <li class="process__item">
+          <span class="process__item-number">02</span>
+          <div class="process__item-title">
+            <h3 class="text-h3">Distill</h3>
+            <p class="p-desc">Simplifying the complex</p>
+          </div>
+          <div class="process__item-body">
+            <p class="p-md">
+              This is where I decode raw data into logic. I strip away the noise
+              to find the core value, building a clear Information Architecture
+              and seamless User Flows. I believe the best solutions are the most
+              refined ones.
+            </p>
+          </div>
+        </li>
+        <li class="process__item">
+          <span class="process__item-number">03</span>
+          <div class="process__item-title">
+            <h3 class="text-h3">Craft</h3>
+            <p class="p-desc">Precision in every pixel</p>
+          </div>
+          <div class="process__item-body">
+            <p class="p-md">
+              Once the logic is solid, I bring the product to life. I don't just
+              design interfaces; I build scalable Design Systems. My focus is on
+              creating a visual language that is not only beautiful but also
+              functional and consistent.
+            </p>
+          </div>
+        </li>
+        <li class="process__item">
+          <span class="process__item-number">04</span>
+          <div class="process__item-title">
+            <h3 class="text-h3">Optimize</h3>
+            <p class="p-desc">Design is a living process</p>
+          </div>
+          <div class="process__item-body">
+            <p class="p-md">
+              A product's journey doesn't end at handoff. I observe how it lives
+              in the real world, using usability testing and feedback to refine
+              the smallest details. I ensure the experience stays smooth and
+              effective over time.
+            </p>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </section>
+  <section class="case-study">
+    <div class="container container--lg">
+      <div class="case-study__wrapper" data-pin-container data-pin-media="desktop" data-pin-start="top 20%" data-pin-end="bottom center">
+        <div class="case-study__header-wrap" data-pin-element>
+          <div class="section-header">
+            <span class="overline">
+              <Icon name="add"/>
+              <span class="overline__text" data-split-text-anim="word" 
+            data-settings='{ "repeat": true}'>SELECTED WORKS</span>
+            </span>
+            <h2 class="text-h2"data-split-text-anim="word" 
+            data-settings='{ "repeat": true}'>Cool stuff I made</h2>
+            <p class="p-desc"data-split-text-anim="line" 
+            data-settings='{ "repeat": true}'>
+              Just me untangling complex vibes into clean designs. Poured a lot
+              of heart into these
+            </p>
+          </div>
+          <div class="btn-container" data-scroll-anim="slide-up"
+          data-settings='{ "repeat": true}'>
+            <a href="/works" class="btn-link" data-hover>
+              <span>View All</span>
+              <Icon name="arrow_outward" />
+            </a>
+          </div>
+        </div>
+        <div class="case-study__list">
+          {works.map((work) => <ProjectCard project={work} variant="box" />)}
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="behind">
+    <div class="container container--lg">
+      <div class="behind__wrapper">
+        <div class="behind__video" >
+          <div
+            class="media-embed"
+            data-controls="false"
+            data-autoplay="true"
+            data-muted="true"
+            data-loop="true" data-img-anim="block" 
+            data-settings='{"type": "down", "delay": 0.5, "duration": 1.5, "repeat": true}'
+          >
+            <video autoplay muted playsinline loop class="media-embed__video">
+              <source src={chill} />
+            </video>
+          </div>
+        </div>
+        <div class="behind__text">
+          <span class="overline"data-scroll-anim="slide-up"
+            data-settings='{ "repeat": true}'>
+            <Icon name="add" />
+            <span class="overline__text">Behind the silence</span>
+          </span>
+          <p class="p-big"data-split-text-anim="line" 
+            data-settings='{ "repeat": true}'>
+            A quiet observer finding logic in the noise. Outside of pixels, I'm
+            often found with a sketchbook or a cup of black coffee
+          </p>
+          <div class="btn-container" data-scroll-anim="slide-up"
+          data-settings='{ "repeat": true}'>
+            <a href="/about" class="btn-link" data-hover >
+              <span>More about my story</span>
+              <Icon name="arrow_outward" />
+            </a>
+          </div>
+        </div>
+        <div class="media-frame behind__photo" data-img-anim="block" 
+     data-settings='{"type": "down",  "duration": 1.5, "repeat": true}'>
+          <CustomImage
+            src={thuongnh}
+            alt="Thuongnh"
+            importance="detail"
+            class="human-img"
+          />
+        </div>
+      </div>
+    </div>
+    <div class="container container--flush">
+      <div class="marquee">
+        <div class="marquee__track">
+          <span class="text-h1"
+            >Ceffeine - Curating - Sketching - Photography -</span
+          >
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .hero {
+    padding-top: 12rem;
+    min-height: 100vh;
+
+    h1 {
+      text-transform: uppercase;
+      text-align: center;
+      max-width: 740px;
+    }
+
+    .media-frame {
+      width: 280px;
+      aspect-ratio: 4/5;
+    }
+
+    .hero__content {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      align-items: center;
+    }
+  }
+
+  .intro-video-section{
+    width: 100%;
+    min-height: 100vh;
+    overflow: hidden;
+    z-index: 10;
+     .section--bg-video {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 130vh;
+      will-change: transform;
+    }
+  }
+
+  .mindset,
+  .case-study {
+    padding: 6rem 0 8rem 0;
+  }
+
+  .mindset .overline{
+    margin-bottom: 1.5rem;
+  }
+
+  .process {
+    padding: 6rem 0;
+    gap: 6rem;
+    background-color: var(--secondaryBackground);
+  }
+
+  .behind {
+    padding: 12rem 0 3rem 0;
+  }
+
+  .behind__wrapper {
+    display: flex;
+    flex-direction: row;
+    gap: 3rem 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  .behind__video {
+    width: 25%;
+    flex-shrink: 0;
+    display: flex;
+    align-items: flex-end;
+  }
+
+  .behind__photo {
+    width: 25%;
+    flex-shrink: 0;
+    margin-bottom: 4rem;
+    aspect-ratio: 1/1;
+  }
+
+  .behind__text {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    flex: 1;
+    padding: 0 2rem;
+  }
+
+  .process__item {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    padding: 5rem 0;
+    border-top: 1px solid var(--linesColor);
+    gap: 1.5rem;
+  }
+
+  .process__item-number {
+    width: 20%;
+  }
+
+  .process__item-title {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .process__item-body {
+    width: 30%;
+  }
+
+  .case-study__header-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    flex: 1;
+  }
+
+  .case-study__wrapper {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 1.5rem;
+  }
+
+  .case-study .section-header {
+    max-width: 480px;
+    width: 100%;
+  }
+
+  .case-study__list {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 4rem;
+
+    .project-card__thumb img { 
+      filter: grayscale(0) contrast(1);
+      transition: all 0.3s ease;
+    }
+  }
+
+  .mindset-card {
+    display: flex;
+    flex-direction: column;
+    gap: 4rem;
+    padding: 1.5rem;
+    background-color: #fff;
+    min-height: 400px;
+  }
+
+  .mindset-card--dark {
+    background-color: #191919;
+    color: #f5f5f5;
+  }
+
+  .mindset-card__number {
+    text-transform: uppercase;
+    letter-spacing: 0.08rem;
+    color: var(--secondaryColor);
+  }
+
+  .mindset-card__body {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .mindset__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+  }
+
+  /*----responsive----*/
+  @media screen and (max-width: 767px) {
+    .hero {
+      padding-top: 10rem;
+      padding-bottom: 4rem;
+
+      h1 {
+        text-align: left;
+      }
+
+      .media-frame {
+        width: 100%;
+      }
+    }
+
+    .case-study__wrapper {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+
+     .behind__text {
+    width: 100%;
+    padding: 0;
+  }
+
+    .behind__photo {
+    width: 100%;
+    margin-bottom: 0;
+  }
+
+    .mindset,
+    .process,
+    .case-study,
+    .behind {
+      padding: 3rem 0;
+    }
+
+    .mindset__grid {
+      grid-template-columns: repeat(1, 1fr);
+    }
+
+    .process__item {
+      padding: 3rem 0;
+    }
+
+    .process__item-number,
+    .process__item-body {
+      width: 100%;
+    }
+
+    .case-study__list {
+      width: 100%;
+      gap: 2rem;
+    }
+
+    .case-study__header-wrap,
+    .case-study .section-header,
+    .behind__video {
+      width: 100%;
+    }
+  }
+</style>

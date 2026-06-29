@@ -1,0 +1,277 @@
+<div id="mouseCursor" class="dot">
+  <span class="cursor-text"></span>
+</div>
+
+<style>
+  #mouseCursor {
+    width: 15px;
+    height: 15px;
+    background-color: #191919;
+    border-radius: 50%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    z-index: 999999999999 !important; /* Đảm bảo nổi lên trên tất cả các lớp */
+    transform: translate(-50%, -50%);
+    will-change: transform;
+    display: flex !important;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    opacity: 0; /* Ẩn mặc định để tránh nhấp nháy ban đầu */
+    transition: none !important; /* Ngăn chặn tuyệt đối xung đột CSS transition với GSAP */
+  }
+
+  .cursor-text {
+    pointer-events: none;
+    font-size: 12px;
+    font-weight: 400;
+    text-transform: uppercase;
+    color: #ffffff;
+    opacity: 0;
+    white-space: nowrap;
+    transform: scale(0);
+  }
+
+  @media (max-width: 1024px), (pointer: coarse) {
+    #mouseCursor {
+      display: none !important;
+    }
+  }
+</style>
+
+<script>
+  import { gsap } from "gsap";
+
+  const initCursor = () => {
+    // Dọn dẹp các sự kiện và GSAP ticker cũ khi Astro SPA chuyển trang
+    if ((window as any).__cleanupCursor) {
+      (window as any).__cleanupCursor();
+    }
+
+    const cursor = document.getElementById("mouseCursor");
+    const cursorText = cursor?.querySelector(".cursor-text");
+    if (!cursor || !cursorText) return;
+
+    const pos = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+    const mouse = { x: pos.x, y: pos.y };
+    const speed = 0.15;
+    const allInteractiveTargets =
+      'a, button, input, select, textarea, [role="button"], [data-cursor-text]';
+
+    // Biến trạng thái hợp nhất
+    let isHovering = false;
+    let isOverDark = false;
+    let hasText = false;
+    let hasMoved = false;
+    let lastTarget: HTMLElement | null = null; // Tối ưu hiệu năng: Chỉ cập nhật khi đổi phần tử di chuột
+
+    // 1. Hàm cập nhật style và màu sắc cursor bằng GSAP
+    const updateCursorStyle = (immediate = false) => {
+      const duration = immediate ? 0 : 0.25;
+
+      if (isHovering) {
+        // Lựa chọn màu nền dựa trên trạng thái Hover và nền tối/sáng
+        const bg = hasText
+          ? isOverDark
+            ? "#fafafa"
+            : "#191919"
+          : isOverDark
+            ? "rgba(255, 255, 255, 0.1)"
+            : "rgba(25, 25, 25, 0.2)";
+
+        gsap.to(cursor, {
+          width: 140,
+          height: 140,
+          backgroundColor: bg,
+          opacity: 1,
+          duration: duration,
+          ease: "power2.out",
+          overwrite: "auto",
+        });
+
+        gsap.to(cursorText, {
+          color: isOverDark ? "#191919" : "#fafafa",
+          opacity: hasText ? 1 : 0,
+          scale: hasText ? 1 : 0,
+          duration: duration,
+          overwrite: "auto",
+        });
+      } else {
+        // Trạng thái mặc định
+        gsap.to(cursor, {
+          width: 15,
+          height: 15,
+          backgroundColor: isOverDark ? "#fafafa" : "#191919",
+          opacity: hasMoved ? 1 : 0,
+          duration: duration,
+          ease: "power1.out",
+          overwrite: "auto",
+        });
+
+        gsap.to(cursorText, {
+          opacity: 0,
+          scale: 0,
+          duration: 0.15,
+          overwrite: "auto",
+        });
+      }
+    };
+
+    // 2. Hàm hợp nhất kiểm tra và cập nhật Trạng thái (Hover & Nền Tối)
+    const updateCursorState = (target: HTMLElement | null) => {
+      if (!target) return;
+
+      // --- PHẦN 1: KIỂM TRA NỀN TỐI (DARK BACKGROUND) ---
+      let foundDark = false;
+      const footer = document.querySelector(".site-footer");
+      if (footer) {
+        const rect = footer.getBoundingClientRect();
+        if (
+          mouse.y >= rect.top &&
+          mouse.y <= rect.bottom &&
+          mouse.x >= rect.left &&
+          mouse.x <= rect.right
+        ) {
+          foundDark = true;
+        }
+      }
+
+      if (!foundDark) {
+        let current: HTMLElement | null = target;
+        while (current && current !== document.body) {
+          if (
+            current.hasAttribute("data-cursor-dark") ||
+            current.classList?.contains("site-footer") ||
+            current.classList?.contains("mindset-card--dark") ||
+            current.classList?.contains("media-embed") ||
+            (typeof current.className === "string" &&
+              (current.className.includes("dark") ||
+                current.className.includes("black") ||
+                current.className.includes("footer")))
+          ) {
+            foundDark = true;
+            break;
+          }
+          current = current.parentElement;
+        }
+      }
+      isOverDark = foundDark;
+
+      // --- PHẦN 2: KIỂM TRA TƯƠNG TÁC (HOVER INTERACTIVE) ---
+      let interactiveEl = target.closest(allInteractiveTargets) as HTMLElement;
+      if (interactiveEl) {
+        // Ưu tiên thẻ cha chứa text cursor (ví dụ: Card Project bao ngoài link)
+        const textParent = target.closest("[data-cursor-text]") as HTMLElement;
+        if (textParent) interactiveEl = textParent;
+
+        isHovering = true;
+        hasText = interactiveEl.hasAttribute("data-cursor-text");
+        if (hasText) {
+          cursorText.textContent =
+            interactiveEl.getAttribute("data-cursor-text") || "VIEW";
+        }
+      } else {
+        isHovering = false;
+        hasText = false;
+      }
+
+      updateCursorStyle();
+    };
+
+    // 3. Sự kiện di chuyển chuột (MouseMove)
+    const onMouseMove = (e: MouseEvent) => {
+      mouse.x = e.clientX;
+      mouse.y = e.clientY;
+
+      if (!hasMoved) {
+        hasMoved = true;
+        gsap.to(cursor, { opacity: 1, duration: 0.2 });
+      }
+
+      // Tối ưu hóa hiệu năng: Chỉ tính toán lại khi chuột thực sự di chuyển sang element khác
+      const target = e.target as HTMLElement;
+      if (target && target !== lastTarget) {
+        lastTarget = target;
+        updateCursorState(target);
+      }
+    };
+
+    // 4. Bám chuột mượt mà thông qua Ticker chuyên dụng của GSAP
+    const updatePos = () => {
+      pos.x += (mouse.x - pos.x) * speed;
+      pos.y += (mouse.y - pos.y) * speed;
+      gsap.set(cursor, { x: pos.x, y: pos.y });
+    };
+
+    // 5. Recheck khi click (phòng trường hợp nút bấm biến mất ngay sau khi click)
+    const onClick = () => {
+      setTimeout(() => {
+        const target = document.elementFromPoint(
+          mouse.x,
+          mouse.y,
+        ) as HTMLElement;
+        if (target) {
+          lastTarget = target;
+          updateCursorState(target);
+        }
+      }, 50);
+    };
+
+    // 6. Recheck khi cuộn trang
+    const onScroll = () => {
+      const target = document.elementFromPoint(mouse.x, mouse.y) as HTMLElement;
+      if (target && target !== lastTarget) {
+        lastTarget = target;
+        updateCursorState(target);
+      }
+    };
+
+    // 7. Ẩn con trỏ khi chuột ra khỏi viewport
+    const onMouseLeave = () => {
+      lastTarget = null;
+      isHovering = false;
+      hasText = false;
+      gsap.to(cursor, {
+        width: 0,
+        height: 0,
+        opacity: 0,
+        duration: 0.2,
+        overwrite: "auto",
+      });
+      gsap.to(cursorText, {
+        opacity: 0,
+        scale: 0,
+        duration: 0.15,
+        overwrite: "auto",
+      });
+    };
+
+    // 8. Hiện lại con trỏ khi quay lại viewport
+    const onMouseEnter = () => {
+      updateCursorStyle(true);
+    };
+
+    // Đăng ký sự kiện
+    window.addEventListener("mousemove", onMouseMove);
+    gsap.ticker.add(updatePos);
+    document.addEventListener("click", onClick);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    document.addEventListener("mouseleave", onMouseLeave);
+    document.addEventListener("mouseenter", onMouseEnter);
+
+    // Lưu trữ dọn dẹp để ngăn chặn rò rỉ bộ nhớ
+    (window as any).__cleanupCursor = () => {
+      window.removeEventListener("mousemove", onMouseMove);
+      gsap.ticker.remove(updatePos);
+      document.removeEventListener("click", onClick);
+      window.removeEventListener("scroll", onScroll);
+      document.removeEventListener("mouseleave", onMouseLeave);
+      document.removeEventListener("mouseenter", onMouseEnter);
+    };
+  };
+
+  initCursor();
+  document.addEventListener("astro:page-load", initCursor);
+</script>

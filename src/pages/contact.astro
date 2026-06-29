@@ -1,0 +1,142 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import CustomImage from "../components/CustomImage.astro";
+import contactAvatar from "../assets/images/img-2.jpg";
+---
+
+<BaseLayout title="Contact" hideFooter={true}>
+  <section class="contact">
+    <div class="container">
+      <div class="section-header">
+        <span class="sub-title" data-split-text-anim="word" 
+          data-settings='{ "repeat": true}'>Say hi / 挨拶</span>
+        <h1 class="text-h1 text-h1--md"data-split-text-anim="word" 
+            data-settings='{ "repeat": true}'>Let's Collaborate</h1>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="contact__layout">
+        <div class="contact__info">
+          <div class="contact__grid">
+            <div class="contact-item">
+              <span class="contact__item-label">Email</span>
+              <div class="btn-text">
+                <a class="btn-link md"data-hover href="mailto:[EMAIL_ADDRESS]"
+                  >ngohuythuong@live.com</a
+                >
+              </div>
+            </div>
+            <div class="contact-item">
+              <span class="contact__item-label">Stay Connected</span>
+              <div class="contact__social">
+                <div class="btn-text">
+                  <a class="btn-link md" data-hover href="https://www.linkedin.com/in/huythuongngo/">Linkedin</a>
+                </div>
+                <div class="btn-text">
+                  <a class="btn-link md"data-hover href="https://www.behance.net/ngohuythuong1991">Behance</a>
+                </div>
+                <div class="btn-text">
+                  <a class="btn-link md"data-hover href="https://www.facebook.com/huythuongngo/">Facebook</a>
+                </div>
+              </div>
+            </div>
+            <div class="contact-item">
+              <span class="contact__item-label">Availability</span>
+              <span class="contact__item-value">Open for new vibes</span>
+            </div>
+            <div class="contact-item">
+              <span class="contact__item-label">Locked in from</span>
+              <div class="clock">
+                <span>EST</span>
+                <span class="clock__display">00:00:00</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="media-frame contact__photo"data-img-anim="hero-block" 
+        data-settings='{"type": "down", "duration": 1.5, "delay": 0.2,  "repeat": true}'>
+          <CustomImage src={contactAvatar} alt="avatar" importance="feature" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <style>
+    .section-header {
+      width: 100%;
+    }
+    .contact {
+      padding-top: 12rem;
+      padding-bottom: 4rem;
+      min-height: 100vh;
+      align-items: start;
+      justify-content: space-between;
+    }
+
+    .contact__layout {
+      display: flex;
+      flex-direction: row;
+      align-items: end;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      justify-content: space-between;
+    }
+
+    .contact__info {
+      width: 50%;
+    }
+
+    .contact__grid {
+      width: 100%;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 3rem;
+    }
+
+    .contact-item {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .contact__item-label {
+      color: var(--secondaryColor);
+    }
+
+    .contact__photo {
+      width: 320px;
+    }
+
+    .contact__social {
+      display: flex;
+      gap: 1rem;
+    }
+
+    @media screen and (max-width: 767px) {
+      .contact__info {
+        width: 100%;
+      }
+      .contact__photo {
+        width: 100%;
+      }
+
+      .contact__grid {
+        grid-template-columns: repeat(1, 1fr);
+        gap: 1.5rem;
+      }
+
+      .contact {
+        padding-top: 10rem;
+        padding-bottom: 3rem;
+      }
+    }
+
+    @media (min-width: 768px) and (max-width: 1024px) {
+      .contact__grid {
+        grid-template-columns: repeat(1, 1fr);
+        gap: 1.5rem;
+      }
+    }
+  </style>
+</BaseLayout>

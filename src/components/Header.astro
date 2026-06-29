@@ -1,0 +1,222 @@
+---
+
+---
+
+<header class="site-header">
+  <div class="container">
+    <nav class="site-header__nav">
+      <a href="/" class="site-header__logo"
+        ><img src="/src/public/logo/logo.svg" alt="Logo" /></a
+      >
+      <div class="site-header__controls">
+        <ul class="nav__list nav__list--desktop">
+          <li><a data-hover href="/about">About</a></li>
+          <li><a data-hover href="/works">Works</a></li>
+          <li><a data-hover href="/contact">Contact</a></li>
+        </ul>
+        <div class="nav__toggle">
+          <div class="nav__toggle-icon">
+            <span class="nav__toggle-bar"></span>
+            <span class="nav__toggle-bar"></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="nav-mobile">
+        <div class="nav-mobile__inner">
+          <ul class="nav__list nav-mobile__list">
+            <li><a href="/">Home</a></li>
+            <li><a href="/about">About</a></li>
+            <li><a href="/works">Works</a></li>
+            <li><a href="/contact">Contact</a></li>
+          </ul>
+          <div class="nav-mobile__footer">
+            <span>(Stay connected)</span>
+            <ul class="social-list">
+              <li>
+                <a
+                  class="social-list__link"
+                  href="https://www.linkedin.com/in/huythuongngo/">Linkedin</a
+                >
+              </li>
+              <li>
+                <a
+                  class="social-list__link"
+                  href="https://www.behance.net/ngohuythuong1991">Behance</a
+                >
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    width: 100%;
+    position: fixed;
+    top: 0;
+    z-index: 100;
+    padding: 1.5rem 0;
+    mix-blend-mode: exclusion;
+    filter: invert(100%);
+  }
+
+  .site-header.is-open {
+    mix-blend-mode: normal;
+    filter: none;
+  }
+
+  .site-header__nav {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .site-header__logo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 99;
+
+    img {
+      width: 40px;
+      height: auto;
+    }
+  }
+
+  .site-header__controls {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    z-index: 99;
+  }
+
+  .nav__list {
+    list-style: none;
+    display: flex;
+    gap: 1.5rem;
+    cursor: pointer;
+
+    a {
+      font-size: 1rem;
+      line-height: 1.5;
+      font-weight: 400;
+      position: relative;
+    }
+  }
+
+  .nav-mobile {
+    display: flex;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 0;
+    overflow: hidden;
+    background: var(--mainBackground);
+    transition: all 0.5s ease-in-out;
+    z-index: 97;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .nav-mobile__inner {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 128px 20px 32px 20px;
+  }
+
+  .nav-mobile__list {
+    width: 100%;
+    flex-direction: column;
+
+    a {
+      font-size: 40px;
+      line-height: 1.2;
+      font-weight: 400;
+      letter-spacing: -0.02rem;
+    }
+  }
+
+  .nav-mobile--open {
+    height: 100vh;
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .nav__toggle {
+    cursor: pointer;
+    display: none;
+  }
+
+  .nav__toggle-icon {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+    width: 40px;
+    height: 40px;
+
+    span {
+      width: 2.5rem;
+      height: 2px;
+      background: var(--mainColor);
+      transition: all 0.3s ease;
+    }
+  }
+
+  .nav__toggle--active .nav__toggle-icon span:nth-child(1) {
+    transform: translateY(3px) rotate(45deg);
+  }
+
+  .nav__toggle--active .nav__toggle-icon span:nth-child(2) {
+    transform: translateY(-3px) rotate(-45deg);
+  }
+
+  .social-list {
+    list-style: none;
+    display: flex;
+    gap: 1rem;
+
+    li a {
+      font-size: 0.875rem;
+      line-height: 1.5;
+      font-weight: 400;
+      text-transform: uppercase;
+      letter-spacing: 0.04rem;
+    }
+  }
+
+  @media screen and (max-width: 767px) {
+    .nav__list--desktop {
+      display: none;
+    }
+    .nav__toggle {
+      display: block;
+    }
+  }
+</style>
+
+<script>
+  const menuToggle = document.querySelector(".nav__toggle");
+  const navMobile = document.querySelector(".nav-mobile");
+  const siteHeader = document.querySelector(".site-header");
+
+  if (menuToggle && navMobile && siteHeader) {
+    menuToggle.addEventListener("click", () => {
+      menuToggle.classList.toggle("nav__toggle--active");
+      navMobile.classList.toggle("nav-mobile--open");
+      siteHeader.classList.toggle("is-open");
+    });
+  }
+</script>

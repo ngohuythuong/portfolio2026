@@ -1,0 +1,180 @@
+---
+import CustomImage from "./CustomImage.astro";
+import type { CollectionEntry } from "astro:content";
+
+interface Props {
+  project: CollectionEntry<"works">;
+}
+
+const { project } = Astro.props;
+---
+
+<a href={`/works/${project.slug}`} class="next-project group">
+  <div class="next-project__content"data-split-hover>
+    <span class="overline__text">Next Project</span>
+    <h2 class="next-project__title text-h1">
+      {project.data.project_hero.title}
+    </h2>
+    <span class="p-md">{project.data.project_hero.metadata.category}</span>
+  </div>
+  <div class="next-project__bg">
+    {
+      project.data.project_hero.thumbnail.image && (
+        <CustomImage
+          src={project.data.project_hero.thumbnail.image}
+          alt={project.data.project_hero.title}
+          importance="hero"
+        />
+      )
+    }
+    <div class="next-project__overlay"></div>
+  </div>
+</a>
+
+<style>
+  .next-project {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    padding: 6rem 2rem;
+    text-align: center;
+    overflow: hidden;
+    color: #ffffff;
+    text-decoration: none;
+    width: 100%;
+    min-height: 110vh;
+  }
+
+  .next-project__content {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+  }
+
+  .next-project__title {
+  display: block;
+  position: relative;
+}
+
+
+  .next-project__bg {
+    position: absolute;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+  }
+
+  .next-project__overlay {
+    position: absolute;
+    inset: 0;
+    background: #000000;
+    opacity: 0.4;
+    z-index: 2;
+  }
+
+  .next-project__bg :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+</style>
+
+<script>
+  import { gsap } from "gsap";
+
+  function initPerfectTextIconSplit() {
+    const hoverElements = document.querySelectorAll("[data-split-hover]");
+    if (!hoverElements.length) return;
+
+    hoverElements.forEach((element) => {
+      if (element.classList.contains("split-hover-initialized")) return;
+      element.classList.add("split-hover-initialized");
+
+      const container = element.querySelector("h2") || element.querySelector("a") || element.querySelector("button") || element.querySelector("span");
+      if (!container) return;
+
+      // 1. Trích xuất nội dung gốc
+      const originalText = container.textContent ? container.textContent.trim() : "";
+      const svgElement = container.querySelector("svg");
+
+      container.innerHTML = ""; // Xóa sạch ruột cũ
+
+      // 2. Tạo Group bọc chữ riêng biệt
+      const textGroup = document.createElement("span");
+      textGroup.className = "split-text-group";
+
+      originalText.split("").forEach((char) => {
+        const charWrap = document.createElement("span");
+        charWrap.className = "char-wrap";
+        
+        const charInner = document.createElement("span");
+        charInner.className = "char primary-char";
+        charInner.textContent = char;
+
+        const charClone = document.createElement("span");
+        charClone.className = "char clone";
+        charClone.textContent = char;
+        charClone.setAttribute("aria-hidden", "true");
+
+        if (char === " ") {
+          charWrap.style.whiteSpace = "pre";
+        }
+
+        charWrap.appendChild(charInner);
+        charWrap.appendChild(charClone);
+        textGroup.appendChild(charWrap);
+      });
+      
+      container.appendChild(textGroup);
+
+      // 3. Xử lý nhân bản SVG Icon
+      let primaryIcon: SVGElement | null = null;
+      let cloneIcon: SVGElement | null = null;
+
+      if (svgElement) {
+        primaryIcon = svgElement as SVGElement;
+        primaryIcon.classList.add("primary-icon");
+        
+        cloneIcon = primaryIcon.cloneNode(true) as SVGElement;
+        cloneIcon.classList.remove("primary-icon");
+        cloneIcon.classList.add("clone-icon");
+        cloneIcon.setAttribute("aria-hidden", "true");
+
+        container.appendChild(primaryIcon);
+        container.appendChild(cloneIcon);
+      }
+
+      // 4. Khởi tạo GSAP Timeline dựa trên các class nằm trong textGroup mới
+      const primaryChars = textGroup.querySelectorAll(".primary-char");
+      const cloneChars = textGroup.querySelectorAll(".clone");
+
+      const tl = gsap.timeline({ paused: true });
+      const duration = 0.4;
+      const ease = "power2.inOut";
+
+      if (primaryChars.length) {
+        tl.to(primaryChars, { yPercent: -100, duration, ease, stagger: 0.012 }, 0)
+          .to(cloneChars, { yPercent: -100, duration, ease, stagger: 0.012 }, 0);
+      }
+
+      if (primaryIcon && cloneIcon) {
+        tl.to(primaryIcon, { yPercent: -100, duration, ease }, 0)
+          .to(cloneIcon, { yPercent: -100, duration, ease }, 0);
+      }
+
+      // Lắng nghe sự kiện hover trên khối cha được đặt data-split-hover
+      element.addEventListener("mouseenter", () => tl.play());
+      element.addEventListener("mouseleave", () => tl.reverse());
+    });
+  }
+
+  // Khởi chạy khi script chạy hoặc khi trang mới được chuyển đến
+  initPerfectTextIconSplit();
+  document.addEventListener("astro:page-load", initPerfectTextIconSplit);
+</script>

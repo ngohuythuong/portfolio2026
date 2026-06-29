@@ -1,0 +1,835 @@
+/* ---  CUSTOM SCROLLBAR --- */
+/* 1. Ẩn tuyệt đối thanh cuộn mặc định */
+html {
+  scrollbar-width: none;
+  /* Firefox */
+  -ms-overflow-style: none;
+  /* IE/Edge */
+  overflow-x: hidden;
+  max-width: 100vw;
+}
+
+html::-webkit-scrollbar {
+  display: none;
+  /* Chrome, Safari, Edge */
+}
+
+/* 2. Thiết kế đường ray (Track) */
+#custom-scroll-track {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 6px;
+  /* Độ mảnh của thanh cuộn */
+  height: 100vh;
+  z-index: 9999;
+  pointer-events: none;
+  /* Để không cản trở việc click vào nội dung bên dưới */
+}
+
+/* 3. Thiết kế con chạy (Thumb) */
+#custom-scroll-thumb {
+  position: absolute;
+  top: 0;
+  right: 2px;
+  width: 100%;
+  height: 0px;
+  /* Sẽ được tính toán bằng JS */
+  background: rgba(0, 0, 0, 0.3);
+  /* Màu mặc định */
+  border-radius: 10px;
+  opacity: 0;
+  transition: opacity 0.3s ease, background 0.3s ease;
+}
+
+/* Hiện thanh scroll khi đang cuộn */
+html.is-scrolling #custom-scroll-thumb {
+  opacity: 1;
+}
+
+/* --- 1. ĐỊNH NGHĨA FONT  --- */
+
+@font-face {
+  font-family: 'Inter';
+  src: url('/src/assets/fonts/Inter_24pt-Regular.ttf') format('ttf');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+
+@font-face {
+  font-family: 'Inter';
+  src: url('/src/assets/fonts/Inter_24pt-Medium.ttf') format('ttf');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+
+/* --- 2. BIẾN GLOBAL --- */
+
+:root {
+  --mainColor: #0f0f0f;
+  --secondaryColor: #6a6a6a;
+  --mainBackground: #f1f1f1;
+  --secondaryBackground: #fff;
+  --linesColor: #d1d1d1;
+  --font-primary: 'Inter', sans-serif;
+}
+
+
+/* --- 3. RESET & BASE STYLE --- */
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+a {
+  color: var(--mainColor);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.overline__icon {
+  font-family: 'Material Symbols Outlined' !important;
+  font-weight: normal;
+  font-style: normal;
+  font-size: 20px;
+  display: inline-block;
+  line-height: 1;
+  text-transform: none;
+  letter-spacing: normal;
+  word-wrap: normal;
+  white-space: nowrap;
+  direction: ltr;
+}
+
+.material-symbols-outlined {
+  font-variation-settings:
+    'FILL' 0,
+    'wght' 400,
+    'GRAD' 0,
+    'opsz' 24
+}
+
+
+/*-- 4. GRID SYSTEM --*/
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  margin-left: -12px;
+  margin-right: -12px;
+}
+
+.col {
+  padding-left: 12px;
+  padding-right: 12px;
+}
+
+.l-4 {
+  flex: 0 0 33.33333%;
+  max-width: 33.33333%;
+}
+
+.l-6 {
+  flex: 0 0 50%;
+  max-width: 50%;
+}
+
+.l-8 {
+  flex: 0 0 66.66666%;
+  max-width: 66.66666%;
+}
+
+
+/*--- 4.1 MEDIA QUERY ---*/
+
+@media (min-width:768px) and (max-width:1200px) {
+  .m-4 {
+    flex: 0 0 33.33333%;
+    max-width: 33.33333%;
+  }
+
+  .m-8 {
+    flex: 0 0 66.66666%;
+    max-width: 66.66666%;
+  }
+}
+
+/*--------------*/
+
+@media only screen and (max-width:767px) {
+
+  .row {
+    margin-left: -8px;
+    margin-right: -8px;
+  }
+
+  .col {
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+
+  .s-12 {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+}
+
+/*--- 5. TYPOGRAPHY ---*/
+
+.u-text-center {
+  text-align: center;
+}
+
+body {
+  background-color: var(--mainBackground);
+  color: var(--mainColor);
+  font-family: var(--font-primary);
+  font-size: 1rem;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+.text-h1,
+h1 {
+  font-size: 6rem;
+  line-height: 1.1;
+  font-weight: 500;
+  letter-spacing: -0.03em;
+}
+
+/* Modifier: medium title */
+.text-h1--md {
+  font-size: 7.5rem;
+  line-height: 1.1;
+  font-weight: 500;
+  letter-spacing: -0.03em;
+}
+
+/* Modifier: extra large title */
+.text-h1--xl {
+  font-size: 12.5rem;
+  line-height: 1;
+  font-weight: 400;
+  letter-spacing: -0.03em;
+}
+
+h2,
+.text-h2 {
+  font-size: 4rem;
+  line-height: 1.2;
+  font-weight: 500;
+  letter-spacing: -0.03em;
+}
+
+h3,
+.text-h3 {
+  font-size: 2.25rem;
+  line-height: 1.2;
+  font-weight: 500;
+  letter-spacing: -0.03em;
+}
+
+.p-small {
+  font-size: 0.875rem;
+  line-height: 1.5;
+  font-weight: 400;
+}
+
+.p-md {
+  font-size: 1.125rem;
+  line-height: 1.5;
+  font-weight: 400;
+}
+
+.p-desc {
+  font-size: 1.25rem;
+  line-height: 1.4;
+  font-weight: 400;
+  color: var(--secondaryColor);
+}
+
+.p-big {
+  font-size: 2.25rem;
+  line-height: 1.2;
+  font-weight: 400;
+  letter-spacing: -0.02rem;
+}
+
+.overline {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.overline__text {
+  text-transform: uppercase;
+  letter-spacing: 0.08rem;
+  line-height: 20px;
+  font-size: 0.875rem;
+}
+
+/* Section header — shared label + heading block */
+.section-header {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1.5rem;
+}
+
+.sub-title {
+  font-size: 1.5rem;
+  line-height: 1.4;
+}
+
+/*--- 6. LAYOUT & COMPONENTS ---*/
+
+
+
+.main-wrapper {
+  position: relative;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.container {
+  width: 100%;
+  padding: 0 3rem;
+}
+
+.container--flush {
+  padding: 0;
+}
+
+.container--lg {
+  max-width: 1704px;
+}
+
+.container--md {
+  max-width: 1320px;
+}
+
+
+
+section {
+  position: relative;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto;
+  align-items: center;
+  gap: 4rem;
+}
+
+.container-wrapper {
+  display: flex;
+  flex-direction: row;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.custom-font {
+  font-family: var(--font-secondary);
+  letter-spacing: 0;
+}
+
+.align-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0 auto;
+}
+
+/* Section with full-bleed background video */
+.section--bg-video {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .media-embed {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    pointer-events: none;
+  }
+}
+
+video::-webkit-media-controls {
+  display: none !important;
+}
+
+/* Embedded media container (video/iframe) */
+.media-embed {
+  width: 100%;
+  aspect-ratio: 16/9;
+  pointer-events: none;
+  background-color: #191919;
+  overflow: hidden;
+  display: block;
+  position: relative;
+}
+
+.media-embed__video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.bg-filter {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+/*-----custom cursor---*/
+
+
+
+/* --- 6.1 Buttons --- */
+
+.btn-container {
+  overflow: hidden;
+}
+
+.btn-link.md {
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.btn-link svg {
+  display: inline-block;
+  position: relative;
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  will-change: transform;
+  overflow: hidden;
+  margin-left: 0.5rem;
+}
+
+
+.btn-link {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  font-size: 1.25rem;
+  line-height: 1.5;
+}
+
+.btn {
+  font-size: 10rem;
+  font-weight: 400;
+  color: #f5f5f5;
+  line-height: 1.2;
+  letter-spacing: -0.03rem;
+}
+
+[data-hover] {
+  position: relative;
+  display: inline-flex;
+  overflow: hidden;
+  vertical-align: middle;
+}
+
+.split-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.split-wrapper.clone {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.split-wrapper.clone span {
+  transform: translateY(100%);
+}
+
+.split-wrapper span {
+  display: inline-block;
+  transition: transform 0.5s cubic-bezier(0.76, 0, 0.24, 1);
+  transition-delay: calc(var(--i) * 0.02s);
+  /* Tạo hiệu ứng lướt sóng */
+}
+
+/* Animate icon inside split-wrapper */
+.split-wrapper svg,
+.split-wrapper i,
+.split-wrapper [class*="icon"] {
+  display: inline-block;
+  transition: transform 0.5s cubic-bezier(0.76, 0, 0.24, 1);
+}
+
+.split-wrapper.clone svg,
+.split-wrapper.clone i,
+.split-wrapper.clone [class*="icon"] {
+  transform: translateY(100%);
+}
+
+/* ================= TRIGGER HOVER THÔNG MINH ================= */
+
+/* Khi hover vào Nav-link hoặc Button, kích hoạt các thẻ con có [data-hover] bên trong */
+.nav-link:hover [data-hover] .split-wrapper.original span,
+.btn:hover [data-hover] .split-wrapper.original span,
+[data-hover]:hover .split-wrapper.original span {
+  transform: translateY(-100%);
+}
+
+.nav-link:hover [data-hover] .split-wrapper.clone span,
+.btn:hover [data-hover] .split-wrapper.clone span,
+[data-hover]:hover .split-wrapper.clone span {
+  transform: translateY(0%);
+}
+
+/* Animate icons on hover */
+[data-hover]:hover .split-wrapper.original svg,
+[data-hover]:hover .split-wrapper.original i,
+[data-hover]:hover .split-wrapper.original [class*="icon"] {
+  transform: translateY(-100%);
+}
+
+
+[data-hover]:hover .split-wrapper.clone svg,
+[data-hover]:hover .split-wrapper.clone i,
+[data-hover]:hover .split-wrapper.clone [class*="icon"] {
+  transform: translateY(0%);
+}
+
+
+/* --- 6.2 Card --- */
+
+.tools,
+.features-list,
+.objectives-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  list-style: none;
+  align-items: center;
+}
+
+.tools-badges,
+.features-list li,
+.objectives-list li {
+  padding: 0.5rem 1rem;
+  background-color: #d6d6d6;
+  border-radius: 999px;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.contact-right .media-frame {
+  width: 320px;
+  height: auto;
+}
+
+
+/*---- media-frame: single image container ---*/
+
+.media-frame {
+  position: relative;
+  display: block;
+  width: 100%;
+  overflow: hidden;
+}
+
+.media-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  will-change: opacity, transform;
+}
+
+.media-block-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  will-change: transform, clip-path;
+  transform-origin: bottom center;
+}
+
+
+/*----7. ANIMATION ----*/
+
+.marquee {
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.marquee__track {
+  display: inline-flex;
+  align-items: center;
+  will-change: transform;
+  overflow: hidden;
+}
+
+.marquee__track span {
+  padding-right: 2rem;
+}
+
+/*----hover split char text animation---*/
+
+
+[data-split-hover] .btn-text-wrapper,
+[data-split-hover] a {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  overflow: hidden;
+  /* Giấu chữ clone nằm ở phía dưới */
+  text-decoration: none;
+  vertical-align: middle;
+}
+
+.split-text-group {
+  display: inline-block;
+  position: relative;
+  overflow: hidden;
+  vertical-align: top;
+  line-height: 1.1;
+}
+
+.char-wrap {
+  position: relative;
+  display: inline-block;
+}
+
+.char {
+  display: inline-block;
+  position: relative;
+  will-change: transform;
+}
+
+.char.clone {
+  position: absolute;
+  left: 0;
+  top: 100%;
+}
+
+/*---- 7.2 TEXT ANIMATION SYSTEM ---*/
+
+.word-wrapper {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+}
+
+.word {
+  display: inline-block;
+}
+
+.global-line-overflow {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+  margin-right: 0.25em;
+}
+
+
+[data-split-text-anim="line"] .global-line-overflow {
+  display: block !important;
+  margin-right: 0;
+}
+
+.global-item-inner {
+  display: inline-block;
+  will-change: transform;
+}
+
+
+[data-split-text-anim="linesMask"] {
+  position: relative;
+  width: 100%;
+}
+
+
+.anim_line_mask {
+  display: block;
+  position: relative;
+  text-align: left;
+  overflow: clip;
+  width: 100%;
+}
+
+.anim_line_mask .line-bg {
+  display: inline-block;
+  font-weight: inherit;
+  letter-spacing: inherit;
+}
+
+.anim_line_mask .line-fg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  -webkit-clip-path: inset(0 100% 0 0);
+  clip-path: inset(0 100% 0 0);
+  font-weight: inherit;
+  letter-spacing: inherit;
+  will-change: clip-path;
+  pointer-events: none;
+}
+
+/*---7.3 mask animation---*/
+
+[data-mask-trigger="true"] {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  overflow: hidden;
+  background-color: #191919;
+  align-items: center;
+}
+
+/* TẤM MÀN PHÍA TRÊN: Thành phần con thứ nhất (:nth-child(1)) */
+[data-mask-trigger="true"]>*:nth-child(1) {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  z-index: 3;
+  /* Nằm trên */
+
+  /* Trạng thái nguyên bản chưa cắt */
+  -webkit-clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
+  clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
+  will-change: clip-path;
+}
+
+/* NỘI DUNG ẨN PHÍA DƯỚI: Thành phần con thứ hai (:nth-child(2)) */
+[data-mask-trigger="true"]>*:nth-child(2) {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  z-index: 1;
+  /* Nằm dưới đáy cố định */
+}
+
+
+/*----9. RESPONSIVE DESIGN----*/
+
+@media screen and (max-width: 767px) {
+
+  .container {
+    padding: 0 1.25rem;
+  }
+
+  .container--flush {
+    padding: 0;
+  }
+
+  .text-h1,
+  h1 {
+    font-size: 4rem;
+    line-height: 1.1;
+    font-weight: 500;
+    letter-spacing: -0.03em;
+  }
+
+  .text-h1--md {
+    font-size: 4rem;
+    line-height: 1.1;
+  }
+
+  .text-h1--xl {
+    font-size: 5rem;
+  }
+
+  h2,
+  .text-h2 {
+    font-size: 2.75rem;
+    line-height: 1.2;
+  }
+
+  h3,
+  .text-h3 {
+    font-size: 2rem;
+    line-height: 1.2;
+  }
+
+  .p-big {
+    font-size: 1.375rem;
+    line-height: 1.4;
+  }
+
+  .btn {
+    font-size: 5rem;
+    line-height: 1.2;
+  }
+
+}
+
+@media (min-width:768px) and (max-width:1024px) {
+  .container {
+    padding: 0 2rem;
+  }
+
+  .container--flush {
+    padding: 0;
+  }
+
+  .text-h1,
+  h1 {
+    font-size: 5rem;
+    line-height: 1.1;
+    font-weight: 500;
+    letter-spacing: -0.03em;
+  }
+
+  .text-h1--md {
+    font-size: 6rem;
+    line-height: 1.1;
+  }
+
+  .text-h1--xl {
+    font-size: 7.5rem;
+  }
+
+  h2,
+  .text-h2 {
+    font-size: 3.5rem;
+    line-height: 1.2;
+  }
+
+  .p-big {
+    font-size: 1.75rem;
+    line-height: 1.4;
+  }
+
+  .btn {
+    font-size: 8.75rem;
+    line-height: 1;
+  }
+
+}

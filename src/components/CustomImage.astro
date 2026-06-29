@@ -1,0 +1,59 @@
+---
+import { Image } from "astro:assets";
+
+// Định nghĩa các kiểu vị trí (presets)
+interface Props {
+  src: any;
+  alt: string;
+  importance?: "hero" | "feature" | "detail"; // Vị trí ảnh
+  class?: string;
+}
+
+const { src, alt, importance = "feature", class: className } = Astro.props;
+
+// Thiết lập thông số nén dựa trên "vị trí"
+const presets = {
+  hero: { width: 1920, quality: 90, loading: "eager" as const },
+  feature: { width: 1920, quality: 80, loading: "lazy" as const },
+  detail: { width: 800, quality: 75, loading: "lazy" as const },
+};
+
+const settings = presets[importance];
+
+// Kiểm tra xem ảnh có phải là Video hay không
+const srcString =
+  typeof src === "object" && src !== null
+    ? src.src
+    : typeof src === "string"
+      ? src
+      : "";
+const cleanSrc = srcString.split("?")[0].toLowerCase();
+
+const isVideo =
+  cleanSrc.endsWith(".mp4") ||
+  cleanSrc.endsWith(".webm") ||
+  cleanSrc.endsWith(".ogv");
+---
+
+{
+  isVideo ? (
+    <video
+      src={typeof src === "object" ? src.src : src}
+      autoplay
+      loop
+      muted
+      playsinline
+      class:list={["w-full object-cover", className]}
+    />
+  ) : (
+    <Image
+      src={src}
+      alt={alt}
+      width={settings.width}
+      quality={settings.quality}
+      loading={settings.loading}
+      format="webp"
+      class:list={["w-full object-cover", className]}
+    />
+  )
+}

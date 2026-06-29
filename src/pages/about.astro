@@ -1,0 +1,601 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import CustomImage from "../components/CustomImage.astro";
+import chinaStreet from "../assets/images/china-street.webp";
+import artExhibition from "../assets/images/art-exhibition.webp";
+import img1994 from "../assets/images/IMG_1994-1.png";
+import hanoi from "../assets/images/hanoi.webp";
+import cafeChill from "../assets/images/cafe-chill.webp";
+import paint from "../assets/images/paint.webp";
+import deepMood from "../assets/images/deep-mood.mp4";
+import Icon from "../components/Icon.astro";
+---
+
+<BaseLayout title="About">
+  <section class="hero"  data-pin-container data-pin-media="all" data-pin-mode="backward" data-pin-start="top top">
+    <div class="hero-wrapper" data-pin-element>
+      <div class="container container--flush">
+        <div class="marquee">
+          <div class="marquee__track">
+            <span class="text-h1 text-h1--xl">
+              <span class="custom-font">About</span>Me -
+            </span>
+          </div>
+        </div>
+      </div>
+      <div class="container align-center">
+        <div class="media-frame"data-img-anim="hero-block" 
+        data-settings='{"type": "down", "duration": 1.5, "delay": 0.2,  "repeat": true}'>
+          <CustomImage
+            src={chinaStreet}
+            alt="china-street"
+            importance="feature"
+          />
+        </div>
+        <span class="scroll-hint"data-split-text-anim="word" 
+            data-settings='{ "repeat": true}'>Scroll to discover</span>
+    </div>
+
+    </div>
+    
+  </section>
+  <section class="intro"data-pin-container data-pin-media="all" data-pin-start="top 0%" data-pin-end="bottom top">
+    <div class="container align-center"data-pin-element >
+        <p class="p-big"data-split-text-anim="line" 
+            data-settings='{ "repeat": true}'>
+          I'm Ngô Huy Thường — a UI/UX Designer who loves softening dry logic
+          into smooth, emotive interfaces, where every touchpoint feels
+          completely natural, making users truly want to stay
+        </p>
+      </div>
+  </section>
+  <section class="perspective">
+    <div class="container align-center">
+      <div class="perspective__layout">
+        <div class="media-frame" data-img-anim="block" 
+     data-settings='{"type": "down",  "duration": 1.5, "repeat": true}'>
+          <CustomImage
+            src={artExhibition}
+            alt="art-exhibition"
+            importance="feature"
+            class="perspective-image"
+          />
+        </div>
+        <div class="perspective__content">
+          <div class="section-header">
+            <div class="overline"data-scroll-anim="slide-up"
+          data-settings='{ "repeat": true}'>
+              <Icon name="add" />
+              <span class="overline__text">Perspective</span>
+            </div>
+            <h2 class="text-h2"data-split-text-anim="word" 
+            data-settings='{ "repeat": true}'>Finding logic in the quiet</h2>
+          </div>
+          <div class="perspective__text">
+            <p class="p-md"data-split-text-anim="linesMask" data-settings='{"fgColor": "#191919", "repeat": true, "scrub": true}'>
+              My journey didn't start with a love for 'pretty screens,' but from
+              a passion for decoding complexity. I believe great design is at
+              its best when it functions so seamlessly that users don't even
+              notice it's there
+            </p>
+            <p class="p-md" data-split-text-anim="linesMask" data-settings='{ "fgColor": "#191919", "repeat": true, "scrub": true}'>
+              I've always been the one observing the world through
+              noise-canceling headphones. Not because I have nothing to say, but
+              because I'm busy 'softening' the hidden rules beneath the surface
+              of everything.
+            </p>
+            <p class="p-md" data-split-text-anim="linesMask" data-settings='{ "fgColor": "#191919", "repeat": true, "scrub": true}'>
+              When the world gets too loud, I find my way back to 'Midnight
+              Logic' — a space of clean grids, lo-fi beats, and the pursuit of a
+              frictionless experience."
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="intent"data-pin-container data-pin-media="all" data-pin-start="top top" data-pin-end="bottom bottom" data-pin-space="true">
+    <div class="section--bg-video"data-pin-element>
+      <div class="bg-filter"></div>
+      <div
+        class="media-embed"
+        data-controls="false"
+        data-autoplay="true"
+        data-muted="true"
+        data-loop="true" 
+      >
+        <video autoplay muted playsinline loop class="media-embed__video">
+          <source src={deepMood} />
+        </video>
+      </div>
+    </div>
+    <div class="intent__text-content"data-pin-end-trigger>
+      <div class="container container--md">
+        <div class="section-header">
+          <div class="overline"data-scroll-anim="slide-up"
+          data-settings='{ "repeat": true}'>
+            <Icon name="add" />
+            <span class="overline__text">The Intent</span>
+          </div>
+          <h2 class="text-h2"data-split-text-anim="word" 
+            data-settings='{ "repeat": true}'>Analog Soul Digital Logic</h2>
+        </div>
+        <div class="intent__row intent__row--right">
+          <p class="p-md"data-split-text-anim="linesMask" data-settings='{"bgColor": "rgba(255,255,255,0.32)", "fgColor": "#ffffff", "repeat": true, "scrub": true}'>
+            People often ask how a sketchbook lover ends up building complex
+            Design Systems. To me, it's the same craft. Whether it's a pencil
+            stroke or a Figma component, it starts with intent. My approach is a
+            constant battle against 'feature bloat.' I don't just add elements;
+            I distill them. I build systems that scale, not just screens that
+            look good.
+          </p>
+        </div>
+        <div class="intent__row intent__row--center">
+          <p class="p-md"data-split-text-anim="linesMask" data-settings='{"bgColor": "rgba(255,255,255,0.32)", "fgColor": "#ffffff", "repeat": true, "scrub": true}'>
+            Working for the US and Japan markets taught me one thing: Efficiency
+            is the ultimate sophistication. If a user has to think twice, I've
+            failed. I design for that split second of 'it just works'.
+          </p>
+        </div>
+      </div>
+    </div>
+    
+  </section>
+  <section class="skills">
+    <div class="container">
+      <div class="skills__row">
+        <div class="skills__aside">
+          <div class="section-header">
+            <span class="overline"data-scroll-anim="slide-up"
+          data-settings='{ "repeat": true}'>
+              <Icon name="add" />
+              <span class="overline__text">Skills & Tools</span>
+            </span>
+            <h2 class="text-h2" data-split-text-anim="word" 
+            data-settings='{ "repeat": true}'>How I Help</h2>
+            <p class="p-desc" data-split-text-anim="line" 
+            data-settings='{ "repeat": true}'>
+              Decoding the 'why' before I even touch the pixels. I bridge the
+              gap between human-centered vibes and clean, functional code. I
+              don't just build products; I craft digital spaces where logic
+              meets a human touch, making sure everything is as smooth as your
+              favorite playlist
+            </p>
+          </div>
+          <div class="media-frame">
+            <CustomImage src={img1994} alt="IMG_1994-1" importance="detail" />
+          </div>
+        </div>
+        <div class="skills__list">
+          <div class="skills__item">
+            <h3 class="text-h3">UX Research</h3>
+            <p class="p-md">
+              I dive deep into the data hidden beneath every move. No guessing
+              games here—I hunt for answers directly from users to make sure
+              every single pixel has a legit reason to exist.
+            </p>
+            <ul class="tools">
+              <li class="tools-badges">User Empathy</li>
+              <li class="tools-badges">User Flow Analysis</li>
+              <li class="tools-badges">Usability Testing</li>
+            </ul>
+          </div>
+          <div class="skills__item">
+            <h3 class="text-h3">UI Design</h3>
+            <p class="p-md">
+              Where aesthetics meet utility. I craft clean, modern interfaces
+              backed by rock-solid Design Systems, making sure everything is not
+              just 'pretty' but also built to scale without the mess.
+            </p>
+            <ul class="tools">
+              <li class="tools-badges">Visual Hierarchy</li>
+              <li class="tools-badges">Design System</li>
+              <li class="tools-badges">Micro-interactions</li>
+              <li class="tools-badges">Hi-fi Prototyping</li>
+            </ul>
+          </div>
+          <div class="skills__item">
+            <h3 class="text-h3">Development</h3>
+            <p class="p-md">
+              Breaking the wall between design and dev. With a solid grip on
+              HTML, CSS, I smooth out the handover process, making sure every
+              creative spark actually works—and feels just right—in production
+            </p>
+            <ul class="tools">
+              <li class="tools-badges">Code-friendly</li>
+              <li class="tools-badges">Framer</li>
+              <li class="tools-badges">Responsive Logic</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="human-side">
+    <div class="container">
+      <div class="human-side__row">
+        <div class="human-side__content">
+          <div class="section-header">
+            <span class="overline"data-scroll-anim="slide-up"
+          data-settings='{ "repeat": true}'>
+              <Icon name="add"/>
+              <span class="overline__text">The Human Side</span>
+            </span>
+            <h2 class="text-h2"data-split-text-anim="word" 
+            data-settings='{ "repeat": true}'>When I'm not <br />polishing pixels...</h2>
+          </div>
+          <p class="human-side__desc"data-split-text-anim="line" 
+            data-settings='{ "repeat": true}'>
+            I'm a low-key observer. To me, the world is the ultimate case study.
+            When the laptop closes, the real research begins. I find design
+            inspiration in the quiet, mundane moments of life—using that raw
+            empathy to make sure my digital pixels feel human
+          </p>
+        </div>
+        <div class="funfact-list">
+          <div class="funfact-card" data-stack-card data-rotate="-3">
+            <div class="media-frame">
+              <CustomImage
+                src={hanoi}
+                alt="hanoi"
+                importance="detail"
+                class="funfact-image"
+              />
+            </div>
+            <div class="funfact-card__body">
+              <h3 class="text-h3">Photography</h3>
+              <p class="p-md">
+                Observing the world through a lens to sharp my eye for
+                composition.
+              </p>
+            </div>
+          </div>
+          <div class="funfact-card" data-stack-card data-rotate="4">
+            <div class="media-frame">
+              <CustomImage
+                src={cafeChill}
+                alt="cafe-chill"
+                importance="detail"
+                class="funfact-image"
+              />
+            </div>
+            <div class="funfact-card__body">
+              <h3 class="text-h3">Caffeine & Curating</h3>
+              <p class="p-md">Chasing the city's most minimal-vibe cafes.</p>
+            </div>
+          </div>
+          <div class="funfact-card" data-stack-card data-rotate="-6">
+            <div class="media-frame">
+              <CustomImage
+                src={paint}
+                alt="paint"
+                importance="detail"
+                class="funfact-image"
+              />
+            </div>
+            <div class="funfact-card__body">
+              <h3 class="text-h3">Drawing & Sketching</h3>
+              <p class="p-md">
+                Trading pixels for pencils to recharge my visual thinking.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <style>
+    .hero{
+      padding-top:12rem;
+      min-height: 100vh;
+    }
+
+    .hero-wrapper {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap:3rem;
+      align-items: center;
+    }
+
+    .hero .media-frame {
+      width: 240px;
+      aspect-ratio: 4/5;
+      img{
+        filter: grayscale(100%) contrast(1);
+      }
+    }
+
+    .intro {
+      background-color: #191919;
+      min-height: 100vh;
+      padding: 6rem 0;
+      justify-content: center;
+
+      .p-big {
+      max-width: 720px;
+      text-align: center;
+      color:#f5f5f5;
+      
+    }
+    }
+
+
+
+    .scroll-hint {
+      font-size: 0.875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-top: 1rem;
+    }
+
+    .perspective__text {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+
+    .perspective {
+      padding: 6rem 0;
+      background-color:var(--mainBackground);
+    }
+
+    .perspective__layout {
+      width: 25%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4rem;
+    }
+
+    .perspective__content {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+      width: 100%;
+    }
+
+    .intent {
+      padding-top: 6rem;
+      min-height: 100vh;
+    }
+
+    .intent__text-content{
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      position: relative;
+      z-index: 1;
+      margin-top: 40vh;
+      padding-bottom: 40vh;
+      color:#ffffff;
+
+      .text-h2{
+        max-width: 520px;
+      }
+    }
+
+    .intent__row {
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .intent__row--center {
+      justify-content: center;
+    }
+
+    .intent__row--right {
+      justify-content: flex-end;
+    }
+
+    .intent .p-md {
+      width: 30%;
+      margin-top: 6rem;
+    }
+
+    .section--bg-video {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: -1;
+      min-height: 100vh;
+    }
+
+    .skills {
+      padding: 6rem 0;
+    }
+
+    .skills__row {
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .skills__aside {
+      width: 50%;
+      display: flex;
+      flex-direction: column;
+      gap: 6rem;
+      flex: 1;
+    }
+
+    .skills__aside .section-header {
+      max-width: 520px;
+      width: 100%;
+    }
+
+    .skills__aside .media-frame {
+      width: 110px;
+    }
+
+    .skills__list {
+      width: 40%;
+    }
+
+    .skills__item {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      padding: 3rem 0;
+      border-top: 1px solid var(--linesColor);
+    }
+
+    .human-side {
+      padding: 10rem 0 6rem 0;
+      min-height: 300vh;
+      overflow: visible;
+    }
+
+    .human-side__row {
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      align-items: center;
+      min-height: 100%;
+    }
+
+    .human-side__content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 4rem;
+    }
+
+    .human-side__content .section-header {
+      max-width: 520px;
+      width: 100%;
+    }
+
+    .human-side__desc {
+      font-size: 1.5rem;
+      line-height: 1.4;
+      max-width: 560px;
+    }
+
+    .funfact-list {
+      width: 50%;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      align-items: center;
+    }
+
+    .funfact-card {
+      display: flex;
+      flex-direction: column;
+      width: 432px;
+      max-width: 100%;
+      background-color: var(--secondaryBackground);
+    }
+
+    @media (min-width: 992px) {
+      .funfact-list {
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr;
+        justify-items: center;
+        align-items: center;
+      }
+      .funfact-card {
+        grid-row: 1;
+        grid-column: 1;
+        will-change: transform;
+      }
+    }
+
+    .funfact-card .media-frame {
+      width: 100%;
+      height: auto;
+      aspect-ratio: 1/1;
+      padding: 1rem;
+      overflow: hidden;
+    }
+
+    .funfact-card__body {
+      padding: 0 1.5rem 2rem 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      align-items: center;
+      text-align: center;
+    }
+
+    @media only screen and (max-width: 767px) {
+      .perspective,
+      .human-side,
+      .skills {
+        padding: 3rem 0;
+      }
+
+      .hero__inner .p-big {
+        width: 100%;
+      }
+
+      .hero__bottom {
+        align-items: flex-start;
+      }
+
+      .hero__bottom .media-frame {
+        width: 100%;
+        order: 1;
+      }
+
+      .scroll-hint {
+        order: 2;
+      }
+
+      .perspective__layout {
+        width: 100%;
+        gap: 3rem;
+      }
+
+      .intent .p-md {
+        width: 100%;
+        margin-top: 2rem;
+      }
+
+      .skills__list,
+      .human-side__content,
+      .funfact-list,
+      .funfact-card {
+        width: 100%;
+      }
+    }
+
+    @media (min-width: 768px) and (max-width: 1024px) {
+      .perspective,
+      .human-side,
+      .skills {
+        padding: 4rem 0;
+      }
+
+      .hero__inner .p-big {
+        width: 100%;
+      }
+
+      .perspective__layout {
+        width: 60%;
+        gap: 3rem;
+      }
+
+      .intent .p-md {
+        width: 50%;
+        margin-top: 4rem;
+      }
+
+      .skills__list,
+      .human-side__content,
+      .funfact-list,
+      .funfact-card {
+        width: 100%;
+      }
+    }
+  </style>
+
+</BaseLayout>

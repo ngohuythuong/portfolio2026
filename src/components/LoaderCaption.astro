@@ -1,0 +1,130 @@
+---
+interface Props {
+  captions?: string[];
+}
+
+const { captions = ["Hello", "Hola", "Xin chào", "こんにちは"] } = Astro.props;
+
+const extendedCaptions = [...captions, captions[0]];
+---
+
+<div class="loader--caption">
+  <div class="caption--repeater--wrap">
+    <div class="capt--repeater--inner" data-caption-repeater>
+      {
+        extendedCaptions.map((text) => (
+          <span class="caption--repeater--text">{text}</span>
+        ))
+      }
+    </div>
+  </div>
+</div>
+
+<style>
+  :root {
+    --caption-height: 4.5rem;
+    --text-color: #f5f5f5;
+  }
+
+  .loader--caption {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 9999;
+    background: #191919;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100%;
+  }
+
+  .caption--repeater--wrap {
+    height: var(--caption-height);
+    overflow: hidden;
+    position: relative;
+    padding: 0 12px;
+  }
+
+  .capt--repeater--inner {
+    display: flex;
+    flex-direction: column;
+    will-change: transform; /* Báo hiệu cho trình duyệt tối ưu phần cứng (GPU) trước khi GSAP chạy */
+  }
+
+  .caption--repeater--text {
+    display: block;
+    height: var(--caption-height);
+    line-height: var(--caption-height);
+    font-size: 3.5rem;
+    letter-spacing: -0.02em;
+    text-align: center;
+    white-space: nowrap;
+    color: var(--text-color);
+  }
+</style>
+
+<script>
+  import { gsap } from "gsap";
+
+  function initLoaderAnimation() {
+    const innerContainer = document.querySelector('[data-caption-repeater]');
+    const overlay = document.getElementById('page-transition-overlay');
+    const columns = overlay ? overlay.querySelectorAll('.transition-column') : null;
+
+    // Chuẩn bị các cột transition che màn hình ở ngay lần tải đầu tiên
+    if (overlay && columns) {
+      overlay.style.visibility = 'visible';
+      overlay.style.pointerEvents = 'auto';
+      gsap.set(columns, { scaleY: 1 });
+    }
+
+    if (!innerContainer) {
+      if (typeof (window as any).playTransitionReveal === "function") {
+        (window as any).playTransitionReveal();
+      }
+      return;
+    }
+
+    const textElements = innerContainer.querySelectorAll('.caption--repeater--text');
+    if (textElements.length <= 1) {
+      if (typeof (window as any).playTransitionReveal === "function") {
+        (window as any).playTransitionReveal();
+      }
+      return;
+    }
+
+    const itemHeight = (textElements[0] as HTMLElement).offsetHeight;
+    const totalShifts = textElements.length - 1;
+
+    const tl = gsap.timeline({
+      onComplete: () => {
+        document.querySelector('.loader--caption')?.remove(); // Xóa khỏi DOM
+        if (typeof (window as any).playTransitionReveal === "function") {
+          (window as any).playTransitionReveal();
+        }
+      }
+    });
+
+    for (let i = 1; i <= totalShifts; i++) {
+      tl.to(innerContainer, {
+        y: -itemHeight * i,
+        duration: 0.55,
+        ease: "power4.inOut",
+        delay: 0.5,
+      });
+    }
+  }
+
+  /* 
+    GIẢI PHÁP UX: CHỈ CHẠY KHI TẢI TRANG ĐẦU TIÊN (HARD REFRESH / FIRST LOAD)
+    - Sử dụng 'DOMContentLoaded' chuẩn của trình duyệt để chạy ngay khi mở web hoặc F5.
+    - Hoàn toàn không lắng nghe sự kiện 'astro:page-load' để tránh kích hoạt lại khi chuyển trang.
+  */
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initLoaderAnimation);
+  } else {
+    // Dự phòng trường hợp script được thực thi sau khi DOM đã sẵn sàng
+    initLoaderAnimation();
+  }
+</script>

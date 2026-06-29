@@ -1,0 +1,443 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import CustomImage from "../../components/CustomImage.astro";
+import NextProject from "../../components/NextProject.astro";
+export async function getStaticPaths() {
+  const workEntries = await getCollection("works");
+  return workEntries.map((entry, index) => {
+    const nextEntry =
+      index === workEntries.length - 1
+        ? workEntries[0]
+        : workEntries[index + 1];
+    return {
+      params: { slug: entry.slug },
+      props: { entry, nextEntry },
+    };
+  });
+}
+
+const { entry, nextEntry } = Astro.props;
+---
+
+<BaseLayout
+  title={entry.data.project_hero.title}
+  description={entry.data.project_hero.description}
+>
+  <main data-barba="main-wrapper" data-barba-namespace="work-detail">
+    <section class="work-hero">
+      <div class="container">
+        <h1
+          class="text-h1"
+          data-split-text-anim="word"
+          data-settings='{ "repeat": true}'
+        >
+          {entry.data.project_hero.title}
+        </h1>
+        <div class="work-hero__desc">
+          <p
+            class="p-desc"
+            data-split-text-anim="line"
+            data-settings='{ "repeat": true}'
+          >
+            {entry.data.project_hero.description}
+          </p>
+        </div>
+        <div
+          class="work-meta"
+          data-scroll-anim="slide-up"
+          data-settings='{ "repeat": true}'
+          data-scroll-stagger
+        >
+          {
+            entry.data.project_hero.metadata.client && (
+              <div class="work-meta__item">
+                <span class="work-meta__label">Client</span>
+                <p class="work-meta__value">
+                  {entry.data.project_hero.metadata.client}
+                </p>
+              </div>
+            )
+          }
+          {
+            entry.data.project_hero.metadata.role && (
+              <div class="work-meta__item">
+                <span class="work-meta__label">Role</span>
+                <p class="work-meta__value">
+                  {entry.data.project_hero.metadata.role}
+                </p>
+              </div>
+            )
+          }
+          {
+            entry.data.project_hero.metadata.category && (
+              <div class="work-meta__item">
+                <span class="work-meta__label">Category</span>
+                <p class="work-meta__value">
+                  {entry.data.project_hero.metadata.category}
+                </p>
+              </div>
+            )
+          }
+          {
+            entry.data.project_hero.metadata.year && (
+              <div class="work-meta__item">
+                <span class="work-meta__label">Year</span>
+                <p class="work-meta__value">
+                  {entry.data.project_hero.metadata.year}
+                </p>
+              </div>
+            )
+          }
+        </div>
+      </div>
+      <div
+        class="work-hero__cover"
+        data-parallax-container
+        data-parallax-media="all"
+        data-parallax-start="top bottom"
+        data-parallax-end="bottom top"
+        data-parallax-y="-20"
+      >
+        <div class="media-frame" data-parallax-element>
+          {
+            entry.data.project_hero.thumbnail.image && (
+              <CustomImage
+                src={entry.data.project_hero.thumbnail.image}
+                alt={entry.data.project_hero.title}
+                importance="hero"
+              />
+            )
+          }
+        </div>
+      </div>
+      <section class="work-overview">
+        <div class="container">
+          <div class="container-wrapper">
+            <div class="work-overview__header">
+              <h2
+                class="text-h2"
+                data-split-text-anim="word"
+                data-settings='{ "repeat": true}'
+              >
+                {entry.data.project_overview.heading || "Project Overview"}
+              </h2>
+              <p
+                class="p-desc"
+                data-split-text-anim="line"
+                data-settings='{ "repeat": true}'
+              >
+                {entry.data.project_overview.description}
+              </p>
+            </div>
+            <div class="work-overview__content">
+              {
+                entry.data.project_overview && (
+                  <>
+                    <div class="work-overview__group">
+                      <h3 class="text-h3">The Challenge</h3>
+                      <p class="p-md">
+                        {entry.data.project_overview.challenge}
+                      </p>
+                    </div>
+                    <div class="work-overview__group">
+                      <h3 class="text-h3">The Solution</h3>
+                      <p class="p-md">{entry.data.project_overview.solution}</p>
+                    </div>
+                    <div class="work-overview__group">
+                      <h3 class="text-h3">Key Objectives</h3>
+                      <ul class="objectives-list">
+                        {entry.data.project_overview.objectives.map(
+                          (objective) => (
+                            <li>{objective}</li>
+                          ),
+                        )}
+                      </ul>
+                    </div>
+                  </>
+                )
+              }
+            </div>
+          </div>
+        </div>
+        <div class="container container--flush">
+          <div class="overview-images">
+            {
+              entry.data.project_overview.images &&
+                entry.data.project_overview.images.map((img) => {
+                  return (
+                    <div class="zoom-image-block">
+                      <div class="zoom-media-layer">
+                        <CustomImage
+                          src={img}
+                          alt={entry.data.project_hero.title}
+                          importance="feature"
+                        />
+                      </div>
+                    </div>
+                  );
+                })
+            }
+          </div>
+        </div>
+      </section>
+      <section class="works-visual">
+        {
+          entry.data.visual_design && (
+            <>
+              <div class="container align-center">
+                <div class="visual-heading">
+                  <h2
+                    class="text-h2"
+                    data-split-text-anim="word"
+                    data-settings='{ "repeat": true}'
+                  >
+                    {entry.data.visual_design.heading}
+                  </h2>
+                  <p
+                    class="p-desc"
+                    data-split-text-anim="line"
+                    data-settings='{ "repeat": true}'
+                  >
+                    {entry.data.visual_design.description}
+                  </p>
+                </div>
+              </div>
+              <div class="container">
+                <div class="visual-blocks">
+                  {entry.data.visual_design.feature_blocks.map((block) => {
+                    return (
+                      <div
+                        class="visual-block"
+                        data-pin-container
+                        data-pin-media="desktop"
+                        data-pin-start="top 25%"
+                        data-pin-end="bottom bottom"
+                      >
+                        <div class="visual-block__content" data-pin-element>
+                          <span class="overline">{block.block_id}</span>
+                          <p class="p-big">{block.micro_copy}</p>
+                        </div>
+                        <div class="visual-block__images">
+                          {block.images.map((image) => {
+                            return (
+                              <div class="media-frame ">
+                                <CustomImage
+                                  src={image}
+                                  alt={entry.data.project_hero.title}
+                                  importance="feature"
+                                />
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </>
+          )
+        }
+      </section>
+      <section class="works-next">
+        <NextProject project={nextEntry} />
+      </section>
+    </section>
+  </main>
+
+  <style>
+    .work-hero {
+      padding: 16rem 0 0 0;
+      gap: 1.5rem;
+      .work-hero__desc {
+        max-width: 592px;
+        color: var(--secondaryColor);
+      }
+    }
+
+    .work-hero__cover {
+      width: 100%;
+      height: 110vh;
+      overflow: hidden;
+
+      .media-frame {
+        width: 100%;
+        height: 140vh;
+      }
+    }
+
+    img,
+    video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+    }
+
+    .work-overview {
+      padding: 6rem 0;
+    }
+
+    .work-overview__header {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      .p-desc {
+        max-width: 560px;
+      }
+    }
+
+    .work-overview__content {
+      width: 40%;
+    }
+
+    .text-h1 {
+      margin-bottom: 2rem;
+    }
+
+    .work-meta {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.5rem;
+      margin-top: 4rem;
+    }
+
+    .work-meta .work-meta__item {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .work-meta .work-meta__label {
+      color: var(--secondaryColor);
+    }
+
+    .work-overview__group {
+      padding: 3rem 0;
+      border-top: 1px solid var(--linesColor);
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .overview-images {
+      display: flex;
+      flex-direction: column;
+      gap: 4rem;
+      width: 100%;
+    }
+
+    .zoom-image-block {
+      position: relative;
+      width: 100%;
+      overflow: visible;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: transparent;
+    }
+
+    .zoom-media-layer {
+      position: relative;
+      width: 100%;
+      height: auto;
+      overflow: hidden;
+      z-index: 1;
+      will-change: transform, width, height;
+
+      img,
+      video {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        will-change: transform;
+      }
+    }
+
+    .works-visual {
+      padding: 6rem 0;
+    }
+
+    .visual-heading {
+      max-width: 768px;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      align-items: center;
+      text-align: center;
+      margin-bottom: 4rem;
+    }
+
+    .visual-blocks {
+      display: flex;
+      flex-direction: column;
+      gap: 4rem;
+    }
+
+    .visual-block {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+    }
+
+    .visual-block__content {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      width: 40%;
+      .p-big {
+        max-width: 480px;
+      }
+    }
+
+    .visual-block__images {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      flex: 1;
+      min-width: 300px;
+      .media-frame {
+        aspect-ratio: 4/3;
+        video {
+          object-fit: cover;
+          width: 100%;
+          height: auto;
+        }
+      }
+    }
+
+    @media screen and (max-width: 768px) {
+      .work-hero {
+        padding: 10rem 0 0 0;
+      }
+
+      .work-hero__cover {
+        height: 50vh;
+      }
+
+      .work-meta {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1;
+      }
+
+      .work-overview__content {
+        width: 100%;
+      }
+
+      .works-visual,
+      .work-overview {
+        padding: 3rem 0;
+      }
+
+      .visual-block__content {
+        width: 100%;
+      }
+
+      .visual-heading .text-h2 {
+        width: 100%;
+      }
+    }
+  </style>
+</BaseLayout>

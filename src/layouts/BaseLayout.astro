@@ -1,0 +1,56 @@
+---
+import "../styles/global.css";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import LoaderCaption from "../components/LoaderCaption.astro";
+import PageTransition from "../components/PageTransition.astro";
+import { ViewTransitions } from 'astro:transitions';
+import CustomCursor from "../components/CustomCursor.astro";
+
+interface Props {
+  title: string;
+  description?: string;
+  hideFooter?: boolean;
+}
+
+const {
+  title,
+  description = "A pixel-crafter with a problem-solving mindset. Always optimizing user flows and design systems to make products 1% better every day.",
+  hideFooter = false,
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <title>{title} — Huy Thuong's</title>
+    <link rel="icon" type="image/svg+xml" href="/src/public/favicon/favicon.svg" />
+    <!-- Google Fonts: Inter -->
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+    />
+    <ViewTransitions />
+  </head>
+  <body>
+    <CustomCursor />
+    <PageTransition />
+    <LoaderCaption />
+    <div id="custom-scroll-track">
+      <div id="custom-scroll-thumb"></div>
+    </div>
+    <Header />
+    <main class="main-wrapper">
+      <slot />
+    </main>
+    {!hideFooter && <Footer />}
+    <script>
+      import "../js/scripts/animation.js";
+      import "../js/scripts/script.js";
+      import "../js/utils/custom-scrollbar.js";
+    </script>
+  </body>
+</html>
