@@ -208,15 +208,17 @@
 </style>
 
 <script>
-  const menuToggle = document.querySelector(".nav__toggle");
-  const navMobile = document.querySelector(".nav-mobile");
-  const siteHeader = document.querySelector(".site-header");
+  document.addEventListener("astro:page-load", () => {
+    const menuToggle = document.querySelector(".nav__toggle");
+    const navMobile = document.querySelector(".nav-mobile");
+    const siteHeader = document.querySelector(".site-header");
 
-  if (menuToggle && navMobile && siteHeader) {
-    menuToggle.addEventListener("click", () => {
-      menuToggle.classList.toggle("nav__toggle--active");
-      navMobile.classList.toggle("nav-mobile--open");
-      siteHeader.classList.toggle("is-open");
-    });
-  }
+    if (menuToggle && navMobile && siteHeader) {
+      menuToggle.addEventListener("click", () => {
+        menuToggle.classList.toggle("nav__toggle--active");
+        navMobile.classList.toggle("nav-mobile--open");
+        siteHeader.classList.toggle("is-open");
+      });
+    }
+  });
 </script>
