@@ -12,7 +12,13 @@ import Icon from "../components/Icon.astro";
 ---
 
 <BaseLayout title="About">
-  <section class="hero"  data-pin-container data-pin-media="all" data-pin-mode="backward" data-pin-start="top top">
+  <section
+    class="hero"
+    data-pin-container
+    data-pin-media="all"
+    data-pin-mode="backward"
+    data-pin-start="top top"
+  >
     <div class="hero-wrapper" data-pin-element>
       <div class="container container--flush">
         <div class="marquee">
@@ -24,36 +30,52 @@ import Icon from "../components/Icon.astro";
         </div>
       </div>
       <div class="container align-center">
-        <div class="media-frame"data-img-anim="hero-block" 
-        data-settings='{"type": "down", "duration": 1.5, "delay": 0.2,  "repeat": true}'>
+        <div
+          class="media-frame"
+          data-img-anim="hero-block"
+          data-settings='{"type": "down", "duration": 1.5, "delay": 0.2,  "repeat": true}'
+        >
           <CustomImage
             src={chinaStreet}
             alt="china-street"
             importance="feature"
           />
         </div>
-        <span class="scroll-hint"data-split-text-anim="word" 
-            data-settings='{ "repeat": true}'>Scroll to discover</span>
-    </div>
-
-    </div>
-    
-  </section>
-  <section class="intro"data-pin-container data-pin-media="all" data-pin-start="top 0%" data-pin-end="bottom top">
-    <div class="container align-center"data-pin-element >
-        <p class="p-big"data-split-text-anim="line" 
-            data-settings='{ "repeat": true}'>
-          I'm Ngô Huy Thường — a UI/UX Designer who loves softening dry logic
-          into smooth, emotive interfaces, where every touchpoint feels
-          completely natural, making users truly want to stay
-        </p>
+        <span
+          class="scroll-hint"
+          data-split-text-anim="word"
+          data-settings='{ "repeat": true}'>Scroll to discover</span
+        >
       </div>
+    </div>
+  </section>
+  <section
+    class="intro"
+    data-pin-container
+    data-pin-media="all"
+    data-pin-start="top 0%"
+    data-pin-end="bottom top"
+  >
+    <div class="container align-center" data-pin-element>
+      <p
+        class="p-big"
+        data-split-text-anim="line"
+        data-settings='{ "repeat": true}'
+      >
+        I'm Ngô Huy Thường — a UI/UX Designer who loves softening dry logic into
+        smooth, emotive interfaces, where every touchpoint feels completely
+        natural, making users truly want to stay
+      </p>
+    </div>
   </section>
   <section class="perspective">
     <div class="container align-center">
       <div class="perspective__layout">
-        <div class="media-frame" data-img-anim="block" 
-     data-settings='{"type": "down",  "duration": 1.5, "repeat": true}'>
+        <div
+          class="media-frame"
+          data-img-anim="block"
+          data-settings='{"type": "down",  "duration": 1.5, "repeat": true}'
+        >
           <CustomImage
             src={artExhibition}
             alt="art-exhibition"
@@ -63,28 +85,48 @@ import Icon from "../components/Icon.astro";
         </div>
         <div class="perspective__content">
           <div class="section-header">
-            <div class="overline"data-scroll-anim="slide-up"
-          data-settings='{ "repeat": true}'>
+            <div
+              class="overline"
+              data-scroll-anim="slide-up"
+              data-settings='{ "repeat": true}'
+            >
               <Icon name="add" />
               <span class="overline__text">Perspective</span>
             </div>
-            <h2 class="text-h2"data-split-text-anim="word" 
-            data-settings='{ "repeat": true}'>Finding logic in the quiet</h2>
+            <h2
+              class="text-h2"
+              data-split-text-anim="word"
+              data-settings='{ "repeat": true}'
+            >
+              Finding logic in the quiet
+            </h2>
           </div>
           <div class="perspective__text">
-            <p class="p-md"data-split-text-anim="linesMask" data-settings='{"fgColor": "#191919", "repeat": true, "scrub": true}'>
+            <p
+              class="p-md"
+              data-split-text-anim="linesMask"
+              data-settings='{"fgColor": "#191919", "repeat": true, "scrub": true}'
+            >
               My journey didn't start with a love for 'pretty screens,' but from
               a passion for decoding complexity. I believe great design is at
               its best when it functions so seamlessly that users don't even
               notice it's there
             </p>
-            <p class="p-md" data-split-text-anim="linesMask" data-settings='{ "fgColor": "#191919", "repeat": true, "scrub": true}'>
+            <p
+              class="p-md"
+              data-split-text-anim="linesMask"
+              data-settings='{ "fgColor": "#191919", "repeat": true, "scrub": true}'
+            >
               I've always been the one observing the world through
               noise-canceling headphones. Not because I have nothing to say, but
               because I'm busy 'softening' the hidden rules beneath the surface
               of everything.
             </p>
-            <p class="p-md" data-split-text-anim="linesMask" data-settings='{ "fgColor": "#191919", "repeat": true, "scrub": true}'>
+            <p
+              class="p-md"
+              data-split-text-anim="linesMask"
+              data-settings='{ "fgColor": "#191919", "repeat": true, "scrub": true}'
+            >
               When the world gets too loud, I find my way back to 'Midnight
               Logic' — a space of clean grids, lo-fi beats, and the pursuit of a
               frictionless experience."
@@ -94,34 +136,53 @@ import Icon from "../components/Icon.astro";
       </div>
     </div>
   </section>
-  <section class="intent"data-pin-container data-pin-media="all" data-pin-start="top top" data-pin-end="bottom bottom" data-pin-space="true">
-    <div class="section--bg-video"data-pin-element>
+  <section
+    class="intent"
+    data-pin-container
+    data-pin-media="all"
+    data-pin-start="top top"
+    data-pin-end="bottom bottom"
+    data-pin-space="true"
+  >
+    <div class="section--bg-video" data-pin-element>
       <div class="bg-filter"></div>
       <div
         class="media-embed"
         data-controls="false"
         data-autoplay="true"
         data-muted="true"
-        data-loop="true" 
+        data-loop="true"
       >
         <video autoplay muted playsinline loop class="media-embed__video">
-          <source src={deepMood} type="video/mp4" />
+          <source src="/assets/video/deep-mood.mp4" type="video/mp4" />
         </video>
       </div>
     </div>
-    <div class="intent__text-content"data-pin-end-trigger>
+    <div class="intent__text-content" data-pin-end-trigger>
       <div class="container container--md">
         <div class="section-header">
-          <div class="overline"data-scroll-anim="slide-up"
-          data-settings='{ "repeat": true}'>
+          <div
+            class="overline"
+            data-scroll-anim="slide-up"
+            data-settings='{ "repeat": true}'
+          >
             <Icon name="add" />
             <span class="overline__text">The Intent</span>
           </div>
-          <h2 class="text-h2"data-split-text-anim="word" 
-            data-settings='{ "repeat": true}'>Analog Soul Digital Logic</h2>
+          <h2
+            class="text-h2"
+            data-split-text-anim="word"
+            data-settings='{ "repeat": true}'
+          >
+            Analog Soul Digital Logic
+          </h2>
         </div>
         <div class="intent__row intent__row--right">
-          <p class="p-md"data-split-text-anim="linesMask" data-settings='{"bgColor": "rgba(255,255,255,0.32)", "fgColor": "#ffffff", "repeat": true, "scrub": true}'>
+          <p
+            class="p-md"
+            data-split-text-anim="linesMask"
+            data-settings='{"bgColor": "rgba(255,255,255,0.32)", "fgColor": "#ffffff", "repeat": true, "scrub": true}'
+          >
             People often ask how a sketchbook lover ends up building complex
             Design Systems. To me, it's the same craft. Whether it's a pencil
             stroke or a Figma component, it starts with intent. My approach is a
@@ -131,7 +192,11 @@ import Icon from "../components/Icon.astro";
           </p>
         </div>
         <div class="intent__row intent__row--center">
-          <p class="p-md"data-split-text-anim="linesMask" data-settings='{"bgColor": "rgba(255,255,255,0.32)", "fgColor": "#ffffff", "repeat": true, "scrub": true}'>
+          <p
+            class="p-md"
+            data-split-text-anim="linesMask"
+            data-settings='{"bgColor": "rgba(255,255,255,0.32)", "fgColor": "#ffffff", "repeat": true, "scrub": true}'
+          >
             Working for the US and Japan markets taught me one thing: Efficiency
             is the ultimate sophistication. If a user has to think twice, I've
             failed. I design for that split second of 'it just works'.
@@ -139,22 +204,32 @@ import Icon from "../components/Icon.astro";
         </div>
       </div>
     </div>
-    
   </section>
   <section class="skills">
     <div class="container">
       <div class="skills__row">
         <div class="skills__aside">
           <div class="section-header">
-            <span class="overline"data-scroll-anim="slide-up"
-          data-settings='{ "repeat": true}'>
+            <span
+              class="overline"
+              data-scroll-anim="slide-up"
+              data-settings='{ "repeat": true}'
+            >
               <Icon name="add" />
               <span class="overline__text">Skills & Tools</span>
             </span>
-            <h2 class="text-h2" data-split-text-anim="word" 
-            data-settings='{ "repeat": true}'>How I Help</h2>
-            <p class="p-desc" data-split-text-anim="line" 
-            data-settings='{ "repeat": true}'>
+            <h2
+              class="text-h2"
+              data-split-text-anim="word"
+              data-settings='{ "repeat": true}'
+            >
+              How I Help
+            </h2>
+            <p
+              class="p-desc"
+              data-split-text-anim="line"
+              data-settings='{ "repeat": true}'
+            >
               Decoding the 'why' before I even touch the pixels. I bridge the
               gap between human-centered vibes and clean, functional code. I
               don't just build products; I craft digital spaces where logic
@@ -216,16 +291,27 @@ import Icon from "../components/Icon.astro";
       <div class="human-side__row">
         <div class="human-side__content">
           <div class="section-header">
-            <span class="overline"data-scroll-anim="slide-up"
-          data-settings='{ "repeat": true}'>
-              <Icon name="add"/>
+            <span
+              class="overline"
+              data-scroll-anim="slide-up"
+              data-settings='{ "repeat": true}'
+            >
+              <Icon name="add" />
               <span class="overline__text">The Human Side</span>
             </span>
-            <h2 class="text-h2"data-split-text-anim="word" 
-            data-settings='{ "repeat": true}'>When I'm not <br />polishing pixels...</h2>
+            <h2
+              class="text-h2"
+              data-split-text-anim="word"
+              data-settings='{ "repeat": true}'
+            >
+              When I'm not <br />polishing pixels...
+            </h2>
           </div>
-          <p class="human-side__desc"data-split-text-anim="line" 
-            data-settings='{ "repeat": true}'>
+          <p
+            class="human-side__desc"
+            data-split-text-anim="line"
+            data-settings='{ "repeat": true}'
+          >
             I'm a low-key observer. To me, the world is the ultimate case study.
             When the laptop closes, the real research begins. I find design
             inspiration in the quiet, mundane moments of life—using that raw
@@ -286,8 +372,8 @@ import Icon from "../components/Icon.astro";
   </section>
 
   <style>
-    .hero{
-      padding-top:12rem;
+    .hero {
+      padding-top: 12rem;
       min-height: 100vh;
     }
 
@@ -295,14 +381,14 @@ import Icon from "../components/Icon.astro";
       width: 100%;
       display: flex;
       flex-direction: column;
-      gap:3rem;
+      gap: 3rem;
       align-items: center;
     }
 
     .hero .media-frame {
       width: 240px;
       aspect-ratio: 4/5;
-      img{
+      img {
         filter: grayscale(100%) contrast(1);
       }
     }
@@ -314,14 +400,11 @@ import Icon from "../components/Icon.astro";
       justify-content: center;
 
       .p-big {
-      max-width: 720px;
-      text-align: center;
-      color:#f5f5f5;
-      
+        max-width: 720px;
+        text-align: center;
+        color: #f5f5f5;
+      }
     }
-    }
-
-
 
     .scroll-hint {
       font-size: 0.875rem;
@@ -336,10 +419,9 @@ import Icon from "../components/Icon.astro";
       gap: 1rem;
     }
 
-
     .perspective {
       padding: 6rem 0;
-      background-color:var(--mainBackground);
+      background-color: var(--mainBackground);
     }
 
     .perspective__layout {
@@ -362,7 +444,7 @@ import Icon from "../components/Icon.astro";
       min-height: 100vh;
     }
 
-    .intent__text-content{
+    .intent__text-content {
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -371,9 +453,9 @@ import Icon from "../components/Icon.astro";
       z-index: 1;
       margin-top: 40vh;
       padding-bottom: 40vh;
-      color:#ffffff;
+      color: #ffffff;
 
-      .text-h2{
+      .text-h2 {
         max-width: 520px;
       }
     }
@@ -597,5 +679,4 @@ import Icon from "../components/Icon.astro";
       }
     }
   </style>
-
 </BaseLayout>
