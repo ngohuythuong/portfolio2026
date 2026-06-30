@@ -5,8 +5,6 @@ import { getCollection } from "astro:content";
 import CustomImage from "../components/CustomImage.astro";
 import avatar from "../assets/images/avatar.webp";
 import thuongnh from "../assets/images/thuongnh.webp";
-import v0407 from "../assets/video/0407.mp4";
-import chill from "../assets/video/chill.mp4";
 import Icon from "../components/Icon.astro";
 
 const allWorks = await getCollection("works");
@@ -72,7 +70,7 @@ const works = allWorks
         data-loop="true"
       >
         <video autoplay muted playsinline loop class="media-embed__video">
-          <source src={v0407} type="video/mp4" />
+          <source src="/assets/video/0407.mp4" type="video/mp4" />
         </video>
       </div>
     </div>
@@ -315,7 +313,7 @@ const works = allWorks
             data-settings='{"type": "down", "delay": 0.5, "duration": 1.5, "repeat": true}'
           >
             <video autoplay muted playsinline loop class="media-embed__video">
-              <source src={chill} type="video/mp4" />
+              <source src="/assets/video/chill.mp4" type="video/mp4" />
             </video>
           </div>
         </div>
