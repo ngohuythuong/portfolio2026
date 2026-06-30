@@ -111,138 +111,136 @@ const { entry, nextEntry } = Astro.props;
           }
         </div>
       </div>
-      <section class="work-overview">
-        <div class="container">
-          <div class="container-wrapper">
-            <div class="work-overview__header">
-              <h2
-                class="text-h2"
-                data-split-text-anim="word"
-                data-settings='{ "repeat": true}'
-              >
-                {entry.data.project_overview.heading || "Project Overview"}
-              </h2>
-              <p
-                class="p-desc"
-                data-split-text-anim="line"
-                data-settings='{ "repeat": true}'
-              >
-                {entry.data.project_overview.description}
-              </p>
-            </div>
-            <div class="work-overview__content">
-              {
-                entry.data.project_overview && (
-                  <>
-                    <div class="work-overview__group">
-                      <h3 class="text-h3">The Challenge</h3>
-                      <p class="p-md">
-                        {entry.data.project_overview.challenge}
-                      </p>
-                    </div>
-                    <div class="work-overview__group">
-                      <h3 class="text-h3">The Solution</h3>
-                      <p class="p-md">{entry.data.project_overview.solution}</p>
-                    </div>
-                    <div class="work-overview__group">
-                      <h3 class="text-h3">Key Objectives</h3>
-                      <ul class="objectives-list">
-                        {entry.data.project_overview.objectives.map(
-                          (objective) => (
-                            <li>{objective}</li>
-                          ),
-                        )}
-                      </ul>
-                    </div>
-                  </>
-                )
-              }
-            </div>
+    </section>
+    <section class="work-overview">
+      <div class="container">
+        <div class="container-wrapper">
+          <div class="work-overview__header">
+            <h2
+              class="text-h2"
+              data-split-text-anim="word"
+              data-settings='{ "repeat": true}'
+            >
+              {entry.data.project_overview.heading || "Project Overview"}
+            </h2>
+            <p
+              class="p-desc"
+              data-split-text-anim="line"
+              data-settings='{ "repeat": true}'
+            >
+              {entry.data.project_overview.description}
+            </p>
           </div>
-        </div>
-        <div class="container container--flush">
-          <div class="overview-images">
+          <div class="work-overview__content">
             {
-              entry.data.project_overview.images &&
-                entry.data.project_overview.images.map((img) => {
-                  return (
-                    <div class="zoom-image-block">
-                      <div class="zoom-media-layer">
-                        <CustomImage
-                          src={img}
-                          alt={entry.data.project_hero.title}
-                          importance="feature"
-                        />
-                      </div>
-                    </div>
-                  );
-                })
+              entry.data.project_overview && (
+                <>
+                  <div class="work-overview__group">
+                    <h3 class="text-h3">The Challenge</h3>
+                    <p class="p-md">{entry.data.project_overview.challenge}</p>
+                  </div>
+                  <div class="work-overview__group">
+                    <h3 class="text-h3">The Solution</h3>
+                    <p class="p-md">{entry.data.project_overview.solution}</p>
+                  </div>
+                  <div class="work-overview__group">
+                    <h3 class="text-h3">Key Objectives</h3>
+                    <ul class="objectives-list">
+                      {entry.data.project_overview.objectives.map(
+                        (objective) => (
+                          <li>{objective}</li>
+                        ),
+                      )}
+                    </ul>
+                  </div>
+                </>
+              )
             }
           </div>
         </div>
-      </section>
-      <section class="works-visual">
-        {
-          entry.data.visual_design && (
-            <>
-              <div class="container align-center">
-                <div class="visual-heading">
-                  <h2
-                    class="text-h2"
-                    data-split-text-anim="word"
-                    data-settings='{ "repeat": true}'
-                  >
-                    {entry.data.visual_design.heading}
-                  </h2>
-                  <p
-                    class="p-desc"
-                    data-split-text-anim="line"
-                    data-settings='{ "repeat": true}'
-                  >
-                    {entry.data.visual_design.description}
-                  </p>
-                </div>
+      </div>
+      <div class="container container--flush">
+        <div class="overview-images">
+          {
+            entry.data.project_overview.images &&
+              entry.data.project_overview.images.map((img) => {
+                return (
+                  <div class="zoom-image-block">
+                    <div class="zoom-media-layer">
+                      <CustomImage
+                        src={img}
+                        alt={entry.data.project_hero.title}
+                        importance="feature"
+                      />
+                    </div>
+                  </div>
+                );
+              })
+          }
+        </div>
+      </div>
+    </section>
+    <section class="works-visual">
+      {
+        entry.data.visual_design && (
+          <>
+            <div class="container align-center">
+              <div class="visual-heading">
+                <h2
+                  class="text-h2"
+                  data-split-text-anim="word"
+                  data-settings='{ "repeat": true}'
+                >
+                  {entry.data.visual_design.heading}
+                </h2>
+                <p
+                  class="p-desc"
+                  data-split-text-anim="line"
+                  data-settings='{ "repeat": true}'
+                >
+                  {entry.data.visual_design.description}
+                </p>
               </div>
-              <div class="container">
-                <div class="visual-blocks">
-                  {entry.data.visual_design.feature_blocks.map((block) => {
-                    return (
-                      <div
-                        class="visual-block"
-                        data-pin-container
-                        data-pin-media="desktop"
-                        data-pin-start="top 25%"
-                        data-pin-end="bottom bottom"
-                      >
-                        <div class="visual-block__content" data-pin-element>
-                          <span class="overline">{block.block_id}</span>
-                          <p class="p-big">{block.micro_copy}</p>
-                        </div>
-                        <div class="visual-block__images">
-                          {block.images.map((image) => {
-                            return (
-                              <div class="media-frame ">
-                                <CustomImage
-                                  src={image}
-                                  alt={entry.data.project_hero.title}
-                                  importance="feature"
-                                />
-                              </div>
-                            );
-                          })}
-                        </div>
+            </div>
+            <div class="container">
+              <div class="visual-blocks">
+                {entry.data.visual_design.feature_blocks.map((block) => {
+                  return (
+                    <div
+                      class="visual-block"
+                      data-pin-container
+                      data-pin-media="desktop"
+                      data-pin-start="top 25%"
+                      data-pin-end="bottom bottom"
+                    >
+                      <div class="visual-block__content" data-pin-element>
+                        <span class="overline">{block.block_id}</span>
+                        <p class="p-big">{block.micro_copy}</p>
                       </div>
-                    );
-                  })}
-                </div>
+                      <div class="visual-block__images">
+                        {block.images.map((image) => {
+                          return (
+                            <div class="media-frame ">
+                              <CustomImage
+                                src={image}
+                                alt={entry.data.project_hero.title}
+                                importance="feature"
+                              />
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
-            </>
-          )
-        }
-      </section>
-      <section class="works-next">
-        <NextProject project={nextEntry} />
-      </section>
+            </div>
+          </>
+        )
+      }
+    </section>
+    <section class="works-next">
+      <NextProject project={nextEntry} />
     </section>
   </main>
 
@@ -334,9 +332,6 @@ const { entry, nextEntry } = Astro.props;
       width: 100%;
       overflow: visible;
       display: flex;
-      align-items: center;
-      justify-content: center;
-      background-color: transparent;
     }
 
     .zoom-media-layer {
@@ -344,8 +339,6 @@ const { entry, nextEntry } = Astro.props;
       width: 100%;
       height: auto;
       overflow: hidden;
-      z-index: 1;
-      will-change: transform, width, height;
 
       img,
       video {
@@ -358,6 +351,7 @@ const { entry, nextEntry } = Astro.props;
 
     .works-visual {
       padding: 6rem 0;
+      gap: 6rem;
     }
 
     .visual-heading {
@@ -367,7 +361,6 @@ const { entry, nextEntry } = Astro.props;
       gap: 1.5rem;
       align-items: center;
       text-align: center;
-      margin-bottom: 4rem;
     }
 
     .visual-blocks {
@@ -415,6 +408,10 @@ const { entry, nextEntry } = Astro.props;
 
       .work-hero__cover {
         height: 50vh;
+        .media-frame {
+          width: 100%;
+          height: 70vh;
+        }
       }
 
       .work-meta {
@@ -429,6 +426,7 @@ const { entry, nextEntry } = Astro.props;
       .works-visual,
       .work-overview {
         padding: 3rem 0;
+        gap: 4rem;
       }
 
       .visual-block__content {

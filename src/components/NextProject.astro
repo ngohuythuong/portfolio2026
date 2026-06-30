@@ -10,7 +10,7 @@ const { project } = Astro.props;
 ---
 
 <a href={`/works/${project.slug}`} class="next-project group">
-  <div class="next-project__content"data-split-hover>
+  <div class="next-project__content" data-split-hover>
     <span class="overline__text">Next Project</span>
     <h2 class="next-project__title text-h1">
       {project.data.project_hero.title}
@@ -43,7 +43,7 @@ const { project } = Astro.props;
     color: #ffffff;
     text-decoration: none;
     width: 100%;
-    min-height: 110vh;
+    min-height: 100vh;
   }
 
   .next-project__content {
@@ -56,10 +56,9 @@ const { project } = Astro.props;
   }
 
   .next-project__title {
-  display: block;
-  position: relative;
-}
-
+    display: block;
+    position: relative;
+  }
 
   .next-project__bg {
     position: absolute;
@@ -83,6 +82,12 @@ const { project } = Astro.props;
     height: 100%;
     object-fit: cover;
   }
+
+  @media screen and (max-width: 768px) {
+    .next-project {
+      min-height: 60vh;
+    }
+  }
 </style>
 
 <script>
@@ -96,11 +101,17 @@ const { project } = Astro.props;
       if (element.classList.contains("split-hover-initialized")) return;
       element.classList.add("split-hover-initialized");
 
-      const container = element.querySelector("h2") || element.querySelector("a") || element.querySelector("button") || element.querySelector("span");
+      const container =
+        element.querySelector("h2") ||
+        element.querySelector("a") ||
+        element.querySelector("button") ||
+        element.querySelector("span");
       if (!container) return;
 
       // 1. Trích xuất nội dung gốc
-      const originalText = container.textContent ? container.textContent.trim() : "";
+      const originalText = container.textContent
+        ? container.textContent.trim()
+        : "";
       const svgElement = container.querySelector("svg");
 
       container.innerHTML = ""; // Xóa sạch ruột cũ
@@ -112,7 +123,7 @@ const { project } = Astro.props;
       originalText.split("").forEach((char) => {
         const charWrap = document.createElement("span");
         charWrap.className = "char-wrap";
-        
+
         const charInner = document.createElement("span");
         charInner.className = "char primary-char";
         charInner.textContent = char;
@@ -130,7 +141,7 @@ const { project } = Astro.props;
         charWrap.appendChild(charClone);
         textGroup.appendChild(charWrap);
       });
-      
+
       container.appendChild(textGroup);
 
       // 3. Xử lý nhân bản SVG Icon
@@ -140,7 +151,7 @@ const { project } = Astro.props;
       if (svgElement) {
         primaryIcon = svgElement as SVGElement;
         primaryIcon.classList.add("primary-icon");
-        
+
         cloneIcon = primaryIcon.cloneNode(true) as SVGElement;
         cloneIcon.classList.remove("primary-icon");
         cloneIcon.classList.add("clone-icon");
@@ -159,13 +170,19 @@ const { project } = Astro.props;
       const ease = "power2.inOut";
 
       if (primaryChars.length) {
-        tl.to(primaryChars, { yPercent: -100, duration, ease, stagger: 0.012 }, 0)
-          .to(cloneChars, { yPercent: -100, duration, ease, stagger: 0.012 }, 0);
+        tl.to(
+          primaryChars,
+          { yPercent: -100, duration, ease, stagger: 0.012 },
+          0,
+        ).to(cloneChars, { yPercent: -100, duration, ease, stagger: 0.012 }, 0);
       }
 
       if (primaryIcon && cloneIcon) {
-        tl.to(primaryIcon, { yPercent: -100, duration, ease }, 0)
-          .to(cloneIcon, { yPercent: -100, duration, ease }, 0);
+        tl.to(primaryIcon, { yPercent: -100, duration, ease }, 0).to(
+          cloneIcon,
+          { yPercent: -100, duration, ease },
+          0,
+        );
       }
 
       // Lắng nghe sự kiện hover trên khối cha được đặt data-split-hover
