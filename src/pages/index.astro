@@ -5,6 +5,7 @@ import { getCollection } from "astro:content";
 import CustomImage from "../components/CustomImage.astro";
 import avatar from "../assets/images/avatar.webp";
 import thuongnh from "../assets/images/thuongnh.webp";
+import pickleball from "../assets/images/pic.webp";
 import Icon from "../components/Icon.astro";
 
 const allWorks = await getCollection("works");
@@ -17,7 +18,7 @@ const works = allWorks
   .slice(0, 3);
 ---
 
-<BaseLayout title="Home">
+<BaseLayout title="Huy Thuong — UI/UX Designer">
   <section
     class="hero"
     data-pin-container
@@ -71,7 +72,14 @@ const works = allWorks
         data-muted="true"
         data-loop="true"
       >
-        <video autoplay muted playsinline loop class="media-embed__video">
+        <video
+          autoplay
+          muted
+          playsinline
+          loop
+          class="media-embed__video"
+          poster="/assets/images/intro-home-cover.webp"
+        >
           <source src="/assets/video/0407.mp4" type="video/mp4" />
         </video>
       </div>
@@ -99,7 +107,7 @@ const works = allWorks
             >
               Complexity isn't my thing. I see UI/UX as a way to observe the
               world and distill it into seamless experiences. I'm a big believer
-              that the best design is felt, not seen—it should just work as
+              that the best design is felt, not seen it should just work as
               naturally as breathing
             </p>
           </div>
@@ -119,7 +127,7 @@ const works = allWorks
             <h3 class="text-h3">Obsession over<br /> observation</h3>
             <p class="p-md">
               Being quiet is my superpower. While others talk, I'm busy
-              'decoding' the subtle cues. No guessing games—just deep listening
+              'decoding' the subtle cues. No guessing games just deep listening
               to what's not being said to build what's actually needed
             </p>
           </div>
@@ -131,7 +139,7 @@ const works = allWorks
             <p class="p-md">
               I'm literally 'allergic' to clutter. My job is to filter out the
               noise and keep the core vibes. A clean UI isn't just for the
-              'aesthetic'—it's about giving users some breathing room to
+              'aesthetic' it's about giving users some breathing room to
               actually breathe
             </p>
           </div>
@@ -312,7 +320,7 @@ const works = allWorks
             data-muted="true"
             data-loop="true"
             data-img-anim="block"
-            data-settings='{"type": "down", "delay": 0.5, "duration": 1.5, "repeat": true}'
+            data-settings='{"type": "down", "delay": 0.2, "duration": 1.5, "repeat": true}'
           >
             <video autoplay muted playsinline loop class="media-embed__video">
               <source src="/assets/video/chill.mp4" type="video/mp4" />
@@ -353,7 +361,7 @@ const works = allWorks
           data-settings='{"type": "down",  "duration": 1.5, "repeat": true}'
         >
           <CustomImage
-            src={thuongnh}
+            src={pickleball}
             alt="Thuongnh"
             importance="detail"
             class="human-img"
@@ -365,7 +373,7 @@ const works = allWorks
       <div class="marquee">
         <div class="marquee__track">
           <span class="text-h1"
-            >Ceffeine - Curating - Sketching - Photography -</span
+            >Ceffeine - Pickleball - Sketching - Photography -</span
           >
         </div>
       </div>
@@ -451,7 +459,7 @@ const works = allWorks
     width: 25%;
     flex-shrink: 0;
     margin-bottom: 4rem;
-    aspect-ratio: 1/1;
+    aspect-ratio: 4/5;
   }
 
   .behind__text {

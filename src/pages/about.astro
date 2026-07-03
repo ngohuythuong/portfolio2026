@@ -7,11 +7,10 @@ import img1994 from "../assets/images/IMG_1994-1.png";
 import hanoi from "../assets/images/hanoi.webp";
 import cafeChill from "../assets/images/cafe-chill.webp";
 import paint from "../assets/images/paint.webp";
-import deepMood from "../assets/images/deep-mood.mp4";
 import Icon from "../components/Icon.astro";
 ---
 
-<BaseLayout title="About">
+<BaseLayout title="Huy Thuong — About">
   <section
     class="hero"
     data-pin-container
@@ -153,7 +152,14 @@ import Icon from "../components/Icon.astro";
         data-muted="true"
         data-loop="true"
       >
-        <video autoplay muted playsinline loop class="media-embed__video">
+        <video
+          autoplay
+          muted
+          playsinline
+          loop
+          class="media-embed__video"
+          poster="/assets/images/intro-about-cover.webp"
+        >
           <source src="/assets/video/deep-mood.mp4" type="video/mp4" />
         </video>
       </div>
@@ -231,14 +237,19 @@ import Icon from "../components/Icon.astro";
               data-settings='{ "repeat": true}'
             >
               Decoding the 'why' before I even touch the pixels. I bridge the
-              gap between human-centered vibes and clean, functional code. I
+              gap between human centered vibes and clean, functional code. I
               don't just build products; I craft digital spaces where logic
               meets a human touch, making sure everything is as smooth as your
               favorite playlist
             </p>
           </div>
-          <div class="media-frame">
-            <CustomImage src={img1994} alt="IMG_1994-1" importance="detail" />
+          <div class="personal">
+            <div class="media-frame">
+              <CustomImage src={img1994} alt="IMG_1994-1" importance="detail" />
+            </div>
+            <div class="chat-bubble">
+              <span id="typing-text"></span><span class="cursor"></span>
+            </div>
           </div>
         </div>
         <div class="skills__list">
@@ -246,7 +257,7 @@ import Icon from "../components/Icon.astro";
             <h3 class="text-h3">UX Research</h3>
             <p class="p-md">
               I dive deep into the data hidden beneath every move. No guessing
-              games here—I hunt for answers directly from users to make sure
+              games here I hunt for answers directly from users to make sure
               every single pixel has a legit reason to exist.
             </p>
             <ul class="tools">
@@ -259,7 +270,7 @@ import Icon from "../components/Icon.astro";
             <h3 class="text-h3">UI Design</h3>
             <p class="p-md">
               Where aesthetics meet utility. I craft clean, modern interfaces
-              backed by rock-solid Design Systems, making sure everything is not
+              backed by rock solid Design Systems, making sure everything is not
               just 'pretty' but also built to scale without the mess.
             </p>
             <ul class="tools">
@@ -274,7 +285,7 @@ import Icon from "../components/Icon.astro";
             <p class="p-md">
               Breaking the wall between design and dev. With a solid grip on
               HTML, CSS, I smooth out the handover process, making sure every
-              creative spark actually works—and feels just right—in production
+              creative spark actually works and feels just right in production
             </p>
             <ul class="tools">
               <li class="tools-badges">Code-friendly</li>
@@ -314,7 +325,7 @@ import Icon from "../components/Icon.astro";
           >
             I'm a low-key observer. To me, the world is the ultimate case study.
             When the laptop closes, the real research begins. I find design
-            inspiration in the quiet, mundane moments of life—using that raw
+            inspiration in the quiet, mundane moments of life using that raw
             empathy to make sure my digital pixels feel human
           </p>
         </div>
@@ -511,8 +522,10 @@ import Icon from "../components/Icon.astro";
       width: 100%;
     }
 
-    .skills__aside .media-frame {
+    .skills__aside .personal {
       width: 110px;
+      position: relative;
+      display: inline-block;
     }
 
     .skills__list {
@@ -526,6 +539,41 @@ import Icon from "../components/Icon.astro";
       gap: 1rem;
       padding: 3rem 0;
       border-top: 1px solid var(--linesColor);
+    }
+
+    .chat-bubble {
+      position: absolute;
+      top: 0;
+      left: 104px;
+      background-color: #ffffff;
+      color: var(--mainColor);
+      padding: 0.75rem 1rem;
+      border-radius: 1rem;
+      border-bottom-left-radius: 2px;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      font-weight: 400;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      white-space: nowrap;
+    }
+    /* Con trỏ nhấp nháy */
+    .cursor {
+      display: inline-block;
+      width: 3px;
+      height: 20px;
+      margin-left: 4px;
+      background-color: #f35f09;
+      animation: blink 0.7s infinite;
+    }
+    @keyframes blink {
+      0%,
+      100% {
+        opacity: 1;
+      }
+      50% {
+        opacity: 0;
+      }
     }
 
     .human-side {
@@ -595,12 +643,12 @@ import Icon from "../components/Icon.astro";
       width: 100%;
       height: auto;
       aspect-ratio: 1/1;
-      padding: 1rem;
+      padding: 1rem 1rem 0 1rem;
       overflow: hidden;
     }
 
     .funfact-card__body {
-      padding: 0 1.5rem 2rem 1.5rem;
+      padding: 1rem 1.5rem 2rem 1.5rem;
       display: flex;
       flex-direction: column;
       gap: 0.5rem;
@@ -650,7 +698,7 @@ import Icon from "../components/Icon.astro";
       }
     }
 
-    @media (min-width: 768px) and (max-width: 1024px) {
+    @media (min-width: 768px) and (max-width: 1023px) {
       .perspective,
       .human-side,
       .skills {
@@ -678,5 +726,66 @@ import Icon from "../components/Icon.astro";
         width: 100%;
       }
     }
+
+    @media (min-width: 1024px) and (max-width: 1440px) {
+      .perspective__layout {
+        width: 40%;
+      }
+    }
   </style>
+  <script>
+    // Danh sách các từ bạn muốn chạy hiệu ứng
+    const words = ["Figma", "Framer", "Photoshop", "Illustrator"];
+
+    let wordIndex = 0;
+    let charIndex = 0;
+    let isDeleting = false;
+
+    const typingTarget = document.getElementById("typing-text");
+
+    function typeEffect() {
+      const currentWord = words[wordIndex];
+
+      if (isDeleting) {
+        // Trừ bớt 1 ký tự khi đang xóa
+        charIndex--;
+      } else {
+        // Thêm 1 ký tự khi đang gõ
+        charIndex++;
+      }
+
+      // Hiển thị đoạn chữ cắt lớp ra màn hình
+      if (typingTarget) {
+        typingTarget.textContent = currentWord.substring(0, charIndex);
+      }
+
+      // Tốc độ mặc định khi gõ chữ (ms)
+      let typeSpeed = 100;
+
+      // Nếu đang xóa thì tăng tốc độ lên cho mượt hơn
+      if (isDeleting) {
+        typeSpeed /= 2;
+      }
+
+      // Nếu đã gõ xong trọn vẹn từ
+      if (!isDeleting && charIndex === currentWord.length) {
+        typeSpeed = 1500; // Dừng lại 1.5 giây để người dùng đọc chữ
+        isDeleting = true;
+      }
+      // Nếu đã xóa hết chữ của từ đó
+      else if (isDeleting && charIndex === 0) {
+        isDeleting = false;
+        wordIndex = (wordIndex + 1) % words.length; // Chuyển sang từ tiếp theo, hết mảng thì quay lại từ đầu
+        typeSpeed = 300; // Nghỉ một chút trước khi bắt đầu gõ từ mới
+      }
+
+      setTimeout(typeEffect, typeSpeed);
+    }
+
+    // Chạy hiệu ứng ngay khi DOM đã sẵn sàng
+    document.addEventListener("DOMContentLoaded", () => {
+      // Đợi 500ms ban đầu rồi mới kích hoạt hiệu ứng gõ
+      setTimeout(typeEffect, 500);
+    });
+  </script>
 </BaseLayout>

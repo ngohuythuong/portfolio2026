@@ -11,12 +11,17 @@ const sortedWorks = allWorks.sort((a, b) =>
 );
 ---
 
-<BaseLayout title="Works">
+<BaseLayout title="Huy Thuong — Works">
   <section class="works">
     <div class="container">
       <div class="works__heading">
-        <h1 class="text-h1" data-split-text-anim="word" 
-            data-settings='{ "repeat": true}'>Our Projects</h1>
+        <h1
+          class="text-h1"
+          data-split-text-anim="word"
+          data-settings='{ "repeat": true}'
+        >
+          Our Projects
+        </h1>
         <div class="view-switch">
           <span
             class="view-switch__btn view-switch__btn--active"
@@ -154,9 +159,9 @@ const sortedWorks = allWorks.sort((a, b) =>
       // Bước A: Tạo nhịp rơi ẩn nhẹ nhàng cho các card cũ (Fade out)
       tl.to(cards, {
         opacity: 0,
-        y: -20,            // Khoảng cách dịch chuyển nhỏ (16px) giúp layout tinh tế, không bị loãng
-        duration: 0.3,    // Tốc độ ẩn nhanh để người dùng không phải đợi lâu
-        stagger: 0.1,     // Nhịp rơi giữa các card mượt và dày hơn
+        y: -20, // Khoảng cách dịch chuyển nhỏ (16px) giúp layout tinh tế, không bị loãng
+        duration: 0.3, // Tốc độ ẩn nhanh để người dùng không phải đợi lâu
+        stagger: 0.1, // Nhịp rơi giữa các card mượt và dày hơn
         ease: "power3.in", // Gia tốc nhanh dần để biến mất dứt khoát
       });
 
@@ -178,9 +183,9 @@ const sortedWorks = allWorks.sort((a, b) =>
       });
 
       // Bước C: Đặt các card ở vị trí chuẩn bị xuất hiện từ dưới lên (Không tốn thời gian chạy)
-      tl.set(cards, { 
-        y: 20, 
-        opacity: 0 
+      tl.set(cards, {
+        y: 20,
+        opacity: 0,
       });
 
       // Bước D: Cho các card ở layout mới xuất hiện tiến lên nhẹ nhàng (Fade in)
@@ -191,7 +196,6 @@ const sortedWorks = allWorks.sort((a, b) =>
         stagger: 0.1,
         ease: "power3.out", // Chậm dần khi về đích, tạo cảm giác các phần tử "hạ cánh" êm ái
       });
-
     });
   });
 </script>
