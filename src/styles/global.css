@@ -50,8 +50,8 @@ html.is-scrolling #custom-scroll-thumb {
 /* --- 1. ĐỊNH NGHĨA FONT  --- */
 
 @font-face {
-  font-family: 'Inter';
-  src: url('/src/assets/fonts/Inter_24pt-Regular.ttf') format('ttf');
+  font-family: 'HelveticaNeue';
+  src: url('/src/assets/fonts/HelveticaNeueRoman.otf') format('opentype');
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -59,8 +59,8 @@ html.is-scrolling #custom-scroll-thumb {
 
 
 @font-face {
-  font-family: 'Inter';
-  src: url('/src/assets/fonts/Inter_24pt-Medium.ttf') format('ttf');
+  font-family: 'HelveticaNeue';
+  src: url('/src/assets/fonts/HelveticaNeueMedium.otf') format('opentype');
   font-weight: 500;
   font-style: normal;
   font-display: swap;
@@ -75,7 +75,7 @@ html.is-scrolling #custom-scroll-thumb {
   --mainBackground: #f1f1f1;
   --secondaryBackground: #fff;
   --linesColor: #d1d1d1;
-  --font-primary: 'Inter', sans-serif;
+  --font-primary: 'HelveticaNeue', sans-serif;
 }
 
 
@@ -199,7 +199,7 @@ body {
 h1 {
   font-size: 6rem;
   line-height: 1.1;
-  font-weight: 500;
+  font-weight: 400;
   letter-spacing: -0.03em;
 }
 
@@ -207,7 +207,7 @@ h1 {
 .text-h1--md {
   font-size: 7.5rem;
   line-height: 1.1;
-  font-weight: 500;
+  font-weight: 400;
   letter-spacing: -0.03em;
 }
 
@@ -223,7 +223,7 @@ h2,
 .text-h2 {
   font-size: 4rem;
   line-height: 1.2;
-  font-weight: 500;
+  font-weight: 400;
   letter-spacing: -0.03em;
 }
 
@@ -231,7 +231,7 @@ h3,
 .text-h3 {
   font-size: 2.25rem;
   line-height: 1.2;
-  font-weight: 500;
+  font-weight: 400;
   letter-spacing: -0.03em;
 }
 

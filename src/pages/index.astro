@@ -39,7 +39,7 @@ const works = allWorks
         <div
           class="media-frame"
           data-img-anim="hero-block"
-          data-settings='{"type": "down", "duration": 1.5, "delay": 0.2,  "repeat": true}'
+          data-settings='{"type": "down", "duration": 1.5, "delay": 0.1,  "repeat": true}'
         >
           <CustomImage src={avatar} alt="avatar" importance="feature" />
         </div>
@@ -48,7 +48,9 @@ const works = allWorks
           data-split-text-anim="word"
           data-settings='{ "repeat": true}'
         >
-          <span>HUY THUONG NGO</span>
+          <span data-split-text-anim="word" data-settings='{ "repeat": true}'
+            >HUY THUONG NGO</span
+          >
         </div>
       </div>
     </div>

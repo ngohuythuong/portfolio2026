@@ -13,7 +13,7 @@ function initUltimateInteractionSystem() {
   // 1. HỆ THỐNG XỬ LÝ PARALLAX ANIMATION
   // ==========================================
   const parallaxContainers = document.querySelectorAll("[data-parallax-container]");
-  
+
   parallaxContainers.forEach((container) => {
     const parallaxElement = container.querySelector("[data-parallax-element]");
     if (!parallaxElement) return;
@@ -23,10 +23,10 @@ function initUltimateInteractionSystem() {
     const pEnd = container.getAttribute("data-parallax-end") || "bottom top";
     const pMedia = container.getAttribute("data-parallax-media") || "all";
     // Mặc định tịnh tiến ngược lên -20% chiều cao (phù hợp video/ảnh cao 120vh-130vh)
-    const pY = parseInt(container.getAttribute("data-parallax-y")) || -20; 
+    const pY = parseInt(container.getAttribute("data-parallax-y")) || -20;
 
     const createParallax = () => {
-      gsap.fromTo(parallaxElement, 
+      gsap.fromTo(parallaxElement,
         { yPercent: 0 },
         {
           yPercent: pY,
@@ -35,7 +35,7 @@ function initUltimateInteractionSystem() {
             trigger: container,
             start: pStart,
             end: pEnd,
-            scrub: true,
+            scrub: 1.5,
             invalidateOnRefresh: true
           }
         }
@@ -66,7 +66,7 @@ function initUltimateInteractionSystem() {
     const customStart = container.getAttribute("data-pin-start") || "top 15%";
     const customEnd = container.getAttribute("data-pin-end") || "bottom top";
     const pinMode = container.getAttribute("data-pin-mode");
-    const pinMedia = container.getAttribute("data-pin-media") || "all"; 
+    const pinMedia = container.getAttribute("data-pin-media") || "all";
     const hasSpacing = container.getAttribute("data-pin-space") === "true";
     const endTriggerElement = container.querySelector("[data-pin-end-trigger]");
 
@@ -109,34 +109,34 @@ function initUltimateInteractionSystem() {
 // initUltimateInteractionSystem() will be called in the consolidated listener at the end of this file.
 
 function initInteractiveAnimations() {
-    
-    // Marquee Infinity Animation
-    const marquees = document.querySelectorAll('.marquee:not([data-anim-initialized])');
 
-    marquees.forEach(marquee => {
-        marquee.dataset.animInitialized = 'true';
-        
-        const wrapper = marquee.querySelector('.marquee__track');
-        if (!wrapper) return;
+  // Marquee Infinity Animation
+  const marquees = document.querySelectorAll('.marquee:not([data-anim-initialized])');
 
-        const content = wrapper.innerHTML;
-        wrapper.innerHTML += content + content + content;
+  marquees.forEach(marquee => {
+    marquee.dataset.animInitialized = 'true';
 
-        const marqueeAnim = gsap.to(wrapper, {
-            xPercent: -25,
-            ease: "none",
-            duration: 25,
-            repeat: -1
-        });
+    const wrapper = marquee.querySelector('.marquee__track');
+    if (!wrapper) return;
 
-        marquee.addEventListener("mouseenter", () => {
-            marqueeAnim.pause();
-        });
+    const content = wrapper.innerHTML;
+    wrapper.innerHTML += content + content + content;
 
-        marquee.addEventListener("mouseleave", () => {
-            marqueeAnim.play();
-        });
+    const marqueeAnim = gsap.to(wrapper, {
+      xPercent: -25,
+      ease: "none",
+      duration: 25,
+      repeat: -1
     });
+
+    marquee.addEventListener("mouseenter", () => {
+      marqueeAnim.pause();
+    });
+
+    marquee.addEventListener("mouseleave", () => {
+      marqueeAnim.play();
+    });
+  });
 }
 
 // Chạy khởi tạo hiệu ứng interactive cho mỗi lần load trang (kể cả first load và chuyển trang)
@@ -152,16 +152,16 @@ function initGlobalTextAnimations() {
     // Tìm container không bị ghim gần nhất để làm trigger có tọa độ cuộn ổn định tuyệt đối
     const pinContainer = el.closest('[data-pin-container]');
     if (pinContainer) return pinContainer;
-    
+
     const humanSide = el.closest('.human-side');
     if (humanSide) return humanSide;
-    
+
     const maskTrigger = el.closest('[data-mask-trigger="true"]');
     if (maskTrigger) return maskTrigger;
-    
+
     const zoomTrigger = el.closest('[data-zoom-trigger="true"]');
     if (zoomTrigger) return zoomTrigger;
-    
+
     return el;
   };
 
@@ -169,20 +169,20 @@ function initGlobalTextAnimations() {
     // Ngăn chặn việc nhân bản thẻ khi Astro SPA cập nhật trang
     if (el.querySelector(".global-line-overflow") || el.querySelector(".anim_line_mask")) return;
 
-    const animType = el.getAttribute("data-split-text-anim"); 
+    const animType = el.getAttribute("data-split-text-anim");
     if (!["word", "line", "linesMask"].includes(animType)) return;
 
     // Thiết lập thông số an toàn mặc định
-    let config = { 
-      bgColor: "rgba(0,0,0,0.32)", 
+    let config = {
+      bgColor: "rgba(0,0,0,0.32)",
       fgColor: "currentColor",
       duration: 1.5,
       delay: 0,
       stagger: 0.1,
       scrub: false,
       repeat: false
-    }; 
-    
+    };
+
     const rawSettings = el.getAttribute("data-settings");
     if (rawSettings) {
       try {
@@ -248,7 +248,7 @@ function initGlobalTextAnimations() {
     // CHẠY LUỒNG 2: LINE UP (Cơ chế tính toán dòng mượt)
     // ==========================================
     else if (animType === "line") {
-      el.innerHTML = ""; 
+      el.innerHTML = "";
       words.forEach((word) => {
         const span = document.createElement("span");
         span.className = "global-temp-word";
@@ -311,7 +311,7 @@ function initGlobalTextAnimations() {
     // CHẠY LUỒNG 3: LINES MASK
     // ==========================================
     else if (animType === "linesMask") {
-      el.innerHTML = ""; 
+      el.innerHTML = "";
       words.forEach((word) => {
         const span = document.createElement("span");
         span.className = "global-temp-word";
@@ -344,12 +344,12 @@ function initGlobalTextAnimations() {
         const bgSpan = document.createElement("span");
         bgSpan.className = "line-bg";
         bgSpan.textContent = text;
-        bgSpan.style.color = config.bgColor; 
+        bgSpan.style.color = config.bgColor;
 
         const fgSpan = document.createElement("span");
         fgSpan.className = "line-fg";
         fgSpan.textContent = text;
-        fgSpan.style.color = config.fgColor; 
+        fgSpan.style.color = config.fgColor;
 
         lineMask.appendChild(bgSpan);
         lineMask.appendChild(fgSpan);
@@ -358,7 +358,7 @@ function initGlobalTextAnimations() {
       el.appendChild(linesContainer);
 
       const allLineForegrounds = el.querySelectorAll(".anim_line_mask .line-fg");
-      gsap.set(allLineForegrounds, { 
+      gsap.set(allLineForegrounds, {
         clipPath: "inset(0% 100% 0% 0%)",
         webkitClipPath: "inset(0% 100% 0% 0%)"
       });
@@ -379,7 +379,7 @@ function initGlobalTextAnimations() {
         webkitClipPath: "inset(0% 0% 0% 0%)",
         duration: config.duration,
         delay: config.delay,
-        ease: config.scrub ? "none" : "power2.out", 
+        ease: config.scrub ? "none" : "power2.out",
         stagger: config.stagger,
         scrollTrigger: scrollTriggerConfig
       });
@@ -466,8 +466,8 @@ function initElementScrollAnimations() {
     }
 
     if (animType === "slide-up") {
-      gsap.fromTo(targets, 
-        { y: config.y, opacity: 0 }, 
+      gsap.fromTo(targets,
+        { y: config.y, opacity: 0 },
         {
           y: 0,
           opacity: 1,
@@ -479,8 +479,8 @@ function initElementScrollAnimations() {
         }
       );
     } else if (animType === "slide-down") {
-      gsap.fromTo(targets, 
-        { y: -config.y, opacity: 0 }, 
+      gsap.fromTo(targets,
+        { y: -config.y, opacity: 0 },
         {
           y: 0,
           opacity: 1,
@@ -511,11 +511,11 @@ function initImageBlockAnimation() {
 
     let config = {
       type: "down",
-      blockColor: "#f1f1f1", 
+      blockColor: "#f1f1f1",
       duration: 1.5,
       delay: 0,
       stagger: 0.1,
-      scrub: false, 
+      scrub: false,
     };
 
     const rawSettings = target.getAttribute("data-settings");
@@ -541,7 +541,7 @@ function initImageBlockAnimation() {
     // 2. TỰ ĐỘNG SINH KHỐI MÀU CUSTOM OVERLAY
     const overlay = document.createElement("div");
     overlay.className = "media-block-overlay";
-    overlay.style.backgroundColor = config.blockColor; 
+    overlay.style.backgroundColor = config.blockColor;
     target.appendChild(overlay);
 
     // 3. XÂY DỰNG TIMELINE HOẠT HỌA PHỐI HỢP VỚI SCROLLTRIGGER
@@ -550,7 +550,7 @@ function initImageBlockAnimation() {
         trigger: target,
         start: "top 80%", // Kích hoạt khi khung ảnh chạm 80% viewport
         scrub: config.scrub ? (typeof config.scrub === "boolean" ? 0.5 : config.scrub) : false, // Bật/Tắt scrub theo cấu hình
-        toggleActions: config.repeat 
+        toggleActions: config.repeat
           ? "play reverse play reverse"  // Nếu repeat: on -> Tự động chạy lại khi cuộn lên/xuống
           : "play none none none",       // Nếu repeat: off -> Chỉ chạy đúng 1 lần duy nhất
         invalidateOnRefresh: true
@@ -571,13 +571,13 @@ function initImageBlockAnimation() {
         delay: config.delay, // Áp dụng độ trễ xuất hiện
         ease: "power2.out"
       })
-      .to(overlay, {
-        // Quét mặt nạ kéo từ trên xuống dưới (độ hở inset top tăng từ 0% lên 100%)
-        clipPath: "inset(100% 0% 0% 0%)", 
-        duration: config.duration, // Áp dụng thời gian chạy duration
-        ease: "power3.inOut",
-        stagger: config.stagger // Áp dụng độ trễ stagger nếu có nhiều ảnh song song
-      }, "-=0.4"); // Chạy gối đầu đè lên nhau nhẹ để tạo sự mượt mà
+        .to(overlay, {
+          // Quét mặt nạ kéo từ trên xuống dưới (độ hở inset top tăng từ 0% lên 100%)
+          clipPath: "inset(100% 0% 0% 0%)",
+          duration: config.duration, // Áp dụng thời gian chạy duration
+          ease: "power3.inOut",
+          stagger: config.stagger // Áp dụng độ trễ stagger nếu có nhiều ảnh song song
+        }, "-=0.4"); // Chạy gối đầu đè lên nhau nhẹ để tạo sự mượt mà
     }
   });
 }
@@ -642,12 +642,12 @@ function initHeroImageBlockAnimation() {
           delay: config.delay, // Chờ đúng khoảng delay quy định (1.3s)
           ease: "power2.out"
         })
-        .to(overlay, {
-          clipPath: "inset(100% 0% 0% 0%)", // Quét khối màu tuột xuống dưới để lộ ảnh
-          duration: config.duration, // Chạy trong bao lâu (1.5s)
-          ease: "power3.inOut",
-          stagger: config.stagger
-        }, "-=0.2"); // Gối đầu nhẹ giúp hiệu ứng mượt mà
+          .to(overlay, {
+            clipPath: "inset(100% 0% 0% 0%)", // Quét khối màu tuột xuống dưới để lộ ảnh
+            duration: config.duration, // Chạy trong bao lâu (1.5s)
+            ease: "power3.inOut",
+            stagger: config.stagger
+          }, "-=0.2"); // Gối đầu nhẹ giúp hiệu ứng mượt mà
       }
     };
 
@@ -670,7 +670,7 @@ function initHumanSideStack() {
   // 1. Trạng thái ban đầu: Tất cả card xếp chồng tại chỗ, mỗi card xoay so le nhẹ (Scatter)
   cards.forEach((card, index) => {
     const initRotate = card.getAttribute("data-rotate") || "0";
-    
+
     gsap.set(card, {
       rotation: parseFloat(initRotate),
       y: 0,
@@ -704,112 +704,25 @@ function initHumanSideStack() {
   }
 }
 
-//mask transition animation
 
-function initGlobalMaskTransition() {
-    // Tìm tất cả các section đăng ký sử dụng hiệu ứng mask trên trang
-    const maskWrappers = document.querySelectorAll('[data-mask-trigger="true"]');
-    
-    if (!maskWrappers.length) return;
 
-    maskWrappers.forEach((wrapper) => {
-      // Xác định phần tử con thứ nhất (Tấm màn)
-      const topLayer = wrapper.children[0];
-      if (!topLayer) return;
-
-      // Tạo timeline độc lập cho từng cụm UI
-      gsap.fromTo(topLayer, 
-        {
-          // TỪ: Phủ kín toàn bộ màn hình
-          clipPath: "polygon(0% 0%, 100% 0%, 100% 50%, 0% 50%, 0% 50%, 100% 50%, 100% 100%, 0% 100%)",
-          webkitClipPath: "polygon(0% 0%, 100% 0%, 100% 50%, 0% 50%, 0% 50%, 100% 50%, 100% 100%, 0% 100%)"
-        },
-        {
-          // ĐẾN: Co dẹt lại thành một đường thẳng ở chính giữa (Mở ra hai đầu Top/Bottom)
-          clipPath: "polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%, 0% 100%, 100% 100%, 100% 100%, 0% 100%)",
-          webkitClipPath: "polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%, 0% 100%, 100% 100%, 100% 100%, 0% 100%)",
-          ease: "none",
-          scrollTrigger: {
-            trigger: wrapper,
-            start: "top top",      // Ghim khi wrapper chạm đỉnh màn hình
-            // FIX: Dùng function để tính end LUÔN dựa trên chiều cao thực tế sau khi layout,
-            // ảnh và font đã load xong — tránh lỗi đo sai khi dùng "+=120%" (% của element height
-            // được tính tại thời điểm init, trước khi ảnh render xong → spacer quá ngắn).
-            end: () => "+=" + (wrapper.offsetHeight + window.innerHeight * 0.5),
-            scrub: 0.6,            // Vuốt mượt theo tay cuộn chuột
-            pin: true,             // Khóa màn hình tại chỗ
-            pinSpacing: true,      // Tường minh: GSAP thêm spacer đủ lớn để section sau không đè lên
-            anticipatePin: 1,      // Tính toán trước vị trí ghim để tránh giật
-            invalidateOnRefresh: true
-          }
-        }
-      );
-    });
-  }
-
-//image zoom animation
-
-function initPureImageZoomScroll() {
-    const zoomWrappers = document.querySelectorAll('[data-zoom-trigger="true"]');
-    
-    if (!zoomWrappers.length) return;
-
-    zoomWrappers.forEach((wrapper) => {
-      const mediaBox = wrapper.querySelector('.zoom-media-layer');
-      if (!mediaBox) return;
-      
-      const img = mediaBox.querySelector("img");
-
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: wrapper,
-          start: "top top",      // Ghim chặt khi chạm đỉnh màn hình
-          end: "+=120%",         // Chiều dài hành trình cuộn chuột làm hiệu ứng
-          scrub: 0.8,            // Độ vuốt mượt bám theo tay cuộn
-          pin: true,             // Khóa màn hình tại chỗ
-          pinSpacing: true,      // Tạo khoảng trống đệm ngăn section sau đè lên sớm
-          anticipatePin: 1,      // Tính toán trước tọa độ ghim mượt mà
-          invalidateOnRefresh: true
-        }
-      });
-
-      // 1. Phóng to khung bọc ảnh tràn viền 100% và xóa bo góc
-      tl.to(mediaBox, {
-        width: "100vw",
-        height: "100vh",
-        borderRadius: "0px",
-        ease: "none"
-      }, 0);
-
-      // 2. Tạo chuyển động thấu kính Parallax nhẹ cho ảnh bên trong
-      if (img) {
-        tl.to(img, {
-          scale: 1.2,
-          ease: "none"
-        }, 0);
-      }
-    });
-  }
-  
 document.addEventListener("astro:page-load", () => {
   console.log("🔄 Astro page navigated & Interaction System fully loaded");
-  
+
   // Chạy trong requestAnimationFrame để đảm bảo tất cả font chữ, CSS và layout đã được render xong hoàn chỉnh trước khi đo offsetTop
   requestAnimationFrame(() => {
     // 1. Khởi chạy hệ thống Pin và Parallax gốc
     initUltimateInteractionSystem();
-    
+
     // 2. Khởi chạy hiệu ứng chữ toàn trang
     initGlobalTextAnimations();
     initElementScrollAnimations();
-    
+
     // 3. Khởi chạy các khối hiệu ứng hình ảnh/giao diện khác
     initImageBlockAnimation();
     initHeroImageBlockAnimation();
     initHumanSideStack();
-    initGlobalMaskTransition(); 
-    initPureImageZoomScroll();
-    
+
     // 4. Sắp xếp và tính toán lại toàn bộ tọa độ ScrollTrigger chính xác
     ScrollTrigger.sort();
     ScrollTrigger.refresh();

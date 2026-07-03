@@ -57,6 +57,7 @@ const extendedCaptions = [...captions, captions[0]];
     height: var(--caption-height);
     line-height: var(--caption-height);
     font-size: 3.5rem;
+    font-weight: 400;
     letter-spacing: -0.02em;
     text-align: center;
     white-space: nowrap;
@@ -68,14 +69,16 @@ const extendedCaptions = [...captions, captions[0]];
   import { gsap } from "gsap";
 
   function initLoaderAnimation() {
-    const innerContainer = document.querySelector('[data-caption-repeater]');
-    const overlay = document.getElementById('page-transition-overlay');
-    const columns = overlay ? overlay.querySelectorAll('.transition-column') : null;
+    const innerContainer = document.querySelector("[data-caption-repeater]");
+    const overlay = document.getElementById("page-transition-overlay");
+    const columns = overlay
+      ? overlay.querySelectorAll(".transition-column")
+      : null;
 
     // Chuẩn bị các cột transition che màn hình ở ngay lần tải đầu tiên
     if (overlay && columns) {
-      overlay.style.visibility = 'visible';
-      overlay.style.pointerEvents = 'auto';
+      overlay.style.visibility = "visible";
+      overlay.style.pointerEvents = "auto";
       gsap.set(columns, { scaleY: 1 });
     }
 
@@ -86,7 +89,9 @@ const extendedCaptions = [...captions, captions[0]];
       return;
     }
 
-    const textElements = innerContainer.querySelectorAll('.caption--repeater--text');
+    const textElements = innerContainer.querySelectorAll(
+      ".caption--repeater--text",
+    );
     if (textElements.length <= 1) {
       if (typeof (window as any).playTransitionReveal === "function") {
         (window as any).playTransitionReveal();
@@ -99,11 +104,11 @@ const extendedCaptions = [...captions, captions[0]];
 
     const tl = gsap.timeline({
       onComplete: () => {
-        document.querySelector('.loader--caption')?.remove(); // Xóa khỏi DOM
+        document.querySelector(".loader--caption")?.remove(); // Xóa khỏi DOM
         if (typeof (window as any).playTransitionReveal === "function") {
           (window as any).playTransitionReveal();
         }
-      }
+      },
     });
 
     for (let i = 1; i <= totalShifts; i++) {

@@ -24,7 +24,7 @@ const { entry, nextEntry } = Astro.props;
   title={entry.data.project_hero.title}
   description={entry.data.project_hero.description}
 >
-  <main data-barba="main-wrapper" data-barba-namespace="work-detail">
+  <article data-barba="main-wrapper" data-barba-namespace="work-detail">
     <section class="work-hero">
       <div class="container">
         <h1
@@ -242,7 +242,7 @@ const { entry, nextEntry } = Astro.props;
     <section class="works-next">
       <NextProject project={nextEntry} />
     </section>
-  </main>
+  </article>
 
   <style>
     .work-hero {
