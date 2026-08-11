@@ -13,7 +13,7 @@
 
   project_overview:
     heading: "Project Overview"
-    description: "Balley is a contemporary fashion brand that needed a digital presence as refined as its physical collections."
+    description: "Bailey is a contemporary fashion brand that needed a digital presence as refined as its physical collections."
     challenge: "Fashion websites often struggle to balance high-quality visual storytelling with performance and conversion. The existing market is crowded with cluttered interfaces that distract users from the products, leading to high bounce rates and fragmented brand perception."
     solution: "I designed a 'Visual-First' interface that utilizes generous whitespace and a strict grid system to highlight craftsmanship. By streamlining the path-to-purchase and integrating immersive 'Lookbook' interactions, the site transforms from a simple shop into a curated brand experience."
     objectives:

@@ -5,11 +5,16 @@ import CustomImage from "../../components/CustomImage.astro";
 import NextProject from "../../components/NextProject.astro";
 export async function getStaticPaths() {
   const workEntries = await getCollection("works");
-  return workEntries.map((entry, index) => {
+  const sortedWorks = [...workEntries].sort((a, b) =>
+    a.data.project_hero.metadata.stt.localeCompare(
+      b.data.project_hero.metadata.stt,
+    ),
+  );
+  return sortedWorks.map((entry, index) => {
     const nextEntry =
-      index === workEntries.length - 1
-        ? workEntries[0]
-        : workEntries[index + 1];
+      index === sortedWorks.length - 1
+        ? sortedWorks[0]
+        : sortedWorks[index + 1];
     return {
       params: { slug: entry.slug },
       props: { entry, nextEntry },

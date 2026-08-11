@@ -15,7 +15,7 @@
     heading: "Project Overview"
     description: "Developing a multi-modal transportation solution that empowers users to plan their journey from 'doorstep to destination' within a single, unified platform."
     challenge: "Travelers often struggle with switching between fragmented apps to book flights and connecting buses, leading to disjointed schedule management. Existing interfaces are frequently cluttered with information overload, making it difficult to compare prices and select optimal time slots."
-    solution: "SkyPath focuses on consolidating transit data into a single experience flow. By prioritizing information hierarchy and intelligent filtering, the app reduces cognitive load, allowing users to complete flight and connecting bus bookings in under 3 minutes."
+    solution: "Maas focuses on consolidating transit data into a single experience flow. By prioritizing information hierarchy and intelligent filtering, the app reduces cognitive load, allowing users to complete flight and connecting bus bookings in under 3 minutes."
     objectives:
       - "Seamless Intermodal Booking"
       - "Cognitive Load Reduction"

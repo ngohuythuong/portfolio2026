@@ -4,12 +4,11 @@ import ProjectCard from "../components/ProjectCard.astro";
 import { getCollection } from "astro:content";
 import CustomImage from "../components/CustomImage.astro";
 import avatar from "../assets/images/avatar.webp";
-import thuongnh from "../assets/images/thuongnh.webp";
-import pickleball from "../assets/images/pic.webp";
+import thuongpick from "../assets/images/pic 1.webp";
 import Icon from "../components/Icon.astro";
 
 const allWorks = await getCollection("works");
-const works = allWorks
+const works = [...allWorks]
   .sort((a, b) =>
     a.data.project_hero.metadata.stt.localeCompare(
       b.data.project_hero.metadata.stt,
@@ -361,7 +360,7 @@ const works = allWorks
           data-settings='{"type": "down",  "duration": 1.5, "repeat": true}'
         >
           <CustomImage
-            src={pickleball}
+            src={thuongpick}
             alt="Thuongnh"
             importance="detail"
             class="human-img"

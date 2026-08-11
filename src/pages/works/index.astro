@@ -4,7 +4,7 @@ import { getCollection } from "astro:content";
 import ProjectCard from "../../components/ProjectCard.astro";
 const allWorks = await getCollection("works");
 // Sắp xếp dự án theo stt
-const sortedWorks = allWorks.sort((a, b) =>
+const sortedWorks = [...allWorks].sort((a, b) =>
   a.data.project_hero.metadata.stt.localeCompare(
     b.data.project_hero.metadata.stt,
   ),
