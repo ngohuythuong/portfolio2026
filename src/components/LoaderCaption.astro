@@ -21,17 +21,14 @@ const extendedCaptions = [...captions, captions[0]];
 </div>
 
 <style>
-  :root {
-    --caption-height: 4.5rem;
-    --text-color: #f5f5f5;
-  }
-
   .loader--caption {
+    --caption-height: 4.5rem;
+
     position: fixed;
     top: 0;
     left: 0;
     z-index: 9999;
-    background: #191919;
+    background: var(--darkBackground);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -61,7 +58,7 @@ const extendedCaptions = [...captions, captions[0]];
     letter-spacing: -0.02em;
     text-align: center;
     white-space: nowrap;
-    color: var(--text-color);
+    color: var(--lightText);
   }
 </style>
 

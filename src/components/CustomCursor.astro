@@ -6,13 +6,13 @@
   #mouseCursor {
     width: 15px;
     height: 15px;
-    background-color: #191919;
+    background-color: var(--darkBackground);
     border-radius: 50%;
     position: fixed;
     top: 0;
     left: 0;
     pointer-events: none;
-    z-index: 999999999999 !important; /* Đảm bảo nổi lên trên tất cả các lớp */
+    z-index: 2147483647 !important; /* Giá trị z-index tối đa — nổi trên tất cả các lớp */
     transform: translate(-50%, -50%);
     will-change: transform;
     display: flex !important;

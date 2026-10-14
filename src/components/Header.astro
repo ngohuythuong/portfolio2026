@@ -1,18 +1,20 @@
 ---
+import { getEntry } from "astro:content";
 
+const { data: site } = await getEntry("site", "index");
+const desktopNav = site.nav.filter((item) => item.href !== "/");
+const headerSocials = site.socials.filter((social) => social.in_header);
 ---
 
 <header class="site-header">
   <div class="container">
     <nav class="site-header__nav">
       <a href="/" class="site-header__logo"
-        ><img src="/assets/logo/logo.svg" alt="Logo" /></a
+        ><img src="/assets/logo/logo.svg" alt={`${site.name} — Home`} /></a
       >
       <div class="site-header__controls">
         <ul class="nav__list nav__list--desktop">
-          <li><a data-hover href="/about">About</a></li>
-          <li><a data-hover href="/works">Works</a></li>
-          <li><a data-hover href="/contact">Contact</a></li>
+          {desktopNav.map((item) => <li><a data-hover href={item.href}>{item.label}</a></li>)}
         </ul>
         <div class="nav__toggle">
           <div class="nav__toggle-icon">
@@ -25,26 +27,20 @@
       <div class="nav-mobile">
         <div class="nav-mobile__inner">
           <ul class="nav__list nav-mobile__list">
-            <li><a href="/">Home</a></li>
-            <li><a href="/about">About</a></li>
-            <li><a href="/works">Works</a></li>
-            <li><a href="/contact">Contact</a></li>
+            {site.nav.map((item) => <li><a href={item.href}>{item.label}</a></li>)}
           </ul>
           <div class="nav-mobile__footer">
-            <span>(Stay connected)</span>
+            <span>{site.socials_label}</span>
             <ul class="social-list">
-              <li>
-                <a
-                  class="social-list__link"
-                  href="https://www.linkedin.com/in/huythuongngo/">Linkedin</a
-                >
-              </li>
-              <li>
-                <a
-                  class="social-list__link"
-                  href="https://www.behance.net/ngohuythuong1991">Behance</a
-                >
-              </li>
+              {
+                headerSocials.map((social) => (
+                  <li>
+                    <a class="social-list__link" href={social.href}>
+                      {social.label}
+                    </a>
+                  </li>
+                ))
+              }
             </ul>
           </div>
         </div>
@@ -118,7 +114,9 @@
     height: 0;
     overflow: hidden;
     background: var(--mainBackground);
-    transition: all 0.5s ease-in-out;
+    transition:
+      height 0.5s ease-in-out,
+      opacity 0.5s ease-in-out;
     z-index: 97;
     opacity: 0;
     pointer-events: none;
@@ -171,7 +169,7 @@
       width: 2.5rem;
       height: 2px;
       background: var(--mainColor);
-      transition: all 0.3s ease;
+      transition: transform 0.3s ease;
     }
   }
 

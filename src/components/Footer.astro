@@ -1,5 +1,7 @@
 ---
+import { getEntry } from "astro:content";
 
+const { data: site } = await getEntry("site", "index");
 ---
 
 <footer class="site-footer" data-cursor-dark="true">
@@ -8,7 +10,7 @@
       <img
         class="site-footer__logo"
         src="/assets/logo/logo-white.svg"
-        alt="logo"
+        alt={site.name}
         data-scroll-anim="slide-up"
         data-settings='{ "repeat": true}'
       />
@@ -17,16 +19,16 @@
           class="site-footer__tagline"
           data-split-text-anim="word"
           data-settings='{ "repeat": true}'
-          >Say Hi / 挨拶
+          >{site.footer.tagline}
         </span>
         <a
           class="btn"
-          href="mailto:ngohuythuong@live.com"
+          href={`mailto:${site.email}`}
           data-hover
           data-scroll-anim="slide-up"
           data-settings='{ "repeat": true}'
         >
-          Let's talk
+          {site.footer.cta_label}
         </a>
       </div>
     </div>
@@ -34,12 +36,10 @@
   <div class="container">
     <div class="site-footer__bottom">
       <div class="clock">
-        <span>ICT</span>
+        <span>{site.footer.clock_label}</span>
         <span class="clock__display">00:00:00</span>
       </div>
-      <span class="site-footer__copyright"
-        >© 2026 — currently locked in from vietnam</span
-      >
+      <span class="site-footer__copyright">{site.footer.copyright}</span>
     </div>
   </div>
 </footer>
@@ -63,8 +63,8 @@
     gap: 12rem;
     height: 100vh;
     padding: 8rem 0 2rem 0;
-    color: #f5f5f5;
-    background: #191919;
+    color: var(--lightText);
+    background: var(--darkBackground);
   }
 
   .site-footer__main {
@@ -104,17 +104,11 @@
     display: flex;
     align-items: center;
     gap: 0.5rem;
-
-    span {
-      font-size: 0.875rem;
-      font-weight: 400;
-      line-height: 1.5;
-    }
   }
 
+  .clock span,
   .site-footer__copyright {
     font-size: 0.875rem;
-    font-weight: 400;
     line-height: 1.5;
   }
 

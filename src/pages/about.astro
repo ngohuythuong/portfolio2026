@@ -1,16 +1,15 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import CustomImage from "../components/CustomImage.astro";
-import chinaStreet from "../assets/images/china-street.webp";
-import artExhibition from "../assets/images/art-exhibition.webp";
-import img1994 from "../assets/images/IMG_1994-1.png";
-import hanoi from "../assets/images/hanoi.webp";
-import cafeChill from "../assets/images/cafe-chill.webp";
-import paint from "../assets/images/paint.webp";
 import Icon from "../components/Icon.astro";
+import Lines from "../components/Lines.astro";
+import { getEntry } from "astro:content";
+
+const { data: page } = await getEntry("about", "index");
+const { hero, perspective, intent, skills, human_side } = page;
 ---
 
-<BaseLayout title="Huy Thuong — About">
+<BaseLayout title={page.seo.title} description={page.seo.description}>
   <section
     class="hero"
     data-pin-container
@@ -20,13 +19,13 @@ import Icon from "../components/Icon.astro";
   >
     <div class="hero-wrapper" data-pin-element>
       <div class="container container--flush">
-        <div class="marquee">
-          <div class="marquee__track">
+        <h1 class="marquee" aria-label={`${hero.heading_accent} ${hero.heading}`}>
+          <span class="marquee__track">
             <span class="text-h1 text-h1--xl">
-              <span class="custom-font">About</span>Me -
+              <span class="custom-font">{hero.heading_accent}</span>{hero.heading} -
             </span>
-          </div>
-        </div>
+          </span>
+        </h1>
       </div>
       <div class="container align-center">
         <div
@@ -35,15 +34,15 @@ import Icon from "../components/Icon.astro";
           data-settings='{"type": "down", "duration": 1.5, "delay": 0.1,  "repeat": true}'
         >
           <CustomImage
-            src={chinaStreet}
-            alt="china-street"
+            src={hero.image.src}
+            alt={hero.image.alt}
             importance="feature"
           />
         </div>
         <span
           class="scroll-hint"
           data-split-text-anim="word"
-          data-settings='{ "repeat": true}'>Scroll to discover</span
+          data-settings='{ "repeat": true}'>{hero.scroll_hint}</span
         >
       </div>
     </div>
@@ -61,9 +60,7 @@ import Icon from "../components/Icon.astro";
         data-split-text-anim="line"
         data-settings='{ "repeat": true}'
       >
-        I'm Ngô Huy Thường — a UI/UX Designer who loves softening dry logic into
-        smooth, emotive interfaces, where every touchpoint feels completely
-        natural, making users truly want to stay
+        {page.intro}
       </p>
     </div>
   </section>
@@ -76,8 +73,8 @@ import Icon from "../components/Icon.astro";
           data-settings='{"type": "down",  "duration": 1.5, "repeat": true}'
         >
           <CustomImage
-            src={artExhibition}
-            alt="art-exhibition"
+            src={perspective.image.src}
+            alt={perspective.image.alt}
             importance="feature"
             class="perspective-image"
           />
@@ -90,46 +87,28 @@ import Icon from "../components/Icon.astro";
               data-settings='{ "repeat": true}'
             >
               <Icon name="add" />
-              <span class="overline__text">Perspective</span>
+              <span class="overline__text">{perspective.overline}</span>
             </div>
             <h2
               class="text-h2"
-              data-split-text-anim="word"
+              data-split-text-anim="line"
               data-settings='{ "repeat": true}'
             >
-              Finding logic in the quiet
+              <Lines text={perspective.heading} />
             </h2>
           </div>
           <div class="perspective__text">
-            <p
-              class="p-md"
-              data-split-text-anim="linesMask"
-              data-settings='{"fgColor": "#191919", "repeat": true, "scrub": true}'
-            >
-              My journey didn't start with a love for 'pretty screens,' but from
-              a passion for decoding complexity. I believe great design is at
-              its best when it functions so seamlessly that users don't even
-              notice it's there
-            </p>
-            <p
-              class="p-md"
-              data-split-text-anim="linesMask"
-              data-settings='{ "fgColor": "#191919", "repeat": true, "scrub": true}'
-            >
-              I've always been the one observing the world through
-              noise-canceling headphones. Not because I have nothing to say, but
-              because I'm busy 'softening' the hidden rules beneath the surface
-              of everything.
-            </p>
-            <p
-              class="p-md"
-              data-split-text-anim="linesMask"
-              data-settings='{ "fgColor": "#191919", "repeat": true, "scrub": true}'
-            >
-              When the world gets too loud, I find my way back to 'Midnight
-              Logic' — a space of clean grids, lo-fi beats, and the pursuit of a
-              frictionless experience."
-            </p>
+            {
+              perspective.paragraphs.map((paragraph) => (
+                <p
+                  class="p-md"
+                  data-split-text-anim="linesMask"
+                  data-settings='{"fgColor": "#191919", "repeat": true, "scrub": true}'
+                >
+                  {paragraph}
+                </p>
+              ))
+            }
           </div>
         </div>
       </div>
@@ -158,9 +137,9 @@ import Icon from "../components/Icon.astro";
           playsinline
           loop
           class="media-embed__video"
-          poster="/assets/images/intro-about-cover.webp"
+          poster={intent.video.poster}
         >
-          <source src="/assets/video/deep-mood.mp4" type="video/mp4" />
+          <source src={intent.video.src} type="video/mp4" />
         </video>
       </div>
     </div>
@@ -173,41 +152,34 @@ import Icon from "../components/Icon.astro";
             data-settings='{ "repeat": true}'
           >
             <Icon name="add" />
-            <span class="overline__text">The Intent</span>
+            <span class="overline__text">{intent.overline}</span>
           </div>
           <h2
             class="text-h2"
-            data-split-text-anim="word"
+            data-split-text-anim="line"
             data-settings='{ "repeat": true}'
           >
-            Analog Soul Digital Logic
+            <Lines text={intent.heading} />
           </h2>
         </div>
-        <div class="intent__row intent__row--right">
-          <p
-            class="p-md"
-            data-split-text-anim="linesMask"
-            data-settings='{"bgColor": "rgba(255,255,255,0.32)", "fgColor": "#ffffff", "repeat": true, "scrub": true}'
-          >
-            People often ask how a sketchbook lover ends up building complex
-            Design Systems. To me, it's the same craft. Whether it's a pencil
-            stroke or a Figma component, it starts with intent. My approach is a
-            constant battle against 'feature bloat.' I don't just add elements;
-            I distill them. I build systems that scale, not just screens that
-            look good.
-          </p>
-        </div>
-        <div class="intent__row intent__row--center">
-          <p
-            class="p-md"
-            data-split-text-anim="linesMask"
-            data-settings='{"bgColor": "rgba(255,255,255,0.32)", "fgColor": "#ffffff", "repeat": true, "scrub": true}'
-          >
-            Working for the US and Japan markets taught me one thing: Efficiency
-            is the ultimate sophistication. If a user has to think twice, I've
-            failed. I design for that split second of 'it just works'.
-          </p>
-        </div>
+        {
+          intent.paragraphs.map((paragraph, index) => (
+            <div
+              class:list={[
+                "intent__row",
+                index === 0 ? "intent__row--right" : "intent__row--center",
+              ]}
+            >
+              <p
+                class="p-md"
+                data-split-text-anim="linesMask"
+                data-settings='{"bgColor": "rgba(255,255,255,0.32)", "fgColor": "#ffffff", "repeat": true, "scrub": true}'
+              >
+                {paragraph}
+              </p>
+            </div>
+          ))
+        }
       </div>
     </div>
   </section>
@@ -216,83 +188,50 @@ import Icon from "../components/Icon.astro";
       <div class="skills__row">
         <div class="skills__aside">
           <div class="section-header">
-            <span
+            <div
               class="overline"
               data-scroll-anim="slide-up"
               data-settings='{ "repeat": true}'
             >
               <Icon name="add" />
-              <span class="overline__text">Skills & Tools</span>
-            </span>
+              <span class="overline__text">{skills.overline}</span>
+            </div>
             <h2
               class="text-h2"
-              data-split-text-anim="word"
+              data-split-text-anim="line"
               data-settings='{ "repeat": true}'
             >
-              How I Help
+              <Lines text={skills.heading} />
             </h2>
             <p
               class="p-desc"
               data-split-text-anim="line"
               data-settings='{ "repeat": true}'
             >
-              Decoding the 'why' before I even touch the pixels. I bridge the
-              gap between human centered vibes and clean, functional code. I
-              don't just build products; I craft digital spaces where logic
-              meets a human touch, making sure everything is as smooth as your
-              favorite playlist
+              {skills.description}
             </p>
           </div>
           <div class="personal">
             <div class="media-frame">
-              <CustomImage src={img1994} alt="IMG_1994-1" importance="detail" />
+              <CustomImage src={skills.image.src} alt={skills.image.alt} importance="detail" />
             </div>
             <div class="chat-bubble">
-              <span id="typing-text"></span><span class="cursor"></span>
+              <span id="typing-text" data-words={JSON.stringify(skills.typing_words)}></span><span class="cursor"></span>
             </div>
           </div>
         </div>
         <div class="skills__list">
-          <div class="skills__item">
-            <h3 class="text-h3">UX Research</h3>
-            <p class="p-md">
-              I dive deep into the data hidden beneath every move. No guessing
-              games here I hunt for answers directly from users to make sure
-              every single pixel has a legit reason to exist.
-            </p>
-            <ul class="tools">
-              <li class="tools-badges">User Empathy</li>
-              <li class="tools-badges">User Flow Analysis</li>
-              <li class="tools-badges">Usability Testing</li>
-            </ul>
-          </div>
-          <div class="skills__item">
-            <h3 class="text-h3">UI Design</h3>
-            <p class="p-md">
-              Where aesthetics meet utility. I craft clean, modern interfaces
-              backed by rock solid Design Systems, making sure everything is not
-              just 'pretty' but also built to scale without the mess.
-            </p>
-            <ul class="tools">
-              <li class="tools-badges">Visual Hierarchy</li>
-              <li class="tools-badges">Design System</li>
-              <li class="tools-badges">Micro-interactions</li>
-              <li class="tools-badges">Hi-fi Prototyping</li>
-            </ul>
-          </div>
-          <div class="skills__item">
-            <h3 class="text-h3">Development</h3>
-            <p class="p-md">
-              Breaking the wall between design and dev. With a solid grip on
-              HTML, CSS, I smooth out the handover process, making sure every
-              creative spark actually works and feels just right in production
-            </p>
-            <ul class="tools">
-              <li class="tools-badges">Code-friendly</li>
-              <li class="tools-badges">Framer</li>
-              <li class="tools-badges">Responsive Logic</li>
-            </ul>
-          </div>
+          {
+            skills.items.map((item) => (
+              <div class="skills__item">
+                <h3 class="text-h3" data-split-text-anim="line">{item.title}</h3>
+                <p class="p-md">{item.text}</p>
+                <ul class="tools">
+                  {item.tags.map((tag) => <li class="tools-badges">{tag}</li>)}
+                </ul>
+              </div>
+            ))
+          }
         </div>
       </div>
     </div>
@@ -302,20 +241,20 @@ import Icon from "../components/Icon.astro";
       <div class="human-side__row">
         <div class="human-side__content">
           <div class="section-header">
-            <span
+            <div
               class="overline"
               data-scroll-anim="slide-up"
               data-settings='{ "repeat": true}'
             >
               <Icon name="add" />
-              <span class="overline__text">The Human Side</span>
-            </span>
+              <span class="overline__text">{human_side.overline}</span>
+            </div>
             <h2
               class="text-h2"
-              data-split-text-anim="word"
+              data-split-text-anim="line"
               data-settings='{ "repeat": true}'
             >
-              When I'm not <br />polishing pixels...
+              <Lines text={human_side.heading} />
             </h2>
           </div>
           <p
@@ -323,60 +262,28 @@ import Icon from "../components/Icon.astro";
             data-split-text-anim="line"
             data-settings='{ "repeat": true}'
           >
-            I'm a low-key observer. To me, the world is the ultimate case study.
-            When the laptop closes, the real research begins. I find design
-            inspiration in the quiet, mundane moments of life using that raw
-            empathy to make sure my digital pixels feel human
+            {human_side.description}
           </p>
         </div>
         <div class="funfact-list">
-          <div class="funfact-card" data-stack-card data-rotate="-3">
-            <div class="media-frame">
-              <CustomImage
-                src={hanoi}
-                alt="hanoi"
-                importance="detail"
-                class="funfact-image"
-              />
-            </div>
-            <div class="funfact-card__body">
-              <h3 class="text-h3">Photography</h3>
-              <p class="p-md">
-                Observing the world through a lens to sharp my eye for
-                composition.
-              </p>
-            </div>
-          </div>
-          <div class="funfact-card" data-stack-card data-rotate="4">
-            <div class="media-frame">
-              <CustomImage
-                src={cafeChill}
-                alt="cafe-chill"
-                importance="detail"
-                class="funfact-image"
-              />
-            </div>
-            <div class="funfact-card__body">
-              <h3 class="text-h3">Caffeine & Curating</h3>
-              <p class="p-md">Chasing the city's most minimal-vibe cafes.</p>
-            </div>
-          </div>
-          <div class="funfact-card" data-stack-card data-rotate="-6">
-            <div class="media-frame">
-              <CustomImage
-                src={paint}
-                alt="paint"
-                importance="detail"
-                class="funfact-image"
-              />
-            </div>
-            <div class="funfact-card__body">
-              <h3 class="text-h3">Drawing & Sketching</h3>
-              <p class="p-md">
-                Trading pixels for pencils to recharge my visual thinking.
-              </p>
-            </div>
-          </div>
+          {
+            human_side.funfacts.map((funfact) => (
+              <div class="funfact-card" data-stack-card data-rotate={funfact.rotate}>
+                <div class="media-frame">
+                  <CustomImage
+                    src={funfact.image.src}
+                    alt={funfact.image.alt}
+                    importance="detail"
+                    class="funfact-image"
+                  />
+                </div>
+                <div class="funfact-card__body">
+                  <h3 class="text-h3" data-split-text-anim="line">{funfact.title}</h3>
+                  <p class="p-md">{funfact.text}</p>
+                </div>
+              </div>
+            ))
+          }
         </div>
       </div>
     </div>
@@ -405,14 +312,14 @@ import Icon from "../components/Icon.astro";
     }
 
     .intro {
-      background-color: #191919;
+      background-color: var(--darkBackground);
       min-height: 100vh;
       padding: 12rem 0;
 
       .p-big {
         max-width: 720px;
         text-align: center;
-        color: #f5f5f5;
+        color: var(--lightText);
       }
     }
 
@@ -466,7 +373,7 @@ import Icon from "../components/Icon.astro";
       color: #ffffff;
 
       .text-h2 {
-        max-width: 520px;
+        max-width: 480px;
       }
     }
 
@@ -493,9 +400,7 @@ import Icon from "../components/Icon.astro";
       position: absolute;
       top: 0;
       left: 0;
-      width: 100%;
       z-index: -1;
-      min-height: 100vh;
     }
 
     .skills {
@@ -665,19 +570,6 @@ import Icon from "../components/Icon.astro";
         padding: 3rem 0;
       }
 
-      .hero__inner .p-big {
-        width: 100%;
-      }
-
-      .hero__bottom {
-        align-items: flex-start;
-      }
-
-      .hero__bottom .media-frame {
-        width: 100%;
-        order: 1;
-      }
-
       .scroll-hint {
         order: 2;
       }
@@ -707,10 +599,6 @@ import Icon from "../components/Icon.astro";
         padding: 4rem 0;
       }
 
-      .hero__inner .p-big {
-        width: 100%;
-      }
-
       .perspective__layout {
         width: 60%;
         gap: 3rem;
@@ -736,14 +624,14 @@ import Icon from "../components/Icon.astro";
     }
   </style>
   <script>
-    // Danh sách các từ bạn muốn chạy hiệu ứng
-    const words = ["Figma", "Framer", "Photoshop", "Illustrator"];
+    const typingTarget = document.getElementById("typing-text");
+
+    // Danh sách các từ chạy hiệu ứng — khai báo ở skills.typing_words trong src/content/about/index.yaml
+    const words: string[] = JSON.parse(typingTarget?.dataset.words ?? "[]");
 
     let wordIndex = 0;
     let charIndex = 0;
     let isDeleting = false;
-
-    const typingTarget = document.getElementById("typing-text");
 
     function typeEffect() {
       const currentWord = words[wordIndex];
@@ -787,7 +675,7 @@ import Icon from "../components/Icon.astro";
     // Chạy hiệu ứng ngay khi DOM đã sẵn sàng
     document.addEventListener("DOMContentLoaded", () => {
       // Đợi 500ms ban đầu rồi mới kích hoạt hiệu ứng gõ
-      setTimeout(typeEffect, 500);
+      if (words.length) setTimeout(typeEffect, 500);
     });
   </script>
 </BaseLayout>

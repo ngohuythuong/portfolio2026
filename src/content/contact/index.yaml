@@ -1,0 +1,23 @@
+# Nội dung trang Contact (/contact)
+# Email và các link mạng xã hội lấy từ site/index.yaml
+
+seo:
+  title: "Contact — Ngô Huy Thường, UI/UX Designer"
+  description: "Have a project in mind or just want to say hi? Get in touch with Ngô Huy Thường via email, LinkedIn, Behance or Facebook."
+
+subtitle: "Say hi / 挨拶"
+heading: "Let's Collaborate"
+
+labels:
+  email: "Email"
+  socials: "Stay Connected"
+  availability: "Availability"
+  location: "Locked in from"
+
+availability: "Open for new vibes"
+# Lưu ý: đồng hồ luôn hiển thị giờ Việt Nam (Asia/Ho_Chi_Minh)
+clock_label: "EST"
+
+image:
+  src: "../../assets/images/img-2.jpg"
+  alt: "Portrait of Ngô Huy Thường"

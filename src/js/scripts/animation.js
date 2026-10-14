@@ -1,731 +1,481 @@
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { SplitText } from "gsap/SplitText";
 
-gsap.registerPlugin(ScrollTrigger);
+gsap.registerPlugin(ScrollTrigger, SplitText);
 
-function initUltimateInteractionSystem() {
-  // Định nghĩa 2 mốc màn hình chuẩn UX toàn hệ thống
-  let mm = gsap.matchMedia();
-  const isDesktop = "(min-width: 1024px)";
-  const isMobile = "(max-width: 1023px)";
+// Mốc màn hình chuẩn UX toàn hệ thống
+const BP_DESKTOP = "(min-width: 1024px)";
+const BP_MOBILE = "(max-width: 1023px)";
+const BP_STACK = "(min-width: 992px)";
 
-  // ==========================================
-  // 1. HỆ THỐNG XỬ LÝ PARALLAX ANIMATION
-  // ==========================================
-  const parallaxContainers = document.querySelectorAll("[data-parallax-container]");
+// Mỗi trang có 1 context + 1 matchMedia riêng → revert toàn bộ khi rời trang
+let ctx;
+let mm;
 
-  parallaxContainers.forEach((container) => {
-    const parallaxElement = container.querySelector("[data-parallax-element]");
-    if (!parallaxElement) return;
+// ==========================================
+// HELPERS
+// ==========================================
 
-    // Đọc thông số cấu hình linh hoạt từ HTML dựa trên bộ tên đầy đủ
-    const pStart = container.getAttribute("data-parallax-start") || "top bottom";
-    const pEnd = container.getAttribute("data-parallax-end") || "bottom top";
-    const pMedia = container.getAttribute("data-parallax-media") || "all";
-    // Mặc định tịnh tiến ngược lên -20% chiều cao (phù hợp video/ảnh cao 120vh-130vh)
-    const pY = parseInt(container.getAttribute("data-parallax-y")) || -20;
+/**
+ * Đọc JSON từ data-settings và merge vào giá trị mặc định.
+ * Chỉ nhận key có trong defaults và đúng kiểu (scrub nhận cả boolean lẫn number).
+ */
+function readSettings(el, defaults) {
+  const config = { ...defaults };
+  const raw = el.getAttribute("data-settings");
+  if (!raw) return config;
 
-    const createParallax = () => {
-      gsap.fromTo(parallaxElement,
-        { yPercent: 0 },
-        {
-          yPercent: pY,
-          ease: "none",
-          scrollTrigger: {
-            trigger: container,
-            start: pStart,
-            end: pEnd,
-            scrub: 1.5,
-            invalidateOnRefresh: true
-          }
-        }
-      );
-    };
-
-    // Phân luồng thiết bị cho Parallax
-    if (pMedia === "desktop") {
-      mm.add(isDesktop, () => { createParallax(); });
-    } else if (pMedia === "mobile") {
-      mm.add(isMobile, () => { createParallax(); });
-    } else {
-      createParallax(); // Chạy trên 'all'
+  try {
+    const parsed = JSON.parse(raw.replace(/'/g, '"'));
+    for (const key in defaults) {
+      const value = parsed[key];
+      const isScrub = key === "scrub" && typeof value === "number";
+      if (typeof value === typeof defaults[key] || isScrub) config[key] = value;
     }
+  } catch (e) {
+    console.warn("data-settings không hợp lệ:", el, e);
+  }
+  return config;
+}
+
+/** ScrollTrigger config dùng chung cho các hiệu ứng "xuất hiện khi cuộn tới" */
+function revealTrigger(trigger, config, extra = {}) {
+  return {
+    trigger,
+    start: "top 85%",
+    scrub: config.scrub === true ? 0.5 : config.scrub,
+    toggleActions: config.repeat ? "play reverse play reverse" : "play none none none",
+    invalidateOnRefresh: true,
+    ...extra,
+  };
+}
+
+// Phần tử nằm trong khối bị ghim phải dùng container không bị ghim làm trigger
+// để tọa độ cuộn ổn định (thứ tự = độ ưu tiên)
+const STABLE_TRIGGERS = [
+  "[data-pin-container]",
+  ".human-side",
+  '[data-mask-trigger="true"]',
+  '[data-zoom-trigger="true"]',
+];
+
+function getTrigger(el) {
+  for (const selector of STABLE_TRIGGERS) {
+    const container = el.closest(selector);
+    if (container) return container;
+  }
+  return el;
+}
+
+/** Chạy hàm tạo animation theo data-*-media: "desktop" | "mobile" | "all" */
+function runForMedia(media, create) {
+  if (media === "desktop") mm.add(BP_DESKTOP, () => { create(); });
+  else if (media === "mobile") mm.add(BP_MOBILE, () => { create(); });
+  else create();
+}
+
+function createOverlay(target, color) {
+  const overlay = document.createElement("div");
+  overlay.className = "media-block-overlay";
+  overlay.style.backgroundColor = color;
+  target.appendChild(overlay);
+  return overlay;
+}
+
+// ==========================================
+// 1. PARALLAX
+// ==========================================
+
+function initParallax() {
+  document.querySelectorAll("[data-parallax-container]").forEach((container) => {
+    const target = container.querySelector("[data-parallax-element]");
+    if (!target) return;
+
+    const { parallaxStart, parallaxEnd, parallaxMedia, parallaxY } = container.dataset;
+    // Mặc định tịnh tiến -20% (phù hợp video/ảnh cao 120vh-130vh)
+    const yPercent = parseFloat(parallaxY) || -20;
+
+    runForMedia(parallaxMedia, () => {
+      gsap.fromTo(target, { yPercent: 0 }, {
+        yPercent,
+        ease: "none",
+        scrollTrigger: {
+          trigger: container,
+          start: parallaxStart || "top bottom",
+          end: parallaxEnd || "bottom top",
+          scrub: 1.5,
+          invalidateOnRefresh: true,
+        },
+      });
+    });
   });
+}
 
+// ==========================================
+// 2. PIN
+// ==========================================
 
-  // ==========================================
-  // 2. HỆ THỐNG XỬ LÝ PIN SYSTEM
-  // ==========================================
-  const pinContainers = document.querySelectorAll("[data-pin-container]");
-  if (!pinContainers.length) return;
-
-  pinContainers.forEach((container) => {
+function initPins() {
+  document.querySelectorAll("[data-pin-container]").forEach((container) => {
     const pinElement = container.querySelector("[data-pin-element]");
     if (!pinElement) return;
 
-    const customStart = container.getAttribute("data-pin-start") || "top 15%";
-    const customEnd = container.getAttribute("data-pin-end") || "bottom top";
-    const pinMode = container.getAttribute("data-pin-mode");
-    const pinMedia = container.getAttribute("data-pin-media") || "all";
-    const hasSpacing = container.getAttribute("data-pin-space") === "true";
-    const endTriggerElement = container.querySelector("[data-pin-end-trigger]");
+    const { pinStart, pinEnd, pinMode, pinMedia, pinSpace } = container.dataset;
 
-    const createPinAnimation = () => {
-      const scrollConfig = {
-        trigger: container,
-        pin: pinElement,
-        start: customStart,
-        end: customEnd,
-        endTrigger: endTriggerElement || container,
-        pinSpacing: hasSpacing,
-        scrub: true,
-        invalidateOnRefresh: true,
-        anticipatePin: 1
-      };
+    const scrollTrigger = {
+      trigger: container,
+      pin: pinElement,
+      start: pinStart || "top 15%",
+      end: pinEnd || "bottom top",
+      endTrigger: container.querySelector("[data-pin-end-trigger]") || container,
+      pinSpacing: pinSpace === "true",
+      scrub: true,
+      invalidateOnRefresh: true,
+      anticipatePin: 1,
+    };
 
+    runForMedia(pinMedia, () => {
       if (pinMode === "backward") {
-        gsap.to(pinElement, {
-          scale: 0.9,
-          opacity: 0.8,
-          yPercent: -15,
-          ease: "none",
-          scrollTrigger: scrollConfig
-        });
+        gsap.to(pinElement, { scale: 0.9, opacity: 0.8, yPercent: -15, ease: "none", scrollTrigger });
       } else {
-        ScrollTrigger.create(scrollConfig);
+        ScrollTrigger.create(scrollTrigger);
       }
-    };
-
-    if (pinMedia === "desktop") {
-      mm.add(isDesktop, () => { createPinAnimation(); });
-    } else if (pinMedia === "mobile") {
-      mm.add(isMobile, () => { createPinAnimation(); });
-    } else {
-      createPinAnimation();
-    }
-  });
-}
-
-// initUltimateInteractionSystem() will be called in the consolidated listener at the end of this file.
-
-function initInteractiveAnimations() {
-
-  // Marquee Infinity Animation
-  const marquees = document.querySelectorAll('.marquee:not([data-anim-initialized])');
-
-  marquees.forEach(marquee => {
-    marquee.dataset.animInitialized = 'true';
-
-    const wrapper = marquee.querySelector('.marquee__track');
-    if (!wrapper) return;
-
-    const content = wrapper.innerHTML;
-    wrapper.innerHTML += content + content + content;
-
-    const marqueeAnim = gsap.to(wrapper, {
-      xPercent: -25,
-      ease: "none",
-      duration: 25,
-      repeat: -1
-    });
-
-    marquee.addEventListener("mouseenter", () => {
-      marqueeAnim.pause();
-    });
-
-    marquee.addEventListener("mouseleave", () => {
-      marqueeAnim.play();
     });
   });
 }
 
-// Chạy khởi tạo hiệu ứng interactive cho mỗi lần load trang (kể cả first load và chuyển trang)
-document.addEventListener('astro:page-load', initInteractiveAnimations);
+// ==========================================
+// 3. MARQUEE
+// ==========================================
 
-// text animation
+function initMarquees() {
+  document.querySelectorAll(".marquee:not([data-anim-initialized])").forEach((marquee) => {
+    const track = marquee.querySelector(".marquee__track");
+    if (!track) return;
+    marquee.dataset.animInitialized = "true";
 
-function initGlobalTextAnimations() {
-  const targets = document.querySelectorAll("[data-split-text-anim]");
-  if (!targets.length) return;
+    // Nhân 3 bản sao để lặp liền mạch (4 bản → dịch -25% = đúng 1 bản)
+    const originals = [...track.children];
+    for (let i = 0; i < 3; i++) {
+      originals.forEach((node) => {
+        const clone = node.cloneNode(true);
+        clone.setAttribute("aria-hidden", "true");
+        track.appendChild(clone);
+      });
+    }
 
-  const getTriggerElement = (el) => {
-    // Tìm container không bị ghim gần nhất để làm trigger có tọa độ cuộn ổn định tuyệt đối
-    const pinContainer = el.closest('[data-pin-container]');
-    if (pinContainer) return pinContainer;
+    const tween = gsap.to(track, { xPercent: -25, ease: "none", duration: 25, repeat: -1 });
 
-    const humanSide = el.closest('.human-side');
-    if (humanSide) return humanSide;
+    // Tạm dừng khi ra khỏi màn hình để tiết kiệm tài nguyên
+    ScrollTrigger.create({
+      trigger: marquee,
+      start: "top bottom",
+      end: "bottom top",
+      onToggle: (self) => (self.isActive ? tween.play() : tween.pause()),
+    });
 
-    const maskTrigger = el.closest('[data-mask-trigger="true"]');
-    if (maskTrigger) return maskTrigger;
+    marquee.addEventListener("mouseenter", () => tween.pause());
+    marquee.addEventListener("mouseleave", () => tween.play());
+  });
+}
 
-    const zoomTrigger = el.closest('[data-zoom-trigger="true"]');
-    if (zoomTrigger) return zoomTrigger;
+// ==========================================
+// 4. TEXT ANIMATION (SplitText)
+// ==========================================
 
-    return el;
-  };
+const TEXT_DEFAULTS = {
+  bgColor: "rgba(0,0,0,0.32)",
+  fgColor: "currentColor",
+  duration: 1.5,
+  delay: 0,
+  stagger: 0.1,
+  scrub: false,
+  repeat: false,
+};
 
-  targets.forEach((el) => {
-    // Ngăn chặn việc nhân bản thẻ khi Astro SPA cập nhật trang
-    if (el.querySelector(".global-line-overflow") || el.querySelector(".anim_line_mask")) return;
+function initTextAnimations() {
+  document.querySelectorAll("[data-split-text-anim]").forEach((el) => {
+    const type = el.getAttribute("data-split-text-anim");
+    if (!el.textContent.trim()) return;
 
-    const animType = el.getAttribute("data-split-text-anim");
-    if (!["word", "line", "linesMask"].includes(animType)) return;
-
-    // Thiết lập thông số an toàn mặc định
-    let config = {
-      bgColor: "rgba(0,0,0,0.32)",
-      fgColor: "currentColor",
-      duration: 1.5,
-      delay: 0,
-      stagger: 0.1,
-      scrub: false,
-      repeat: false
+    const config = readSettings(el, TEXT_DEFAULTS);
+    const trigger = getTrigger(el);
+    const tweenVars = {
+      duration: config.duration,
+      delay: config.delay,
+      stagger: config.stagger,
     };
 
-    const rawSettings = el.getAttribute("data-settings");
-    if (rawSettings) {
-      try {
-        const sanitized = rawSettings.replace(/'/g, '"');
-        const parsed = JSON.parse(sanitized);
-        if (parsed.bgColor) config.bgColor = parsed.bgColor;
-        if (parsed.fgColor) config.fgColor = parsed.fgColor;
-        if (typeof parsed.duration === "number") config.duration = parsed.duration;
-        if (typeof parsed.delay === "number") config.delay = parsed.delay;
-        if (typeof parsed.stagger === "number") config.stagger = parsed.stagger;
-        if (typeof parsed.scrub === "boolean" || typeof parsed.scrub === "number") config.scrub = parsed.scrub;
-        if (typeof parsed.repeat === "boolean") config.repeat = parsed.repeat;
-      } catch (e) {
-        console.warn("Lỗi đọc cấu hình data-settings:", e);
-      }
-    }
+    // --- WORD UP / LINE UP: từng từ/dòng trượt lên từ trong mask ---
+    if (type === "word" || type === "line") {
+      const unit = type === "word" ? "words" : "lines";
 
-    const textContent = el.textContent.trim();
-    if (!textContent) return;
-    const words = textContent.split(/\s+/);
-
-    // ==========================================
-    // CHẠY LUỒNG 1: WORD UP
-    // ==========================================
-    if (animType === "word") {
-      el.innerHTML = "";
-      const fragment = document.createDocumentFragment();
-      words.forEach((word) => {
-        const maskSpan = document.createElement("span");
-        maskSpan.className = "global-line-overflow";
-
-        const innerSpan = document.createElement("span");
-        innerSpan.className = "global-item-inner";
-        innerSpan.textContent = word;
-
-        maskSpan.appendChild(innerSpan);
-        fragment.appendChild(maskSpan);
-      });
-      el.appendChild(fragment);
-
-      const items = el.querySelectorAll(".global-item-inner");
-      const triggerEl = getTriggerElement(el);
-
-      const scrollTriggerConfig = {
-        trigger: triggerEl,
-        start: "top 85%",
-        scrub: config.scrub ? (typeof config.scrub === "boolean" ? 0.5 : config.scrub) : false,
-        toggleActions: config.repeat ? "play reverse play reverse" : "play none none none",
-        invalidateOnRefresh: true
-      };
-
-      gsap.fromTo(items, { yPercent: 100 }, {
-        yPercent: 0,
-        duration: config.duration,
-        delay: config.delay,
-        stagger: config.stagger,
-        ease: config.scrub ? "none" : "power3.out",
-        scrollTrigger: scrollTriggerConfig
+      SplitText.create(el, {
+        type: unit,
+        mask: unit,
+        [`${unit}Class`]: `split-${type}`,
+        // Tách dòng phụ thuộc font & chiều rộng → tự tách lại khi font load / resize
+        autoSplit: type === "line",
+        onSplit: (self) =>
+          gsap.fromTo(self[unit], { yPercent: 100 }, {
+            ...tweenVars,
+            yPercent: 0,
+            ease: config.scrub ? "none" : "power3.out",
+            scrollTrigger: revealTrigger(trigger, config),
+          }),
       });
     }
 
-    // ==========================================
-    // CHẠY LUỒNG 2: LINE UP (Cơ chế tính toán dòng mượt)
-    // ==========================================
-    else if (animType === "line") {
-      el.innerHTML = "";
-      words.forEach((word) => {
-        const span = document.createElement("span");
-        span.className = "global-temp-word";
-        span.textContent = word + " ";
-        el.appendChild(span);
-      });
+    // --- LINES MASK: lớp chữ đậm quét từ trái sang phải trên lớp chữ mờ ---
+    else if (type === "linesMask") {
+      // currentColor phải lấy trước khi đổi màu dòng sang bgColor
+      const fgColor = config.fgColor === "currentColor" ? getComputedStyle(el).color : config.fgColor;
 
-      const tempWords = el.querySelectorAll(".global-temp-word");
-      let lines = [];
-      let currentLine = [];
-      let currentTop = tempWords[0].offsetTop;
+      SplitText.create(el, {
+        type: "lines",
+        linesClass: "anim_line_mask",
+        autoSplit: true,
+        onSplit: (self) => {
+          const foregrounds = self.lines.map((line) => {
+            line.style.color = config.bgColor;
 
-      tempWords.forEach((wordSpan) => {
-        if (Math.abs(wordSpan.offsetTop - currentTop) > 6 && currentLine.length > 0) {
-          lines.push([...currentLine]);
-          currentLine = [];
-          currentTop = wordSpan.offsetTop;
-        }
-        currentLine.push(wordSpan.textContent);
-      });
-      if (currentLine.length > 0) lines.push(currentLine);
+            const fg = document.createElement("span");
+            fg.className = "line-fg";
+            fg.setAttribute("aria-hidden", "true");
+            fg.textContent = line.textContent;
+            fg.style.color = fgColor;
+            line.appendChild(fg);
+            return fg;
+          });
 
-      el.innerHTML = "";
-      const fragment = document.createDocumentFragment();
-      lines.forEach((lineWords) => {
-        const maskSpan = document.createElement("span");
-        maskSpan.className = "global-line-overflow";
-
-        const innerSpan = document.createElement("span");
-        innerSpan.className = "global-item-inner";
-        innerSpan.textContent = lineWords.join("").trim();
-
-        maskSpan.appendChild(innerSpan);
-        fragment.appendChild(maskSpan);
-      });
-      el.appendChild(fragment);
-
-      const items = el.querySelectorAll(".global-item-inner");
-      const triggerEl = getTriggerElement(el);
-
-      const scrollTriggerConfig = {
-        trigger: triggerEl,
-        start: "top 85%",
-        scrub: config.scrub ? (typeof config.scrub === "boolean" ? 0.5 : config.scrub) : false,
-        toggleActions: config.repeat ? "play reverse play reverse" : "play none none none",
-        invalidateOnRefresh: true
-      };
-
-      gsap.fromTo(items, { yPercent: 100 }, {
-        yPercent: 0,
-        duration: config.duration,
-        delay: config.delay,
-        stagger: config.stagger,
-        ease: config.scrub ? "none" : "power3.out",
-        scrollTrigger: scrollTriggerConfig
-      });
-    }
-
-    // ==========================================
-    // CHẠY LUỒNG 3: LINES MASK
-    // ==========================================
-    else if (animType === "linesMask") {
-      el.innerHTML = "";
-      words.forEach((word) => {
-        const span = document.createElement("span");
-        span.className = "global-temp-word";
-        span.textContent = word + " ";
-        el.appendChild(span);
-      });
-
-      const tempWords = el.querySelectorAll(".global-temp-word");
-      let lines = [];
-      let currentLine = [];
-      let currentTop = tempWords[0].offsetTop;
-
-      tempWords.forEach((wordSpan) => {
-        if (Math.abs(wordSpan.offsetTop - currentTop) > 6 && currentLine.length > 0) {
-          lines.push([...currentLine]);
-          currentLine = [];
-          currentTop = wordSpan.offsetTop;
-        }
-        currentLine.push(wordSpan.textContent);
-      });
-      if (currentLine.length > 0) lines.push(currentLine);
-
-      el.innerHTML = "";
-      const linesContainer = document.createDocumentFragment();
-      lines.forEach((lineWords) => {
-        const text = lineWords.join("").trim() + " ";
-        const lineMask = document.createElement("span");
-        lineMask.className = "anim_line_mask";
-
-        const bgSpan = document.createElement("span");
-        bgSpan.className = "line-bg";
-        bgSpan.textContent = text;
-        bgSpan.style.color = config.bgColor;
-
-        const fgSpan = document.createElement("span");
-        fgSpan.className = "line-fg";
-        fgSpan.textContent = text;
-        fgSpan.style.color = config.fgColor;
-
-        lineMask.appendChild(bgSpan);
-        lineMask.appendChild(fgSpan);
-        linesContainer.appendChild(lineMask);
-      });
-      el.appendChild(linesContainer);
-
-      const allLineForegrounds = el.querySelectorAll(".anim_line_mask .line-fg");
-      gsap.set(allLineForegrounds, {
-        clipPath: "inset(0% 100% 0% 0%)",
-        webkitClipPath: "inset(0% 100% 0% 0%)"
-      });
-
-      const triggerEl = getTriggerElement(el);
-
-      const scrollTriggerConfig = {
-        trigger: triggerEl,
-        start: "top 65%",
-        end: "bottom 35%",
-        scrub: config.scrub ? (typeof config.scrub === "boolean" ? 0.5 : config.scrub) : false,
-        toggleActions: config.repeat ? "play reverse play reverse" : "play none none none",
-        invalidateOnRefresh: true
-      };
-
-      gsap.to(allLineForegrounds, {
-        clipPath: "inset(0% 0% 0% 0%)",
-        webkitClipPath: "inset(0% 0% 0% 0%)",
-        duration: config.duration,
-        delay: config.delay,
-        ease: config.scrub ? "none" : "power2.out",
-        stagger: config.stagger,
-        scrollTrigger: scrollTriggerConfig
+          return gsap.fromTo(foregrounds, { clipPath: "inset(0% 100% 0% 0%)" }, {
+            ...tweenVars,
+            clipPath: "inset(0% 0% 0% 0%)",
+            ease: config.scrub ? "none" : "power2.out",
+            scrollTrigger: revealTrigger(trigger, config, { start: "top 65%", end: "bottom 35%" }),
+          });
+        },
       });
     }
   });
 }
 
-// generic element scroll animation (fade, slide, etc. without modifying innerHTML)
-function initElementScrollAnimations() {
-  const targets = document.querySelectorAll("[data-scroll-anim]");
-  if (!targets.length) return;
+// ==========================================
+// 5. ELEMENT SCROLL ANIMATION (slide-up / slide-down)
+// ==========================================
 
-  const getTriggerElement = (el) => {
-    const pinContainer = el.closest('[data-pin-container]');
-    if (pinContainer) return pinContainer;
-    const humanSide = el.closest('.human-side');
-    if (humanSide) return humanSide;
-    const maskTrigger = el.closest('[data-mask-trigger="true"]');
-    if (maskTrigger) return maskTrigger;
-    const zoomTrigger = el.closest('[data-zoom-trigger="true"]');
-    if (zoomTrigger) return zoomTrigger;
-    return el;
-  };
+const SCROLL_DEFAULTS = {
+  duration: 1.5,
+  delay: 0,
+  y: 80,
+  stagger: 0.15,
+  scrub: false,
+  repeat: false,
+  staggerChildren: false,
+  selector: "",
+};
 
-  targets.forEach((el) => {
-    const animType = el.getAttribute("data-scroll-anim");
-    if (!["slide-up", "slide-down"].includes(animType)) return;
+function initScrollReveal() {
+  document.querySelectorAll("[data-scroll-anim]").forEach((el) => {
+    const type = el.getAttribute("data-scroll-anim");
+    if (type !== "slide-up" && type !== "slide-down") return;
 
-    let config = {
-      duration: 1.5,
-      delay: 0,
-      y: 80,
-      stagger: 0.15,
-      scrub: false,
-      repeat: false,
-      // Stagger children mode
-      staggerChildren: false,
-      selector: null
-    };
+    const config = readSettings(el, SCROLL_DEFAULTS);
 
-    const rawSettings = el.getAttribute("data-settings");
-    if (rawSettings) {
-      try {
-        const sanitized = rawSettings.replace(/'/g, '"');
-        const parsed = JSON.parse(sanitized);
-        if (typeof parsed.duration === "number") config.duration = parsed.duration;
-        if (typeof parsed.delay === "number") config.delay = parsed.delay;
-        if (typeof parsed.y === "number") config.y = parsed.y;
-        if (typeof parsed.stagger === "number") config.stagger = parsed.stagger;
-        if (typeof parsed.scrub === "boolean" || typeof parsed.scrub === "number") config.scrub = parsed.scrub;
-        if (typeof parsed.repeat === "boolean") config.repeat = parsed.repeat;
-        if (typeof parsed.staggerChildren === "boolean") config.staggerChildren = parsed.staggerChildren;
-        if (typeof parsed.selector === "string") config.selector = parsed.selector;
-      } catch (e) {
-        console.warn("Lỗi đọc cấu hình data-settings cho scroll-anim:", e);
-      }
+    // Stagger con: data-scroll-stagger="<selector>" > config.selector > con trực tiếp
+    let targets = el;
+    const staggerAttr = el.getAttribute("data-scroll-stagger");
+    if (staggerAttr !== null || config.staggerChildren || config.selector) {
+      const selector = staggerAttr && staggerAttr !== "true" ? staggerAttr : config.selector || ":scope > *";
+      const children = el.querySelectorAll(selector);
+      if (children.length) targets = children;
     }
 
-    const triggerEl = getTriggerElement(el);
-    const scrollTriggerConfig = {
-      trigger: triggerEl,
-      start: "top 90%",
-      scrub: config.scrub ? (typeof config.scrub === "boolean" ? 0.5 : config.scrub) : false,
-      toggleActions: config.repeat ? "play reverse play reverse" : "play none none none",
-      invalidateOnRefresh: true
-    };
-
-    // --- STAGGER CHILDREN MODE ---
-    // Kích hoạt khi: có attribute data-scroll-stagger, hoặc config.staggerChildren = true
-    const hasStaggerAttr = el.hasAttribute("data-scroll-stagger");
-    const isStaggerMode = hasStaggerAttr || config.staggerChildren || !!config.selector;
-
-    let targets;
-    if (isStaggerMode) {
-      // Ưu tiên: giá trị của data-scroll-stagger > config.selector > tất cả con trực tiếp
-      const staggerAttrVal = el.getAttribute("data-scroll-stagger");
-      const childSelector = (staggerAttrVal && staggerAttrVal !== "" && staggerAttrVal !== "true")
-        ? staggerAttrVal
-        : (config.selector || ":scope > *");
-      const children = el.querySelectorAll(childSelector);
-      targets = children.length > 0 ? children : el;
-    } else {
-      targets = el;
-    }
-
-    if (animType === "slide-up") {
-      gsap.fromTo(targets,
-        { y: config.y, opacity: 0 },
-        {
-          y: 0,
-          opacity: 1,
-          duration: config.duration,
-          delay: config.delay,
-          stagger: config.stagger,
-          ease: "power3.out",
-          scrollTrigger: scrollTriggerConfig
-        }
-      );
-    } else if (animType === "slide-down") {
-      gsap.fromTo(targets,
-        { y: -config.y, opacity: 0 },
-        {
-          y: 0,
-          opacity: 1,
-          duration: config.duration,
-          delay: config.delay,
-          stagger: config.stagger,
-          ease: "power3.out",
-          scrollTrigger: scrollTriggerConfig
-        }
-      );
-    }
+    gsap.fromTo(targets, { y: type === "slide-up" ? config.y : -config.y, opacity: 0 }, {
+      y: 0,
+      opacity: 1,
+      duration: config.duration,
+      delay: config.delay,
+      stagger: config.stagger,
+      ease: "power3.out",
+      scrollTrigger: revealTrigger(getTrigger(el), config, { start: "top 90%" }),
+    });
   });
 }
 
-// initGlobalTextAnimations() will be called in the consolidated listener at the end of this file.
+// ==========================================
+// 6. IMAGE BLOCK REVEAL
+// ==========================================
 
-//-----------
-
-// image block animation
-
-function initImageBlockAnimation() {
-  const mediaTargets = document.querySelectorAll('[data-img-anim="block"]');
-  if (!mediaTargets.length) return;
-
-  mediaTargets.forEach((target) => {
-
-    if (target.querySelector(".media-block-overlay")) return;
-
-    let config = {
+function initImageBlocks() {
+  document.querySelectorAll('[data-img-anim="block"]').forEach((target) => {
+    const config = readSettings(target, {
       type: "down",
       blockColor: "#f1f1f1",
       duration: 1.5,
       delay: 0,
-      stagger: 0.1,
       scrub: false,
-    };
-
-    const rawSettings = target.getAttribute("data-settings");
-    if (rawSettings) {
-      try {
-        const parsed = JSON.parse(rawSettings);
-        if (parsed.type) config.type = parsed.type;
-        if (parsed.blockColor) config.blockColor = parsed.blockColor;
-        if (typeof parsed.duration === "number") config.duration = parsed.duration;
-        if (typeof parsed.delay === "number") config.delay = parsed.delay;
-        if (typeof parsed.stagger === "number") config.stagger = parsed.stagger;
-        if (typeof parsed.scrub === "boolean") config.scrub = parsed.scrub;
-        if (typeof parsed.repeat === "boolean") config.repeat = parsed.repeat;
-      } catch (e) {
-        console.error("Lỗi đọc cấu hình image settings:", e);
-      }
-    }
-
-    // Tìm thẻ ảnh bên trong (Hỗ trợ cả thẻ img chuẩn và CustomImage component)
-    const img = target.querySelector("img, video");
-    if (!img) return;
-
-    // 2. TỰ ĐỘNG SINH KHỐI MÀU CUSTOM OVERLAY
-    const overlay = document.createElement("div");
-    overlay.className = "media-block-overlay";
-    overlay.style.backgroundColor = config.blockColor;
-    target.appendChild(overlay);
-
-    // 3. XÂY DỰNG TIMELINE HOẠT HỌA PHỐI HỢP VỚI SCROLLTRIGGER
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: target,
-        start: "top 80%", // Kích hoạt khi khung ảnh chạm 80% viewport
-        scrub: config.scrub ? (typeof config.scrub === "boolean" ? 0.5 : config.scrub) : false, // Bật/Tắt scrub theo cấu hình
-        toggleActions: config.repeat
-          ? "play reverse play reverse"  // Nếu repeat: on -> Tự động chạy lại khi cuộn lên/xuống
-          : "play none none none",       // Nếu repeat: off -> Chỉ chạy đúng 1 lần duy nhất
-        invalidateOnRefresh: true
-      }
+      repeat: false,
     });
 
-    // Thiết lập trạng thái ban đầu dựa theo hướng 'down'
-    if (config.type === "down") {
-      // Đặt khối màu phủ kín 100% từ đỉnh xuống đáy
-      gsap.set(overlay, { clipPath: "inset(0% 0% 0% 0%)" });
-      gsap.set(img, { scale: 1.1, opacity: 0 }); // Ảnh hơi scale nhẹ để tạo cảm giác cinematic khi lộ ra
+    const media = target.querySelector("img, video");
+    if (config.type !== "down" || !media) return;
 
-      // Chạy chuỗi hiệu ứng (Timeline)
-      tl.to(img, {
-        opacity: 1,
+    const overlay = createOverlay(target, config.blockColor);
+
+    gsap.timeline({ scrollTrigger: revealTrigger(target, config, { start: "top 80%" }) })
+      // Ảnh hơi phóng to rồi thu về để tạo cảm giác cinematic khi lộ ra
+      .fromTo(media, { scale: 1.1, opacity: 0 }, {
         scale: 1,
+        opacity: 1,
         duration: 0.4,
-        delay: config.delay, // Áp dụng độ trễ xuất hiện
-        ease: "power2.out"
+        delay: config.delay,
+        ease: "power2.out",
       })
-        .to(overlay, {
-          // Quét mặt nạ kéo từ trên xuống dưới (độ hở inset top tăng từ 0% lên 100%)
-          clipPath: "inset(100% 0% 0% 0%)",
-          duration: config.duration, // Áp dụng thời gian chạy duration
-          ease: "power3.inOut",
-          stagger: config.stagger // Áp dụng độ trễ stagger nếu có nhiều ảnh song song
-        }, "-=0.4"); // Chạy gối đầu đè lên nhau nhẹ để tạo sự mượt mà
-    }
+      // Khối màu tuột từ trên xuống dưới
+      .fromTo(overlay, { clipPath: "inset(0% 0% 0% 0%)" }, {
+        clipPath: "inset(100% 0% 0% 0%)",
+        duration: config.duration,
+        ease: "power3.inOut",
+      }, "-=0.4");
   });
 }
 
-//image hero block animation (tự chạy không cần scroll)
-
-function initHeroImageBlockAnimation() {
-  // Tìm riêng các khối được chỉ định làm hiệu ứng Hero tự động
-  const heroTargets = document.querySelectorAll('[data-img-anim="hero-block"]');
-  if (!heroTargets.length) return;
-
-  heroTargets.forEach((target) => {
-    if (target.querySelector(".media-block-overlay")) return;
-
-    // --- PARSE CẤU HÌNH AN TOÀN TỪ DATA-SETTINGS ---
-    let config = {
+// Hero: tự chạy khi ảnh load xong, không cần scroll
+function initHeroImageBlocks() {
+  document.querySelectorAll('[data-img-anim="hero-block"]').forEach((target) => {
+    const config = readSettings(target, {
       type: "down",
       blockColor: "#f1f1f1",
       duration: 1.5,
       delay: 1.3,
-      stagger: 0.1
-    };
-
-    const rawSettings = target.getAttribute("data-settings");
-    if (rawSettings) {
-      try {
-        const sanitized = rawSettings.replace(/'/g, '"');
-        const parsed = JSON.parse(sanitized);
-        if (parsed.type) config.type = parsed.type;
-        if (parsed.blockColor) config.blockColor = parsed.blockColor;
-        if (typeof parsed.duration === "number") config.duration = parsed.duration;
-        if (typeof parsed.delay === "number") config.delay = parsed.delay;
-        if (typeof parsed.stagger === "number") config.stagger = parsed.stagger;
-      } catch (e) {
-        console.warn("Dùng cấu hình mặc định cho Hero do lỗi JSON:", e);
-      }
-    }
+    });
 
     const img = target.querySelector("img, .hero-image");
-    if (!img) return;
+    if (config.type !== "down" || !img) return;
 
-    // Tự sinh khối màu lót overlay
-    const overlay = document.createElement("div");
-    overlay.className = "media-block-overlay";
-    overlay.style.backgroundColor = config.blockColor;
-    target.appendChild(overlay);
+    const overlay = createOverlay(target, config.blockColor);
 
-    // --- HÀM CHẠY TỰ ĐỘNG KHÔNG CẦN SCROLL ---
-    const runHeroAnimation = () => {
-      // Khởi tạo Timeline thuần túy tự chạy
-      const tl = gsap.timeline();
-
-      if (config.type === "down") {
-        // Thiết lập trạng thái gốc
-        gsap.set(overlay, { clipPath: "inset(0% 0% 0% 0%)" });
-        gsap.set(img, { scale: 1.08, opacity: 0 });
-
-        tl.to(img, {
-          opacity: 1,
+    // ctx.add để timeline vẫn được dọn khi chạy bất đồng bộ (sau sự kiện load)
+    const play = () => ctx?.add(() => {
+      gsap.timeline()
+        .fromTo(img, { scale: 1.08, opacity: 0 }, {
           scale: 1,
+          opacity: 1,
           duration: 0.3,
-          delay: config.delay, // Chờ đúng khoảng delay quy định (1.3s)
-          ease: "power2.out"
+          delay: config.delay,
+          ease: "power2.out",
         })
-          .to(overlay, {
-            clipPath: "inset(100% 0% 0% 0%)", // Quét khối màu tuột xuống dưới để lộ ảnh
-            duration: config.duration, // Chạy trong bao lâu (1.5s)
-            ease: "power3.inOut",
-            stagger: config.stagger
-          }, "-=0.2"); // Gối đầu nhẹ giúp hiệu ứng mượt mà
-      }
-    };
+        .fromTo(overlay, { clipPath: "inset(0% 0% 0% 0%)" }, {
+          clipPath: "inset(100% 0% 0% 0%)",
+          duration: config.duration,
+          ease: "power3.inOut",
+        }, "-=0.2");
+    });
 
-    // Đảm bảo ảnh đã nạp dữ liệu xong để tránh lỗi nhảy pixel
+    // Đợi ảnh nạp xong để tránh nhảy pixel; lỗi ảnh vẫn chạy để không kẹt overlay
     if (img.complete) {
-      runHeroAnimation();
+      play();
     } else {
-      img.addEventListener("load", runHeroAnimation);
+      img.addEventListener("load", play, { once: true });
+      img.addEventListener("error", play, { once: true });
     }
   });
 }
+
+// ==========================================
+// 7. HUMAN SIDE — STACK CARDS (desktop)
+// ==========================================
 
 function initHumanSideStack() {
-  if (window.innerWidth <= 991) return;
-
   const section = document.querySelector(".human-side");
-  const cards = document.querySelectorAll("[data-stack-card]");
+  const cards = gsap.utils.toArray("[data-stack-card]");
   if (!section || !cards.length) return;
 
-  // 1. Trạng thái ban đầu: Tất cả card xếp chồng tại chỗ, mỗi card xoay so le nhẹ (Scatter)
-  cards.forEach((card, index) => {
-    const initRotate = card.getAttribute("data-rotate") || "0";
-
-    gsap.set(card, {
-      rotation: parseFloat(initRotate),
-      y: 0,
-      zIndex: index + 1,          // Card cuối cùng trong DOM nằm trên cùng
-      transformOrigin: "center center"
+  mm.add(BP_STACK, () => {
+    // Xếp chồng, xoay so le nhẹ; card cuối trong DOM nằm trên cùng
+    cards.forEach((card, index) => {
+      gsap.set(card, {
+        rotation: parseFloat(card.dataset.rotate) || 0,
+        zIndex: index + 1,
+        transformOrigin: "center center",
+      });
     });
-  });
 
-  // 2. Khởi tạo Timeline cuộn ghim
-  const tl = gsap.timeline({
-    scrollTrigger: {
-      trigger: section,
-      start: "top top",
-      end: "+=200%",               // Kéo dài tiến trình cuộn để từng card bay đi mượt mà
-      scrub: 0.6,
-      pin: true,
-      invalidateOnRefresh: true
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: section,
+        start: "top top",
+        end: "+=200%",
+        scrub: 0.6,
+        pin: true,
+        invalidateOnRefresh: true,
+      },
+    });
+
+    // Lần lượt đẩy card trên cùng bay lên; card đáy (index 0) giữ lại
+    for (let i = cards.length - 1; i >= 1; i--) {
+      tl.to(cards[i], { yPercent: -200, ease: "power2.inOut", duration: 1 });
     }
   });
-
-  // 3. Lần lượt đẩy card trên cùng bay lên mất hút (từ card cuối → card thứ 2)
-  //    Card đáy (index 0) giữ nguyên làm card cuối cùng hiển thị
-  const totalCards = cards.length;
-  for (let i = totalCards - 1; i >= 1; i--) {
-    tl.to(cards[i], {
-      yPercent: -200,              // Trượt thẳng lên trên bay mất hút
-      opacity: 1,                  // Mờ dần khi bay xa
-      ease: "power2.inOut",
-      duration: 1
-    });
-  }
 }
 
+// ==========================================
+// LIFECYCLE (Astro View Transitions)
+// ==========================================
 
+function initPage() {
+  mm = gsap.matchMedia();
+  ctx = gsap.context(() => {});
+
+  ctx.add(() => {
+    initParallax();
+    initPins();
+    initMarquees();
+    initTextAnimations();
+    initScrollReveal();
+    initImageBlocks();
+    initHeroImageBlocks();
+    initHumanSideStack();
+  });
+
+  // Sắp xếp theo vị trí trên trang rồi tính lại tọa độ
+  ScrollTrigger.sort();
+  ScrollTrigger.refresh();
+
+  // Font custom load xong có thể làm đổi chiều cao layout
+  document.fonts?.ready.then(() => ScrollTrigger.refresh());
+}
+
+// Hàm init đang chờ tín hiệu mở màn che (để gỡ nếu rời trang trước khi kịp chạy)
+let pendingInit;
+
+function cleanupPage() {
+  if (pendingInit) document.removeEventListener("page:revealed", pendingInit);
+  pendingInit = undefined;
+
+  // Revert: kill tween/ScrollTrigger, gỡ pin-spacer, khôi phục text đã split
+  mm?.revert();
+  ctx?.revert();
+  mm = ctx = undefined;
+}
 
 document.addEventListener("astro:page-load", () => {
-  console.log("🔄 Astro page navigated & Interaction System fully loaded");
+  // requestAnimationFrame: đợi layout render xong trước khi đo
+  const start = () => {
+    pendingInit = undefined;
+    requestAnimationFrame(initPage);
+  };
 
-  // Chạy trong requestAnimationFrame để đảm bảo tất cả font chữ, CSS và layout đã được render xong hoàn chỉnh trước khi đo offsetTop
-  requestAnimationFrame(() => {
-    // 1. Khởi chạy hệ thống Pin và Parallax gốc
-    initUltimateInteractionSystem();
-
-    // 2. Khởi chạy hiệu ứng chữ toàn trang
-    initGlobalTextAnimations();
-    initElementScrollAnimations();
-
-    // 3. Khởi chạy các khối hiệu ứng hình ảnh/giao diện khác
-    initImageBlockAnimation();
-    initHeroImageBlockAnimation();
-    initHumanSideStack();
-
-    // 4. Sắp xếp và tính toán lại toàn bộ tọa độ ScrollTrigger chính xác
-    ScrollTrigger.sort();
-    ScrollTrigger.refresh();
-  });
+  // Lần load đầu, loader + overlay che màn hình vài giây → đợi PageTransition
+  // báo "page:revealed" rồi mới chạy, nếu không animation sẽ chạy xong khi còn bị che
+  if (document.documentElement.dataset.revealed === "true") {
+    start();
+  } else {
+    pendingInit = start;
+    document.addEventListener("page:revealed", start, { once: true });
+  }
 });
-
+// Trang cũ đã bị overlay che kín lúc này nên revert không gây giật hình
+document.addEventListener("astro:before-swap", cleanupPage);

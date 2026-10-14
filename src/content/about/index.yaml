@@ -1,0 +1,83 @@
+# Nội dung trang About (/about)
+# Xuống dòng trong tiêu đề: dùng "\n" trong chuỗi có dấu nháy kép
+
+seo:
+  title: "About — Ngô Huy Thường, UI/UX Designer"
+  description: "Get to know Ngô Huy Thường, a UI/UX designer: background, design philosophy, working process and the things that inspire my work."
+
+hero:
+  # Hiển thị: <heading_accent (font riêng)><heading> -   vd: "About" + "Me"
+  heading_accent: "About"
+  heading: "Me"
+  image:
+    src: "../../assets/images/china-street.webp"
+    alt: "Street scene in China"
+  scroll_hint: "Scroll to discover"
+
+intro: "I'm Ngô Huy Thường — a UI/UX Designer who loves softening dry logic into smooth, emotive interfaces, where every touchpoint feels completely natural, making users truly want to stay"
+
+perspective:
+  overline: "Perspective"
+  heading: "Finding logic in the quiet"
+  image:
+    src: "../../assets/images/art-exhibition.webp"
+    alt: "Visiting an art exhibition"
+  paragraphs:
+    - "My journey didn't start with a love for 'pretty screens,' but from a passion for decoding complexity. I believe great design is at its best when it functions so seamlessly that users don't even notice it's there"
+    - "I've always been the one observing the world through noise-canceling headphones. Not because I have nothing to say, but because I'm busy 'softening' the hidden rules beneath the surface of everything."
+    - "When the world gets too loud, I find my way back to 'Midnight Logic' — a space of clean grids, lo-fi beats, and the pursuit of a frictionless experience.\""
+
+intent:
+  overline: "The Intent"
+  heading: "Analog Soul Digital Logic"
+  video:
+    src: "/assets/video/deep-mood.mp4"
+    poster: "/assets/images/intro-about-cover.webp"
+  # Đoạn 1 canh phải, các đoạn sau canh giữa
+  paragraphs:
+    - "People often ask how a sketchbook lover ends up building complex Design Systems. To me, it's the same craft. Whether it's a pencil stroke or a Figma component, it starts with intent. My approach is a constant battle against 'feature bloat.' I don't just add elements; I distill them. I build systems that scale, not just screens that look good."
+    - "Working for the US and Japan markets taught me one thing: Efficiency is the ultimate sophistication. If a user has to think twice, I've failed. I design for that split second of 'it just works'."
+
+skills:
+  overline: "Skills & Tools"
+  heading: "How I Help"
+  description: "Decoding the 'why' before I even touch the pixels. I bridge the gap between human centered vibes and clean, functional code. I don't just build products; I craft digital spaces where logic meets a human touch, making sure everything is as smooth as your favorite playlist"
+  image:
+    src: "../../assets/images/IMG_1994-1.png"
+    alt: "Ngô Huy Thường at work"
+  # Các từ chạy hiệu ứng gõ chữ trong bong bóng chat
+  typing_words: ["Figma", "Framer", "Photoshop", "Illustrator"]
+  items:
+    - title: "UX Research"
+      text: "I dive deep into the data hidden beneath every move. No guessing games here I hunt for answers directly from users to make sure every single pixel has a legit reason to exist."
+      tags: ["User Empathy", "User Flow Analysis", "Usability Testing"]
+    - title: "UI Design"
+      text: "Where aesthetics meet utility. I craft clean, modern interfaces backed by rock solid Design Systems, making sure everything is not just 'pretty' but also built to scale without the mess."
+      tags: ["Visual Hierarchy", "Design System", "Micro-interactions", "Hi-fi Prototyping"]
+    - title: "Development"
+      text: "Breaking the wall between design and dev. With a solid grip on HTML, CSS, I smooth out the handover process, making sure every creative spark actually works and feels just right in production"
+      tags: ["Code-friendly", "Framer", "Responsive Logic"]
+
+human_side:
+  overline: "The Human Side"
+  heading: "When I'm not\npolishing pixels..."
+  description: "I'm a low-key observer. To me, the world is the ultimate case study. When the laptop closes, the real research begins. I find design inspiration in the quiet, mundane moments of life using that raw empathy to make sure my digital pixels feel human"
+  funfacts:
+    - title: "Photography"
+      text: "Observing the world through a lens to sharp my eye for composition."
+      image:
+        src: "../../assets/images/hanoi.webp"
+        alt: "Street photography in Hanoi"
+      rotate: -3
+    - title: "Caffeine & Curating"
+      text: "Chasing the city's most minimal-vibe cafes."
+      image:
+        src: "../../assets/images/cafe-chill.webp"
+        alt: "A minimal cafe corner"
+      rotate: 4
+    - title: "Drawing & Sketching"
+      text: "Trading pixels for pencils to recharge my visual thinking."
+      image:
+        src: "../../assets/images/paint.webp"
+        alt: "Sketching and painting"
+      rotate: -6

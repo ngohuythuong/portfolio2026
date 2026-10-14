@@ -1,6 +1,9 @@
 import Lenis from '@studio-freight/lenis';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
-const thumb = document.getElementById('custom-scroll-thumb');
+gsap.registerPlugin(ScrollTrigger);
+
 const html = document.documentElement;
 
 const lenis = new Lenis({
@@ -9,30 +12,35 @@ const lenis = new Lenis({
     smoothWheel: true
 });
 
-function raf(time) {
-    lenis.raf(time);
-    requestAnimationFrame(raf);
-}
-requestAnimationFrame(raf);
+// Đồng bộ Lenis với ScrollTrigger: chạy chung ticker của GSAP thay vì RAF riêng
+lenis.on('scroll', ScrollTrigger.update);
+gsap.ticker.add((time) => lenis.raf(time * 1000));
+gsap.ticker.lagSmoothing(0);
 
-lenis.on('scroll', ({ scroll, limit, progress }) => {
-    // 1. Thêm class để hiện thanh scroll
+// DOM được thay mới sau mỗi lần chuyển trang (View Transitions) → lấy lại thumb
+let thumb = document.getElementById('custom-scroll-thumb');
+document.addEventListener('astro:after-swap', () => {
+    thumb = document.getElementById('custom-scroll-thumb');
+});
+
+let hideTimer;
+
+lenis.on('scroll', ({ limit, progress }) => {
+    // 1. Hiện thanh scroll
     html.classList.add('is-scrolling');
 
-    // 2. Tính toán chiều cao con chạy (tỷ lệ thuận với viewport)
-    const viewportHeight = window.innerHeight;
-    const contentHeight = document.body.scrollHeight;
-    const thumbHeight = (viewportHeight / contentHeight) * viewportHeight;
-
-    // 3. Cập nhật vị trí và chiều cao thumb
+    // 2. Chiều cao con chạy tỷ lệ với viewport (dùng limit của Lenis, không đọc lại DOM)
     if (thumb) {
+        const viewportHeight = window.innerHeight;
+        const thumbHeight = (viewportHeight / (limit + viewportHeight)) * viewportHeight;
+
         thumb.style.height = `${thumbHeight}px`;
         thumb.style.transform = `translateY(${progress * (viewportHeight - thumbHeight)}px)`;
     }
 
-    // 4. Tự động ẩn sau khi ngừng cuộn
-    window.clearTimeout(window.scrollTimeout);
-    window.scrollTimeout = setTimeout(() => {
+    // 3. Tự động ẩn sau khi ngừng cuộn
+    clearTimeout(hideTimer);
+    hideTimer = setTimeout(() => {
         html.classList.remove('is-scrolling');
     }, 1000);
 });

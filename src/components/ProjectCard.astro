@@ -14,7 +14,7 @@ const { client, category, year, stt } = project.data.project_hero.metadata;
 const image = thumbnail.image;
 ---
 
-<div class={`project-card project-card--${variant} ${customClass}`} data-cursor-text="VIEW project">
+<div class:list={["project-card", `project-card--${variant}`, customClass]} data-cursor-text="VIEW project">
   <a class="project-card__link" href={`/works/${project.slug}`}>
     <span class="project-card__index">{stt}</span>
 
@@ -40,7 +40,6 @@ const image = thumbnail.image;
     position: relative;
     width: 100%;
     overflow: hidden;
-    transition: all 0.3s ease;
   }
 
   .project-card__title {
@@ -58,88 +57,85 @@ const image = thumbnail.image;
     height: 0;
     background-color: rgba(0, 0, 0, 0.05);
     z-index: -1;
-    transition: all 0.3s ease;
+    transition: height 0.3s ease;
+  }
+
+  .project-card__thumb {
+    overflow: hidden;
   }
 
   .project-card__thumb img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: center;
     filter: grayscale(1) contrast(0.9);
-      transition: all 0.3s ease;
+    transition:
+      filter 0.3s ease,
+      scale 0.3s ease;
   }
 
   .project-card__link:hover .project-card__thumb img {
-      filter: grayscale(0) contrast(1);
-      scale: 1.1;
-    }
+    filter: grayscale(0) contrast(1);
+    scale: 1.1;
+  }
 
   /*---- card list ----*/
 
   .project-card--list {
-    padding: 0 3rem;
+    padding-inline: var(--gutter);
 
     .project-card__link {
       display: flex;
-      flex-direction: row;
-      gap: 0.5rem 1.5rem;
-      align-items: center;
-      border-top: 1px solid var(--linesColor);
-      padding: 1.5rem 0;
       flex-wrap: wrap;
+      align-items: center;
+      gap: 0.5rem 1.5rem;
+      padding: 1.5rem 0;
+      border-top: 1px solid var(--linesColor);
     }
 
     .project-card__thumb {
       width: 64px;
-      height: auto;
       aspect-ratio: 1/1;
-      overflow: hidden;
     }
 
-    .project-card__index {
-      padding-right: 1.5rem;
+    .project-card__index,
+    .project-card__meta-item {
       font-size: 0.75rem;
       line-height: 1.5;
       letter-spacing: 0.06rem;
       text-transform: uppercase;
     }
 
+    .project-card__index {
+      padding-right: 1.5rem;
+    }
+
     .project-card__body {
       display: flex;
-      flex-direction: row;
+      flex-wrap: wrap;
       flex: 1;
       width: 50%;
       gap: 1rem 1.5rem;
       align-items: center;
-      flex-wrap: wrap;
     }
 
     .project-card__meta {
-      width: 40%;
       display: flex;
-      flex-direction: row;
+      width: 40%;
       gap: 1.5rem;
     }
 
     .project-card__meta-item {
       flex: 1;
-      text-align: start;
-      font-size: 0.75rem;
-      line-height: 1.5;
-      letter-spacing: 0.06rem;
-      text-transform: uppercase;
     }
 
     .project-card__meta-item--right {
       text-align: right;
-      justify-content: flex-end;
     }
   }
 
   .project-card--list:hover .project-card__overlay {
     height: 100%;
-    opacity: 1;
   }
 
   /*--- card box ---*/
@@ -150,43 +146,35 @@ const image = thumbnail.image;
       display: none;
     }
 
-    .project-card__link {
+    .project-card__link,
+    .project-card__body {
       display: flex;
       flex-direction: column;
     }
 
     .project-card__body {
-      display: flex;
-      flex-direction: column;
       gap: 1rem;
-      align-items: left;
     }
 
     .project-card__thumb {
       position: relative;
       width: 100%;
-      height: auto;
       aspect-ratio: 4/3;
-      overflow: hidden;
     }
-
-   }
-
-  
+  }
 
   @media (max-width: 767px) {
     .project-card--list {
-      padding: 0 1.25rem;
-
       .project-card__index {
         display: none;
       }
-      .project-card__link {
+
+      .project-card__link,
+      .project-card__body {
         align-items: flex-start;
       }
 
       .project-card__body {
-        align-items: flex-start;
         width: 100%;
       }
 
@@ -199,15 +187,10 @@ const image = thumbnail.image;
         gap: 1rem;
         width: 100%;
       }
+
       .project-card__meta-item {
         flex: none;
       }
-    }
-  }
-
-  @media (min-width: 768px) and (max-width: 1024px) {
-    .project-card--list {
-      padding: 0 2rem;
     }
   }
 </style>

@@ -6,18 +6,46 @@ import LoaderCaption from "../components/LoaderCaption.astro";
 import PageTransition from "../components/PageTransition.astro";
 import { ViewTransitions } from "astro:transitions";
 import CustomCursor from "../components/CustomCursor.astro";
+import { getImage } from "astro:assets";
+import { getEntry } from "astro:content";
+import defaultOgImage from "../assets/images/project-img/project_featured.webp";
 
 interface Props {
-  title: string;
+  title?: string;
   description?: string;
   hideFooter?: boolean;
+  ogImage?: ImageMetadata;
+  ogType?: "website" | "article";
 }
 
+const { data: site } = await getEntry("site", "index");
+
 const {
-  title = "Ngô Huy Thường — UI/UX Designer",
-  description = "A pixel-crafter with a problem-solving mindset. Always optimizing user flows and design systems to make products 1% better every day.",
+  title = site.default_seo.title,
+  description = site.default_seo.description,
   hideFooter = false,
+  ogImage = defaultOgImage,
+  ogType = "website",
 } = Astro.props;
+
+// Canonical / og:url cần URL tuyệt đối nên chỉ sinh ra khi đã khai báo `site`
+const canonicalURL = Astro.site
+  ? new URL(Astro.url.pathname, Astro.site).href
+  : undefined;
+const og = await getImage({ src: ogImage, width: 1200, format: "jpg" });
+const ogImageURL = Astro.site ? new URL(og.src, Astro.site).href : og.src;
+
+const personSchema = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: site.name,
+  alternateName: site.alternate_name,
+  jobTitle: site.job_title,
+  description: site.default_seo.description,
+  ...(Astro.site && { url: Astro.site.href }),
+  email: `mailto:${site.email}`,
+  sameAs: site.socials.map((social) => social.href),
+};
 ---
 
 <!doctype html>
@@ -27,12 +55,34 @@ const {
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content={description} />
     <title>{title}</title>
+    <link rel="icon" href="/favicon.ico" sizes="48x48" />
     <link rel="icon" type="image/svg+xml" href="/assets/favicon/favicon.svg" />
-    <!-- Google Fonts: Inter -->
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
-    />
+    <link rel="icon" type="image/png" sizes="96x96" href="/assets/favicon/favicon-96x96.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon/favicon-16x16.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png" />
+    <link rel="mask-icon" href="/assets/favicon/safari-pinned-tab.svg" color="#000000" />
+    <meta name="apple-mobile-web-app-title" content="Huy Thường" />
+    <meta name="msapplication-TileColor" content="#000000" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <meta name="theme-color" content="#f1f1f1" />
+    {canonicalURL && <link rel="canonical" href={canonicalURL} />}
+    {Astro.site && <link rel="sitemap" href="/sitemap-index.xml" />}
+
+    <meta property="og:type" content={ogType} />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImageURL} />
+    <meta property="og:image:width" content={String(og.attributes.width)} />
+    <meta property="og:image:height" content={String(og.attributes.height)} />
+    {canonicalURL && <meta property="og:url" content={canonicalURL} />}
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageURL} />
+
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(personSchema)} />
     <ViewTransitions />
   </head>
   <body>

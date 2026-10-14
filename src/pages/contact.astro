@@ -1,24 +1,31 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import CustomImage from "../components/CustomImage.astro";
-import contactAvatar from "../assets/images/img-2.jpg";
+import { getEntry } from "astro:content";
+
+const { data: page } = await getEntry("contact", "index");
+const { data: site } = await getEntry("site", "index");
 ---
 
-<BaseLayout title="Huy Thuong — Contact" hideFooter={true}>
+<BaseLayout
+  title={page.seo.title}
+  description={page.seo.description}
+  hideFooter={true}
+>
   <section class="contact">
     <div class="container">
       <div class="section-header">
         <span
           class="sub-title"
           data-split-text-anim="word"
-          data-settings='{ "repeat": true}'>Say hi / 挨拶</span
+          data-settings='{ "repeat": true}'>{page.subtitle}</span
         >
         <h1
           class="text-h1 text-h1--md"
           data-split-text-anim="word"
           data-settings='{ "repeat": true}'
         >
-          Let's Collaborate
+          {page.heading}
         </h1>
       </div>
     </div>
@@ -28,47 +35,35 @@ import contactAvatar from "../assets/images/img-2.jpg";
         <div class="contact__info">
           <div class="contact__grid">
             <div class="contact-item">
-              <span class="contact__item-label">Email</span>
+              <span class="contact__item-label">{page.labels.email}</span>
               <div class="btn-text">
-                <a class="btn-link md" data-hover href="mailto:ngohuythuong@live.com"
-                  >ngohuythuong@live.com</a
+                <a class="btn-link md" data-hover href={`mailto:${site.email}`}
+                  >{site.email}</a
                 >
               </div>
             </div>
             <div class="contact-item">
-              <span class="contact__item-label">Stay Connected</span>
+              <span class="contact__item-label">{page.labels.socials}</span>
               <div class="contact__social">
-                <div class="btn-text">
-                  <a
-                    class="btn-link md"
-                    data-hover
-                    href="https://www.linkedin.com/in/huythuongngo/">Linkedin</a
-                  >
-                </div>
-                <div class="btn-text">
-                  <a
-                    class="btn-link md"
-                    data-hover
-                    href="https://www.behance.net/ngohuythuong1991">Behance</a
-                  >
-                </div>
-                <div class="btn-text">
-                  <a
-                    class="btn-link md"
-                    data-hover
-                    href="https://www.facebook.com/huythuongngo/">Facebook</a
-                  >
-                </div>
+                {
+                  site.socials.map((social) => (
+                    <div class="btn-text">
+                      <a class="btn-link md" data-hover href={social.href}>
+                        {social.label}
+                      </a>
+                    </div>
+                  ))
+                }
               </div>
             </div>
             <div class="contact-item">
-              <span class="contact__item-label">Availability</span>
-              <span class="contact__item-value">Open for new vibes</span>
+              <span class="contact__item-label">{page.labels.availability}</span>
+              <span class="contact__item-value">{page.availability}</span>
             </div>
             <div class="contact-item">
-              <span class="contact__item-label">Locked in from</span>
+              <span class="contact__item-label">{page.labels.location}</span>
               <div class="clock">
-                <span>EST</span>
+                <span>{page.clock_label}</span>
                 <span class="clock__display">00:00:00</span>
               </div>
             </div>
@@ -79,16 +74,13 @@ import contactAvatar from "../assets/images/img-2.jpg";
           data-img-anim="hero-block"
           data-settings='{"type": "down", "duration": 1.5, "delay": 0.1,  "repeat": true}'
         >
-          <CustomImage src={contactAvatar} alt="avatar" importance="feature" />
+          <CustomImage src={page.image.src} alt={page.image.alt} importance="feature" />
         </div>
       </div>
     </div>
   </section>
 
   <style>
-    .section-header {
-      width: 100%;
-    }
     .contact {
       padding-top: 12rem;
       padding-bottom: 4rem;

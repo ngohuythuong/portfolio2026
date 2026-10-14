@@ -1,4 +1,5 @@
 <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+<style>path{fill:#fff}@media (prefers-color-scheme:light){path{fill:#000}}</style>
 <path d="M13.7143 0V4.57143H4.57143V0H13.7143Z" fill="white"/>
 <path d="M13.7143 27.4286V32H4.57143V27.4286H13.7143Z" fill="white"/>
 <path d="M27.4286 27.4286V32H18.2857V27.4286H27.4286Z" fill="white"/>

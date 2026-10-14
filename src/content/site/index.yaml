@@ -1,0 +1,29 @@
+# Thông tin dùng chung toàn site: Header, Footer, SEO mặc định, JSON-LD
+name: "Ngô Huy Thường"
+alternate_name: "Huy Thuong Ngo"
+job_title: "UI/UX Designer"
+email: "ngohuythuong@live.com"
+
+default_seo:
+  title: "Ngô Huy Thường — UI/UX Designer"
+  description: "A pixel-crafter with a problem-solving mindset. Always optimizing user flows and design systems to make products 1% better every day."
+
+# Menu (Header). Trang chủ "/" chỉ hiện trong menu mobile
+nav:
+  - { label: "Home", href: "/" }
+  - { label: "About", href: "/about" }
+  - { label: "Works", href: "/works" }
+  - { label: "Contact", href: "/contact" }
+
+# in_header: true → hiện trong menu mobile; tất cả đều hiện ở trang Contact
+socials_label: "(Stay connected)"
+socials:
+  - { label: "Linkedin", href: "https://www.linkedin.com/in/huythuongngo/", in_header: true }
+  - { label: "Behance", href: "https://www.behance.net/ngohuythuong1991", in_header: true }
+  - { label: "Facebook", href: "https://www.facebook.com/huythuongngo/" }
+
+footer:
+  tagline: "Say Hi / 挨拶"
+  cta_label: "Let's talk"
+  clock_label: "ICT"
+  copyright: "© 2026 — currently locked in from vietnam"

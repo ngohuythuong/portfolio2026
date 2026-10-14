@@ -11,7 +11,10 @@ const sortedWorks = [...allWorks].sort((a, b) =>
 );
 ---
 
-<BaseLayout title="Huy Thuong — Works">
+<BaseLayout
+  title="Works — UI/UX Case Studies | Ngô Huy Thường"
+  description="Selected UI/UX design case studies by Ngô Huy Thường, covering fintech, e-commerce and mobility products, from research to visual design."
+>
   <section class="works">
     <div class="container">
       <div class="works__heading">
@@ -59,7 +62,7 @@ const sortedWorks = [...allWorks].sort((a, b) =>
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 4rem 2rem;
-    padding: 0 3rem;
+    padding-inline: var(--gutter);
   }
 
   .works__heading {
@@ -118,7 +121,6 @@ const sortedWorks = [...allWorks].sort((a, b) =>
     .works__list--grid {
       grid-template-columns: repeat(1, 1fr);
       gap: 2rem;
-      padding: 0 1.25rem;
     }
   }
 
@@ -126,7 +128,6 @@ const sortedWorks = [...allWorks].sort((a, b) =>
     .works__list--grid {
       grid-template-columns: repeat(2, 1fr);
       gap: 3rem 1.5rem;
-      padding: 0 2rem;
     }
   }
 </style>

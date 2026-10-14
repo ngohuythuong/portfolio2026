@@ -23,11 +23,14 @@ export async function getStaticPaths() {
 }
 
 const { entry, nextEntry } = Astro.props;
+const thumbnail = entry.data.project_hero.thumbnail.image;
 ---
 
 <BaseLayout
-  title={entry.data.project_hero.title}
+  title={`${entry.data.project_hero.title} — UI/UX Case Study | Ngô Huy Thường`}
   description={entry.data.project_hero.description}
+  ogImage={typeof thumbnail === "object" ? thumbnail : undefined}
+  ogType="article"
 >
   <article data-barba="main-wrapper" data-barba-namespace="work-detail">
     <section class="work-hero">
@@ -123,7 +126,7 @@ const { entry, nextEntry } = Astro.props;
           <div class="work-overview__header">
             <h2
               class="text-h2"
-              data-split-text-anim="word"
+              data-split-text-anim="line"
               data-settings='{ "repeat": true}'
             >
               {entry.data.project_overview.heading || "Project Overview"}
@@ -141,15 +144,15 @@ const { entry, nextEntry } = Astro.props;
               entry.data.project_overview && (
                 <>
                   <div class="work-overview__group">
-                    <h3 class="text-h3">The Challenge</h3>
+                    <h3 class="text-h3" data-split-text-anim="line">The Challenge</h3>
                     <p class="p-md">{entry.data.project_overview.challenge}</p>
                   </div>
                   <div class="work-overview__group">
-                    <h3 class="text-h3">The Solution</h3>
+                    <h3 class="text-h3" data-split-text-anim="line">The Solution</h3>
                     <p class="p-md">{entry.data.project_overview.solution}</p>
                   </div>
                   <div class="work-overview__group">
-                    <h3 class="text-h3">Key Objectives</h3>
+                    <h3 class="text-h3" data-split-text-anim="line">Key Objectives</h3>
                     <ul class="objectives-list">
                       {entry.data.project_overview.objectives.map(
                         (objective) => (
@@ -193,7 +196,7 @@ const { entry, nextEntry } = Astro.props;
               <div class="visual-heading">
                 <h2
                   class="text-h2"
-                  data-split-text-anim="word"
+                  data-split-text-anim="line"
                   data-settings='{ "repeat": true}'
                 >
                   {entry.data.visual_design.heading}
@@ -219,7 +222,7 @@ const { entry, nextEntry } = Astro.props;
                       data-pin-end="bottom bottom"
                     >
                       <div class="visual-block__content" data-pin-element>
-                        <span class="overline">{block.block_id}</span>
+                        <div class="overline">{block.block_id}</div>
                         <p class="p-big">{block.micro_copy}</p>
                       </div>
                       <div class="visual-block__images">
@@ -270,12 +273,13 @@ const { entry, nextEntry } = Astro.props;
       }
     }
 
-    img,
-    video {
+    /* img/video render từ CustomImage (component con) → cần :global */
+    .zoom-media-layer :global(:is(img, video)),
+    .media-frame :global(video) {
+      display: block;
       width: 100%;
       height: 100%;
       object-fit: cover;
-      object-position: center;
     }
 
     .work-overview {
@@ -342,16 +346,7 @@ const { entry, nextEntry } = Astro.props;
     .zoom-media-layer {
       position: relative;
       width: 100%;
-      height: auto;
       overflow: hidden;
-
-      img,
-      video {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        will-change: transform;
-      }
     }
 
     .works-visual {
@@ -398,15 +393,10 @@ const { entry, nextEntry } = Astro.props;
       min-width: 300px;
       .media-frame {
         aspect-ratio: 4/3;
-        video {
-          object-fit: cover;
-          width: 100%;
-          height: auto;
-        }
       }
     }
 
-    @media screen and (max-width: 768px) {
+    @media (max-width: 767px) {
       .work-hero {
         padding: 10rem 0 0 0;
       }
@@ -414,14 +404,13 @@ const { entry, nextEntry } = Astro.props;
       .work-hero__cover {
         height: 60vh;
         .media-frame {
-          width: 100%;
           height: 75vh;
         }
       }
 
       .work-meta {
         grid-template-columns: repeat(2, 1fr);
-        gap: 1;
+        gap: 1rem;
       }
 
       .work-overview__content,

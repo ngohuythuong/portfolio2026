@@ -1,129 +1,125 @@
-document.addEventListener("DOMContentLoaded", () => {
-    const videoContainers = document.querySelectorAll('.media-embed');
+// ==========================================
+// 1. VIDEO: chỉ phát khi trong tầm nhìn
+// ==========================================
 
-    const videoObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
+let videoObserver;
+
+function initVideoAutoplay() {
+    videoObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
             const video = entry.target.querySelector('video');
-            const isAutoplay = entry.target.getAttribute('data-autoplay') === 'true';
+            if (!video) return;
 
             if (entry.isIntersecting) {
-                // Video đi vào tầm mắt người dùng
-                if (isAutoplay) {
-                    video.play().catch(error => {
-                        console.log("Autoplay bị chặn bởi trình duyệt hoặc chế độ tiết kiệm pin");
+                if (entry.target.dataset.autoplay === 'true') {
+                    video.play().catch(() => {
+                        // Autoplay bị chặn bởi trình duyệt hoặc chế độ tiết kiệm pin
                     });
                 }
             } else {
-                // Video ra khỏi tầm mắt -> Tạm dừng để tiết kiệm tài nguyên
+                // Ra khỏi tầm nhìn → tạm dừng để tiết kiệm tài nguyên
                 video.pause();
             }
         });
     }, { threshold: 0.1 }); // Chạy khi 10% video xuất hiện trên màn hình
 
-    videoContainers.forEach(container => videoObserver.observe(container));
+    document.querySelectorAll('.media-embed').forEach((container) => videoObserver.observe(container));
+}
 
-    // Clock
-    function updateClock() {
-        const clockElement = document.querySelector(".clock__display");
-        if (!clockElement) return;
+// ==========================================
+// 2. CLOCK (giờ Việt Nam)
+// ==========================================
 
-        const now = new Date();
+const timeFormatter = new Intl.DateTimeFormat('en-US', {
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: true,
+    timeZone: 'Asia/Ho_Chi_Minh',
+});
 
-        const timeString = now.toLocaleTimeString("en-US", {
-            hour: "2-digit",
-            minute: "2-digit",
-            second: "2-digit",
-            hour12: true,
-            timeZone: "Asia/Ho_Chi_Minh",
-        });
+function updateClocks() {
+    const clocks = document.querySelectorAll('.clock__display');
+    if (!clocks.length) return;
 
-        clockElement.textContent = timeString;
-    }
+    const timeString = timeFormatter.format(new Date());
+    clocks.forEach((clock) => {
+        clock.textContent = timeString;
+    });
+}
 
-    if (document.querySelector(".clock__display")) {
-        updateClock();
-        setInterval(updateClock, 1000);
-    }
+// 1 interval duy nhất cho cả site; DOM mới sau khi chuyển trang được query lại mỗi tick
+setInterval(updateClocks, 1000);
 
-    // Split text hover effect
-    const initSplitHover = () => {
-        document.querySelectorAll('[data-hover]:not(.split-initialized)').forEach(element => {
-            // Lưu lại các icon trước khi xóa HTML
-            const iconElements = Array.from(element.querySelectorAll('svg, i, [class*="icon"]'));
-            const iconClones = iconElements.map(icon => icon.cloneNode(true));
+// ==========================================
+// 3. SPLIT WAVE HOVER ([data-hover]) — sóng chạy từ trái sang phải
+// ==========================================
 
-            const text = element.textContent.trim();
-            if (!text && iconElements.length === 0) return;
+const WAVE_STEP = 0.025; // Độ trễ trung bình (s) giữa 2 ký tự liền kề
 
-            element.setAttribute('aria-label', element.getAttribute('aria-label') || text);
-            element.innerHTML = '';
-            element.classList.add('split-initialized');
+/**
+ * Độ trễ theo đường cong sine (sine.out) từ trái sang phải:
+ * khoảng trễ lớn ở đầu chữ rồi dồn dần về cuối, như ngọn sóng đổ qua chữ.
+ */
+function getWaveDelay(index, total) {
+    if (total <= 1) return 0;
 
-            // Tạo wrapper cho text nếu có
-            if (text) {
-                const createWrapper = (className) => {
-                    const wrapper = document.createElement('span');
-                    wrapper.classList.add('split-wrapper', className);
-                    wrapper.setAttribute('aria-hidden', 'true');
+    const progress = index / (total - 1); // 0 (trái) → 1 (phải)
+    return WAVE_STEP * (total - 1) * Math.sin((progress * Math.PI) / 2);
+}
 
-                    [...text].forEach((char, index) => {
-                        const span = document.createElement('span');
-                        span.textContent = char === ' ' ? '\u00A0' : char;
-                        span.style.setProperty('--i', index);
-                        wrapper.appendChild(span);
-                    });
+function createWrapper(className, text, icons) {
+    const wrapper = document.createElement('span');
+    wrapper.classList.add('split-wrapper', className);
+    wrapper.setAttribute('aria-hidden', 'true');
 
-                    // Thêm icon vào mỗi wrapper
-                    iconClones.forEach(icon => {
-                        wrapper.appendChild(icon.cloneNode(true));
-                    });
+    const items = [
+        ...[...text].map((char) => {
+            const span = document.createElement('span');
+            span.textContent = char === ' ' ? ' ' : char;
+            return span;
+        }),
+        // Icon nằm cuối, nhận độ trễ như 1 ký tự trong sóng
+        ...icons.map((icon) => icon.cloneNode(true)),
+    ];
 
-                    return wrapper;
-                };
+    items.forEach((item, index) => {
+        item.style.setProperty('--d', `${getWaveDelay(index, items.length).toFixed(3)}s`);
+        wrapper.appendChild(item);
+    });
 
-                element.appendChild(createWrapper('original'));
-                element.appendChild(createWrapper('clone'));
-            } else {
-                // Nếu không có text, chỉ có icon
-                const createIconWrapper = (className) => {
-                    const wrapper = document.createElement('span');
-                    wrapper.classList.add('split-wrapper', className);
-                    wrapper.setAttribute('aria-hidden', 'true');
-                    iconClones.forEach(icon => {
-                        wrapper.appendChild(icon.cloneNode(true));
-                    });
-                    return wrapper;
-                };
+    return wrapper;
+}
 
-                element.appendChild(createIconWrapper('original'));
-                element.appendChild(createIconWrapper('clone'));
-            }
+function initSplitHover() {
+    document.querySelectorAll('[data-hover]:not(.split-initialized)').forEach((element) => {
+        // Lưu lại icon trước khi xóa HTML
+        const icons = Array.from(element.querySelectorAll('svg, i, [class*="icon"]'));
+        const text = element.textContent.trim();
+        if (!text && !icons.length) return;
 
-            // Thêm hover listeners
-            element.addEventListener('mouseenter', () => {
-                element.classList.add('is-hovering');
-            });
+        if (text && !element.hasAttribute('aria-label')) element.setAttribute('aria-label', text);
+        element.classList.add('split-initialized');
 
-            element.addEventListener('mouseleave', () => {
-                element.classList.remove('is-hovering');
-            });
-        });
-    };
+        element.replaceChildren(
+            createWrapper('original', text, icons),
+            createWrapper('clone', text, icons),
+        );
+    });
+}
 
-    // Khởi tạo khi load trang
+// ==========================================
+// LIFECYCLE (Astro View Transitions)
+// ==========================================
+
+// astro:page-load chạy cả lần load đầu lẫn sau mỗi lần chuyển trang
+document.addEventListener('astro:page-load', () => {
+    initVideoAutoplay();
     initSplitHover();
+    updateClocks();
+});
 
-    // Re-initialize khi Astro chuyển trang (View Transitions)
-    document.addEventListener('astro:after-swap', initSplitHover);
-
-    // Theo dõi dynamic content
-    const observer = new MutationObserver(() => {
-        initSplitHover();
-    });
-
-    observer.observe(document.body, {
-        childList: true,
-        subtree: true
-    });
-
+document.addEventListener('astro:before-swap', () => {
+    videoObserver?.disconnect();
+    videoObserver = undefined;
 });
